@@ -1,30 +1,26 @@
 package com.agenthub.controller;
-
-import com.agenthub.model.dto.LoginRequest;
-import com.agenthub.model.dto.LoginResponse;
-import com.agenthub.model.dto.RegistroUsuarioRequest;
-import com.agenthub.model.dto.UsuarioResponse;
-import com.agenthub.service.AuthService;
+import com.agenthub.model.dto.*;
+import com.agenthub.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/auth")
-@RequiredArgsConstructor
+@RestController @RequestMapping("/api/auth")
+@RequiredArgsConstructor @CrossOrigin(origins = "*")
 public class AuthController {
-
-    private final AuthService authService;
+    private final UsuarioService usuarioService;
 
     @PostMapping("/registro")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioResponse registro(@Valid @RequestBody RegistroUsuarioRequest request) {
-        return authService.registro(request);
+    public ResponseEntity<UsuarioResponse> registrar(
+            @Valid @RequestBody RegistroUsuarioRequest req) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(usuarioService.registrar(req));
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-        return authService.login(request);
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest req) {
+        return ResponseEntity.ok(usuarioService.login(req));
     }
 }
