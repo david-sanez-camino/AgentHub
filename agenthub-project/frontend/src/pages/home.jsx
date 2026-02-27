@@ -1,11 +1,6 @@
 import React from "react";
 
-/**
- * AgentHub Home
- * - Mantiene la estética del HTML proporcionado.
- * - TailwindCSS + modo oscuro por clase "dark" en <html>.
- * - Material Symbols + Google Fonts (Inter) cargadas vía <link> en index.html.
- */
+
 export default function Home() {
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
