@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 
 export default function Login() {
@@ -11,12 +12,12 @@ export default function Login() {
             {/* Navbar minimal */}
             <header className="border-b border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-[#101822]/60 backdrop-blur-sm sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
+                    <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
                         <div className="size-7 bg-[#136dec] rounded-md flex items-center justify-center text-white">
                             <span className="material-symbols-outlined text-xl">smart_toy</span>
                         </div>
                         <h2 className="text-lg font-bold tracking-tight">AgentHub</h2>
-                    </div>
+                    </Link>
 
 
                 </div>
@@ -101,7 +102,7 @@ export default function Login() {
                     {/* Acciones secundarias (más minimalista) */}
                     <div className="mt-6 flex flex-col gap-3">
                         <a
-                            href="/registro"
+                            href="/crear_usuario"
                             className="block w-full py-2.5 text-center text-sm font-medium border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition"
                         >
                             Crear un usuario nuevo
