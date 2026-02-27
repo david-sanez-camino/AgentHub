@@ -19,6 +19,7 @@ public class Agente {
     private Integer precio;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean publicado = false;
 
     // relacion n->n con entidad Herramienta 

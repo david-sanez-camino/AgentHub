@@ -1,5 +1,6 @@
 package com.agenthub.model.dto;
 import lombok.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Data 
 

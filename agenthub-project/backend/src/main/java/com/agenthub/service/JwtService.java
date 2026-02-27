@@ -14,7 +14,7 @@ public class JwtService {
     @Value("${jwt.espiration}") private Long expiration;
 
     public String extractUsername(String token){
-        return exctractClaim(token, Claims::getSubject);
+        return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
@@ -30,7 +30,7 @@ public class JwtService {
         return Jwts.builder().setSubject(email).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + expiration)).signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    private Key getSgnKey() { 
+    private Key getSignKey() { 
         return Keys.hmacShaKeyFor(secret.getBytes()); 
     }
 }

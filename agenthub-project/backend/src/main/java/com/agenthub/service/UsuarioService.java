@@ -1,5 +1,4 @@
 package com.agenthub.service;
-import com.agenthub.exception.ResourceNotFoundException;
 import com.agenthub.model.dto.*;
 import com.agenthub.model.entity.Usuario;
 import com.agenthub.repository.UsuarioRepository;

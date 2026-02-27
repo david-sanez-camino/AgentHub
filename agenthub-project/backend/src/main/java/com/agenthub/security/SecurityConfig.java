@@ -1,6 +1,5 @@
-package com.agenthub.config;
+package com.agenthub.security;
 
-import com.agenthub.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
