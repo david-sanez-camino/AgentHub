@@ -20,5 +20,5 @@ public class Usuario {
     private String empresa;
     private String nombre;
     private String apellido;
-    private String telefono;
+    private Integer telefono;
 }
