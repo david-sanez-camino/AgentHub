@@ -1,5 +1,5 @@
 package com.agenthub.repository;
-import com.agenthub.model.entity.Usuario;
+import com.agenthub.model.entity.Agente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

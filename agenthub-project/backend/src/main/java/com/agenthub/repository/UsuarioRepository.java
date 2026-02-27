@@ -1,7 +1,6 @@
 package com.agenthub.repository;
 import com.agenthub.model.entity.Usuario;
-import org.springframework.stereotype.data.jpa.repository.JpaRepostory;
-import org.hibernate.action.internal.OrphanRemovalAction;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 

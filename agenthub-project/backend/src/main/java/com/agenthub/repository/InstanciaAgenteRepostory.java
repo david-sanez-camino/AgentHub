@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InstanciaAgenteRepostory extends JpaRepository<IntanciaAgente, Integer>{
+public interface InstanciaAgenteRepostory extends JpaRepository<InstanciaAgente, Integer>{
     List<InstanciaAgente> findByUsuarioId(Integer usuarioId);
 }
