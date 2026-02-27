@@ -15,7 +15,7 @@ public class Usuario {
     private String email;
 
     @Column(name = "contrasenia", nullable = false)
-    private String password;
+    private String contrasenia;
 
     private String empresa;
     private String nombre;

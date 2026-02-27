@@ -16,7 +16,7 @@ public class UsuarioService {
 
     // HU 1 registro de usuario
     @Transactional 
-    public UsuarioReponse registrar(RegistroUsuarioRequest req) {
+    public UsuarioResponse registrar(RegistroUsuarioRequest req) {
         if (usuarioRepository.existsByEmail(req.getEmail()))
             throw new IllegalArgumentException("El email ya esta registrado, nice try didi");
         Usuario u = Usuario.builder()
