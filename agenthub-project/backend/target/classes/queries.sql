@@ -5,6 +5,7 @@ CREATE TABLE Usuario (
     contrasenia VARCHAR(255) NOT NULL,
     empresa VARCHAR(255),
     nombre VARCHAR(255),
+    apellido VARCHAR(255),
     telefono INT
 );
 
