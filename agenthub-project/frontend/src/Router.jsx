@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
 import Login from './pages/login';
 import CrearUsuario from './pages/crear_usuario';
+import AboutUs from './pages/AboutUs';
 
 export default function Router() {
     return (
@@ -15,6 +16,7 @@ export default function Router() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/crear_usuario" element={<CrearUsuario />} />
+                <Route path="/sobre-nosotros" element={<AboutUs />} />
             </Routes>
         </BrowserRouter>
     );
