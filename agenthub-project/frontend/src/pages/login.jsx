@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-
+import logo from "../assets/logo.png";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -14,7 +14,11 @@ export default function Login() {
                 <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
                         <div className="size-7 bg-[#136dec] rounded-md flex items-center justify-center text-white">
-                            <span className="material-symbols-outlined text-xl">smart_toy</span>
+                            <img 
+                                src={logo}
+                                alt="AgentHub Logo" 
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                         <h2 className="text-lg font-bold tracking-tight">AgentHub</h2>
                     </Link>
@@ -41,6 +45,7 @@ export default function Login() {
                             </label>
                             <input
                                 type="email"
+                                aria-label="Correo electrónico"
                                 placeholder="nombre@empresa.com"
                                 className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
                                 autoComplete="email"
@@ -61,6 +66,7 @@ export default function Login() {
                             <div className="relative">
                                 <input
                                     type={showPassword ? "text" : "password"}
+                                    aria-label="Contraseña"
                                     placeholder="••••••••"
                                     className="w-full h-11 px-4 pr-10 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
                                     autoComplete="current-password"

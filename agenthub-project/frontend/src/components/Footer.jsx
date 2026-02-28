@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 export default function Footer() {
     return (
@@ -9,8 +10,12 @@ export default function Footer() {
                     {/* Brand and Info */}
                     <div className="col-span-1 md:col-span-1">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="size-8 bg-[#136dec] rounded-lg flex items-center justify-center text-white">
-                                <span className="material-symbols-outlined">smart_toy</span>
+                            <div className="size-8 rounded-lg flex items-center justify-center shadow-lg shadow-[#136dec]/20 overflow-hidden">
+                                <img 
+                                    src={logo}
+                                    alt="AgentHub Logo" 
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">AgentHub</h2>
                         </div>

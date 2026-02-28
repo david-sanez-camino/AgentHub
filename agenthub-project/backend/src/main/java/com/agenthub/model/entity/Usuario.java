@@ -11,6 +11,10 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name="id_desarrollador")
+    private Desarrollador desarrollador;
+    
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -21,4 +25,5 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private Integer telefono;
+
 }
