@@ -5,12 +5,18 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController @RequestMapping("/api/auth")
 @RequiredArgsConstructor @CrossOrigin(origins = "*")
 public class AuthController {
     private final UsuarioService usuarioService;
 
+    // obtener todos los usuarios dados de alta en el sistema
+    @GetMapping
+    public List<usuario> getAllUsuarios(){
+        return usuarioService.getAllUsuarios();
+    }
     @PostMapping("/registro")
     public ResponseEntity<UsuarioResponse> registrar(
             @Valid @RequestBody RegistroUsuarioRequest req) {
@@ -23,4 +29,6 @@ public class AuthController {
             @Valid @RequestBody LoginRequest req) {
         return ResponseEntity.ok(usuarioService.login(req));
     }
+
+
 }

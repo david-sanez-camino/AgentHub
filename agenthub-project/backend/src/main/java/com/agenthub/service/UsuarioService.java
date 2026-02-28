@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
@@ -46,5 +47,10 @@ public class UsuarioService {
             .id(u.getId()).email(u.getEmail())
             .nombre(u.getNombre()).empresa(u.getEmpresa())
             .telefono(u.getTelefono()).build();
+    }
+
+    // Obtener todos los usuarios
+    public List<Usuario> getAllUsuarios(){
+        return usuarioRepository.findAll();
     }
 }

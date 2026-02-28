@@ -1,3 +1,6 @@
+
+
+
 -- Tabla de Usuarios
 CREATE TABLE Usuario (
     id SERIAL PRIMARY KEY,
@@ -6,7 +9,18 @@ CREATE TABLE Usuario (
     empresa VARCHAR(255),
     nombre VARCHAR(255),
     apellido VARCHAR(255),
-    telefono INT
+    telefono INT,
+);
+
+-- Tabla desarrollador
+CREATE TABLE Desarrollador (
+    id INT PRIMARY KEY,
+    nif VARCHAR(20) UNIQUE,
+    web VARCHAR(255),
+    descripcion TEXT,
+    experiencia TEXT,
+    CONSTRAINT fk_desarollador_usuario FOREIGN KEY (id) REFERENCES usuario(id) ON DELETE CASCADE
+
 );
 
 -- Tabla Agente
