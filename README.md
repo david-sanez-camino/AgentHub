@@ -1,5 +1,14 @@
 # AgentHub
+Para la ejecucion de la aplicacion seguir los siguientes pasos:
 
+1. cd agenthub-project
+2. Abrir Docker Desktop
+3. Ejecutar docker compose up --build
+4. Acceder a : http://localhost:3000/
+
+
+
+Ha dia 1/03/2026 solamente se desarrollo el home, login , creacion de usuario. Hay mas apartados en desarrollo pero pendientes de implementacion que se haran durante las semanas posteriores. Aclaramos esto ya que hubo problemas tecnicos con el alcance del proyecto durante el desarrollo que se comentaron al profesor Roberto.
 ```text
 AgentHub/
 ├── Guia_GitFlow_10.md
