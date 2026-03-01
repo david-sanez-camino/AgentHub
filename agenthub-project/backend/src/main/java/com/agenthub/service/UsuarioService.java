@@ -1,5 +1,6 @@
 package com.agenthub.service;
 import com.agenthub.model.dto.*;
+import com.agenthub.model.entity.Desarrollador;
 import com.agenthub.model.entity.Usuario;
 import com.agenthub.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,26 @@ public class UsuarioService {
         if (usuarioRepository.existsByEmail(req.getEmail()))
             throw new IllegalArgumentException("El email ya esta registrado, nice try didi");
         Usuario u = Usuario.builder()
+            .nombre(req.getNombre())
             .email(req.getEmail())
             .contrasenia(passwordEncoder.encode(req.getContrasenia()))
-            .nombre(req.getNombre())
             .empresa(req.getEmpresa())
             .telefono(req.getTelefono())
+            .rol(req.getRol().toUpperCase())
             .build();
+        
+        // ROL DESARROLLADOR
+        if("DESARROLLADOR".equals(req.getRol().toUpperCase())) {
+            Desarrollador desarrollador = Desarrollador.builder()
+                .nif(req.getNif())
+                .web(req.getWeb())
+                .descripcion(req.getDescripcion())
+                .experiencia(req.getExperiencia())
+                .usuario(u)
+                .build();
+            u.setDesarrollador(desarrollador);
+        }
+
         return toResponse(usuarioRepository.save(u));
     }
 

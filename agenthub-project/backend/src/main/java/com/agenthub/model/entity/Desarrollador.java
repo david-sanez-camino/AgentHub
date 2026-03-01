@@ -10,9 +10,10 @@ public class Desarrollador {
     @Id
     private Integer id;
 
-    @OneToOne
     @MapsId
-    @JoinColumn(name="id")
+    // Conexion con tabla usuario
+    @OneToOne
+    @JoinColumn(name="id_usuario")
     private Usuario usuario;
 
     private String nif;

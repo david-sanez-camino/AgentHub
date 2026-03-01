@@ -1,15 +1,36 @@
+/*
+Esta pagina es la encargada de mostrar el formulario de registro para usuarios y desarrolladores 
+El usuario normal solo necesita rellenar los campos de nombre, email, contraseña, empresa y teléfono, 
+mientras que el desarrollador debe rellenar campos adicionales 
+como , nif/cif, web, descripción y experiencia.
+Al enviar los datos el usuario normal se le crea la cuenta al momento pero al desarrolador se le muestra 
+mensaje de espera hasta q sea aceptado y pasado el visto bueno de los admins.
 
+*/
+
+//import React, { useMemo, useState } from "react"; 
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { registrarUsuario } from "../services/conexion_api";
 
-import React, { useMemo, useState } from "react";
-
-//registro de usuarios y desarrolladores
 export default function Register() {
-    const [role, setRole] = useState(""); // "developer" | "business" | ""
-    const fechaRegistroISO = useMemo(() => new Date().toISOString(), []);
+    // "developer" | "business" | ""
+    const [role, setRole] = useState("");
 
+    /*
+    // No lo necesita el backend, pero lo guardamos por si lo usas en logs
+    const fechaRegistroISO = useMemo(() => new Date().toISOString(), []);
+*/
+    // Mensajes éxito
+    const [successBusiness, setSuccessBusiness] = useState(false);
+    const [successDeveloper, setSuccessDeveloper] = useState(false);
+
+    // Error + loading
+    const [errorMsg, setErrorMsg] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    // Datos formulario
     const [form, setForm] = useState({
-        // Usuario normal
         nombre: "",
         email: "",
         contrasena: "",
@@ -17,7 +38,7 @@ export default function Register() {
         telefono: "",
 
         // Developer extra
-        nombreEmpresaDesarrolladora: "",
+       // nombreEmpresaDesarrolladora: "",
         nif_cif: "",
         web: "",
         descripcion: "",
@@ -30,38 +51,76 @@ export default function Register() {
         return (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
     }
 
-    function onSubmit(e) {
+
+    //normalizacion del telefono en caso de q el usuario ponga espacios o guiones (aprueba de bobos)
+    function normalizeTelefonoToInteger(raw) {
+        const digits = String(raw ?? "").replace(/\D/g, "");
+        if (!digits) return 0;
+
+        const last9 = digits.length > 9 ? digits.slice(-9) : digits;
+        const n = parseInt(last9, 10);
+        return Number.isNaN(n) ? 0 : n;
+    }
+
+    async function onSubmit(e) {
         e.preventDefault();
 
-        // datps q enviaremos al backend para crear usuario
+        // reset UI
+        setErrorMsg("");
+        setSuccessBusiness(false);
+        setSuccessDeveloper(false);
+
+        //roles de registrro
+        const rolBackend = isDeveloper ? "DESARROLLADOR" : "CLIENTE";
+/*
+        // empresa final: si es developer y puso nombreEmpresaDesarrolladora, usamos ese como "empresa"
+        const empresaFinal =
+            isDeveloper && form.nombreEmpresaDesarrolladora.trim()
+                ? form.nombreEmpresaDesarrolladora.trim()
+                : form.empresa;
+*/
         const payload = {
-            usuario: {
-                nombre: form.nombre,
-                email: form.email,
-                contrasena: form.contrasena,
-                empresa: form.empresa,
-                telefono: form.telefono,
-                rol: role || "business",
-            },
-            desarrollador: isDeveloper
+            //info general de todos los usuarios
+            email: form.email.trim(),
+            contrasenia: form.contrasena, 
+            nombre: form.nombre.trim(),
+            empresa: form.empresa.trim(),
+            telefono: normalizeTelefonoToInteger(form.telefono),
+            rol: rolBackend,
+
+            ...(isDeveloper
                 ? {
-                    // id y usuario_id los crea el backend
-                    nombreEmpresaDesarrolladora:
-                        form.nombreEmpresaDesarrolladora?.trim() || form.empresa,
-                    nif_cif: form.nif_cif,
-                    web: form.web,
-                    descripcion: form.descripcion,
-                    experiencia: form.experiencia,
-                    verificado: false,
-                    fechaRegistro: fechaRegistroISO,
+                    // info extra solo para desarrolladores
+                    nif: form.nif_cif.trim(),
+                    web: form.web.trim(),
+                    descripcion: form.descripcion.trim(),
+                    experiencia: form.experiencia.trim(),
                 }
-                : null,
+                : {}),
         };
 
-        console.log("REGISTER PAYLOAD:", payload);
+        try {
+            setLoading(true);
 
-        // Aquí llamarías a tu API:
-        // await authService.register(payload);
+            const resp = await registrarUsuario(payload);
+
+            if (!isDeveloper) setSuccessBusiness(true);
+            if (isDeveloper) setSuccessDeveloper(true);
+
+            // oculta mensajes en 10s
+            setTimeout(() => {
+                setSuccessBusiness(false);
+                setSuccessDeveloper(false);
+            }, 10000);
+            //console.log("Registro OK:", resp, "fechaRegistroISO(front):", fechaRegistroISO);
+            console.log("Registro OK:", resp);
+        } catch (err) {
+            setErrorMsg(err?.message || "Error al registrar. Inténtalo de nuevo.");
+            console.error("Error al registrar usuario:", err);
+            console.log("Payload enviado:", payload); // comporbar debug
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -69,21 +128,23 @@ export default function Register() {
             {/* Header minimal */}
             <header className="border-b border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-[#101822]/60 backdrop-blur-md sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-                    <a href="/" className="text-lg font-bold tracking-tight">
+                    <Link to="/" className="text-lg font-bold tracking-tight">
                         AgentHub
-                    </a>
-                    <a
-                        href="/login"
+                    </Link>
+
+                    <Link
+                        to="/login"
                         className="px-4 py-1.5 text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
                     >
                         Iniciar sesión
-                    </a>
+                    </Link>
                 </div>
             </header>
 
             {/* Main */}
             <main className="flex-1 flex items-center justify-center p-6">
                 <div className="w-full max-w-xl bg-white dark:bg-[#1a2230] p-7 sm:p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800">
+                    {/* Título */}
                     <div className="text-center mb-7">
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
                             Crear cuenta
@@ -93,8 +154,31 @@ export default function Register() {
                         </p>
                     </div>
 
+                    {/* Los datos no se enviaron bien entonces mensaje error */}
+                    {errorMsg && (
+                        <div className="mb-5 p-4 rounded-lg bg-red-100 border border-red-300 text-red-800 text-sm font-semibold">
+                            ❌ {errorMsg}
+                        </div>
+                    )}
+
+                    {/* Datos enviados correctamente del cleinte normal */}
+                    {successBusiness && (
+                        <div className="mb-5 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800 text-sm font-semibold">
+                            🎉 Cuenta creada correctamente. ¡Felicitaciones!
+                        </div>
+                    )}
+
+                    {/* Datos enviados correctamente del desarrollador */}
+                    {successDeveloper && (
+                        <div className="mb-5 p-4 rounded-lg bg-blue-100 border border-blue-300 text-blue-800 text-sm font-semibold">
+                            📩 Gracias por registrarte como desarrollador. Te llegará un correo eletronico
+                            cuando nuestro equipo evalúe tu perfil. Muchas gracias.
+                        </div>
+                    )}
+
+                    {/* Form */}
                     <form onSubmit={onSubmit} className="space-y-4">
-                        {/* Datos usuario normal */}
+                        {/* Nombre */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Nombre
@@ -108,6 +192,7 @@ export default function Register() {
                             />
                         </div>
 
+                        {/* Email */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Correo electrónico
@@ -122,6 +207,7 @@ export default function Register() {
                             />
                         </div>
 
+                        {/* Contraseña */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Contraseña
@@ -136,6 +222,7 @@ export default function Register() {
                             />
                         </div>
 
+                        {/* Empresa */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Empresa
@@ -149,27 +236,29 @@ export default function Register() {
                             />
                         </div>
 
+                        {/* Teléfono */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Teléfono
                             </label>
                             <input
                                 type="tel"
+                                inputMode="numeric"
                                 className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                placeholder="+34 600 000 000"
+                                placeholder="600000000"
                                 required
                                 value={form.telefono}
                                 onChange={updateField("telefono")}
                             />
                         </div>
 
-                        {/* Selector tipo usuario */}
+                        {/* Tipo cuenta aqui vemos si es desarrollador o es cliente*/}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Tipo de cuenta
                             </label>
                             <select
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition"
+                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-black dark:text-white focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition"
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
                                 required
@@ -182,7 +271,7 @@ export default function Register() {
                             </select>
                         </div>
 
-                        {/* Campos extra si es desarrollador */}
+                        {/* DE aqui para abajo es info extra del desarrollador */}
                         {isDeveloper && (
                             <div className="mt-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/40 dark:bg-white/5 backdrop-blur-sm p-5 space-y-4">
                                 <div className="flex items-center justify-between">
@@ -192,23 +281,9 @@ export default function Register() {
                                     </span>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                        Nombre empresa desarrolladora
-                                    </label>
-                                    <input
-                                        className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                        placeholder="Ej. DevLabs AI"
-                                        required
-                                        value={form.nombreEmpresaDesarrolladora}
-                                        onChange={updateField("nombreEmpresaDesarrolladora")}
-                                    />
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                                        Si no es distinto, puedes repetir el nombre de “Empresa”.
-                                    </p>
-                                </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* NIF/CIF */}
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                             NIF/CIF
@@ -222,6 +297,7 @@ export default function Register() {
                                         />
                                     </div>
 
+                                    {/* Web */}
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                             Web
@@ -237,6 +313,7 @@ export default function Register() {
                                     </div>
                                 </div>
 
+                                {/* Descripción */}
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                         Descripción
@@ -250,6 +327,7 @@ export default function Register() {
                                     />
                                 </div>
 
+                                {/* Experiencia */}
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                         Experiencia (resumen)
@@ -262,24 +340,32 @@ export default function Register() {
                                         onChange={updateField("experiencia")}
                                     />
                                 </div>
-                                
                             </div>
                         )}
 
-                        {/* Botón submit */}
+                        {/* Boton de enviar  */}
                         <button
                             type="submit"
-                            className="w-full h-11 bg-[#136dec] hover:bg-blue-700 text-white font-medium rounded-lg transition shadow-md shadow-[#136dec]/20 flex items-center justify-center gap-2 mt-2"
+                            disabled={loading}
+                            className={`w-full h-11 font-medium rounded-lg transition shadow-md shadow-[#136dec]/20 flex items-center justify-center gap-2 mt-2
+                            ${loading
+                                    ? "bg-[#136dec]/60 cursor-not-allowed text-white"
+                                    : "bg-[#136dec] hover:bg-blue-700 text-white"
+                                }`}
                         >
-                            Crear cuenta
-                            <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                            {loading ? "Enviando..." : "Crear cuenta"}
+                            {!loading && (
+                                <span className="material-symbols-outlined text-lg">
+                                    arrow_forward
+                                </span>
+                            )}
                         </button>
 
                         {/* Ayuda */}
                         <div className="text-center pt-2">
-                            <a href="/ayuda" className="text-sm text-[#136dec] hover:underline">
+                            <Link to="/ayuda" className="text-sm text-[#136dec] hover:underline">
                                 ¿Necesitas ayuda?
-                            </a>
+                            </Link>
                         </div>
                     </form>
                 </div>

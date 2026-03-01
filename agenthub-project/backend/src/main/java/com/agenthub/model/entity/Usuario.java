@@ -10,10 +10,6 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name="id_desarrollador")
-    private Desarrollador desarrollador;
     
     @Column(nullable = false, unique = true)
     private String email;
@@ -26,4 +22,10 @@ public class Usuario {
     private String apellido;
     private Integer telefono;
 
+    @Column(name = "rol", nullable = false)
+    private String rol;
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Desarrollador desarrollador;
 }

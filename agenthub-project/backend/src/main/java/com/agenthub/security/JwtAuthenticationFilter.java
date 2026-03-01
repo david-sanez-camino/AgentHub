@@ -16,6 +16,7 @@ import java.io.IOException;
 @Component @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
+    private final com.agenthub.repository.UsuarioRepository usuarioRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest req,
@@ -28,8 +29,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = header.substring(7);
         String email = jwtService.extractUsername(jwt);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails ud = User.builder().username(email)
-                .password("").roles("USER").build();
+            com.agenthub.model.entity.Usuario usuarioReal = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario No encontrado, nice try didi"));
+
+            UserDetails ud = User.builder()
+                .username(email)
+                .password("")
+                .roles(usuarioReal.getRol())
+                .build();
+                
             if (jwtService.validateToken(jwt, ud)) {
                 var auth = new UsernamePasswordAuthenticationToken(
                     ud, null, ud.getAuthorities());

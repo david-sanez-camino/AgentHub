@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 export default function TopNavbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -24,8 +25,12 @@ export default function TopNavbar() {
                 {/* Logo & Brand */}
                 <div className="flex items-center gap-2">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="size-10 bg-[#136dec] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#136dec]/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                            <span className="material-symbols-outlined text-[22px]">smart_toy</span>
+                        <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-[#136dec]/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                            <img 
+                                src={logo}
+                                alt="AgentHub Logo" 
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                         <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                             Agent<span className="text-[#136dec]">Hub</span>
