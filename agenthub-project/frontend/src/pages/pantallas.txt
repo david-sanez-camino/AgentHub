@@ -1,0 +1,1 @@
+estas carpeta sera para las pantallas q veran los usuarios, desarrolladores, o admin
