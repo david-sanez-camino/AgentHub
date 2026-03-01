@@ -18,8 +18,6 @@ export default function Register() {
     const [role, setRole] = useState("");
 
     /*
-    // No lo necesita el backend, pero lo guardamos por si lo usas en logs
-    const fechaRegistroISO = useMemo(() => new Date().toISOString(), []);
 */
     // Mensajes éxito
     const [successBusiness, setSuccessBusiness] = useState(false);
@@ -32,13 +30,13 @@ export default function Register() {
     // Datos formulario
     const [form, setForm] = useState({
         nombre: "",
+        apellido: "",
         email: "",
         contrasena: "",
         empresa: "",
         telefono: "",
 
         // Developer extra
-       // nombreEmpresaDesarrolladora: "",
         nif_cif: "",
         web: "",
         descripcion: "",
@@ -84,6 +82,7 @@ export default function Register() {
             email: form.email.trim(),
             contrasenia: form.contrasena, 
             nombre: form.nombre.trim(),
+            apellido: form.apellido.trim(),
             empresa: form.empresa.trim(),
             telefono: normalizeTelefonoToInteger(form.telefono),
             rol: rolBackend,
@@ -178,7 +177,8 @@ export default function Register() {
 
                     {/* Form */}
                     <form onSubmit={onSubmit} className="space-y-4">
-                        {/* Nombre */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Nombre */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Nombre
@@ -191,6 +191,22 @@ export default function Register() {
                                 onChange={updateField("nombre")}
                             />
                         </div>
+
+                        {/* Apellido */}
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                                Apellido
+                            </label>
+                            <input
+                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
+                                placeholder="Tu apellido"
+                                required
+                                value={form.apellido}
+                                onChange={updateField("apellido")}
+                            />
+                        </div>
+                        </div>
+                        
 
                         {/* Email */}
                         <div>
@@ -220,6 +236,7 @@ export default function Register() {
                                 value={form.contrasena}
                                 onChange={updateField("contrasena")}
                             />
+                            <p>* Debe tener al menos 6 caracteres</p>
                         </div>
 
                         {/* Empresa */}

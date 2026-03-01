@@ -17,7 +17,7 @@ public class RegistroUsuarioRequest {
     private String empresa;
     private Integer telefono;
 
-    @NotBlank(message = "El rol es obligatorio, NICE TRY DIDI")
+    @NotBlank(message = "El rol es obligatorio")
     private String rol;
 
     // campos especificos para registro de desarrollador
