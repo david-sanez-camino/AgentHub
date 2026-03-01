@@ -15,11 +15,7 @@ public class AuthController {
 
     // obtener todos los usuarios dados de alta en el sistema
     @GetMapping
-<<<<<<< HEAD
     public List<UsuarioResponse> getAllUsuarios(){
-=======
-    public List<Usuario> getAllUsuarios(){
->>>>>>> 275ebce8301cf32bd9a23eeebd5d43d1da9c70dd
         return usuarioService.getAllUsuarios();
     }
     @PostMapping("/registro")
