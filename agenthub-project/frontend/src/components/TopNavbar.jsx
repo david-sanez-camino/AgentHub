@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
+//importamos las funciones para manejar la autenticacion
+import { getUser, logout } from "../services/auth";
+import { useNavigate } from "react-router-dom";
+
 export default function TopNavbar() {
     const [scrolled, setScrolled] = useState(false);
 
@@ -13,6 +17,11 @@ export default function TopNavbar() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    //para el login del ususario, si esta logueado muestra su nombre y un boton para cerrar sesion, 
+    // si no esta logueado muestra los botones de login y crear cuenta
+    const user = getUser();
+    const navigate = useNavigate();
 
     return (
         <header
@@ -26,9 +35,9 @@ export default function TopNavbar() {
                 <div className="flex items-center gap-2">
                     <Link to="/" className="flex items-center gap-2 group">
                         <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-[#136dec]/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                            <img 
+                            <img
                                 src={logo}
-                                alt="AgentHub Logo" 
+                                alt="AgentHub Logo"
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -56,18 +65,34 @@ export default function TopNavbar() {
 
                 {/* Actions (Login / Signup) */}
                 <div className="flex items-center gap-4">
-                    <Link
-                        to="/login"
-                        className="hidden sm:block px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
-                    >
-                        Iniciar Sesión
-                    </Link>
-                    <Link
-                        to="/crear_usuario"
-                        className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-[#136dec] hover:bg-blue-600 text-white transition-all shadow-lg shadow-[#136dec]/30 hover:shadow-[#136dec]/50 active:scale-95"
-                    >
-                        Comenzar Gratis
-                    </Link>
+                    {!user ? (
+                        <>
+                            <Link
+                                to="/login"
+                                className="hidden sm:block px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">
+                                Iniciar Sesión
+                            </Link>
+                            <Link
+                                to="/crear_usuario"
+                                className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-[#136dec] hover:bg-blue-600 text-white transition-all shadow-lg shadow-[#136dec]/30 hover:shadow-[#136dec]/50 active:scale-95">
+                                Comenzar Gratis
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Hola, {user.nombre}
+                            </span>
+                            <button
+                                onClick={() => {
+                                    logout();
+                                    navigate("/login");
+                                }}
+                                className="px-4 py-2 text-sm font-semibold rounded-xl border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                                Salir
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </header>
