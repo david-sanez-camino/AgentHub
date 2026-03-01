@@ -50,7 +50,9 @@ public class UsuarioService {
     }
 
     // Obtener todos los usuarios
-    public List<Usuario> getAllUsuarios(){
-        return usuarioRepository.findAll();
+    public List<UsuarioResponse> getAllUsuarios(){
+        return usuarioRepository.findAll().stream()
+            .map(this::toResponse)
+            .toList();
     }
 }

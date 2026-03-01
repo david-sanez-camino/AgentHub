@@ -1,5 +1,6 @@
 package com.agenthub.controller;
 import com.agenthub.model.dto.*;
+import com.agenthub.model.entity.Usuario;
 import com.agenthub.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class AuthController {
 
     // obtener todos los usuarios dados de alta en el sistema
     @GetMapping
-    public List<usuario> getAllUsuarios(){
+    public List<UsuarioResponse> getAllUsuarios(){
         return usuarioService.getAllUsuarios();
     }
     @PostMapping("/registro")

@@ -20,4 +20,8 @@ public class Desarrollador {
     private String descripcion;
     private String experiencia;
     
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'pendiente'")
+    @Builder.Default
+    private String estado = "pendiente";
+    
 }

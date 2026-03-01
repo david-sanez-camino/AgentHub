@@ -1,4 +1,4 @@
-package com.agenthub.model.entity;
+package com.agenthub.model.dto;
 
 import lombok.Data;
 

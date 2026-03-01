@@ -19,6 +19,7 @@ CREATE TABLE Desarrollador (
     web VARCHAR(255),
     descripcion TEXT,
     experiencia TEXT,
+    estado VARCHAR(255) DEFAULT 'pendiente',
     CONSTRAINT fk_desarollador_usuario FOREIGN KEY (id) REFERENCES usuario(id) ON DELETE CASCADE
 
 );
