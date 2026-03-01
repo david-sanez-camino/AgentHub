@@ -2,14 +2,14 @@
 Esta pagina es la encargada de mostrar el formulario de registro para usuarios y desarrolladores 
 El usuario normal solo necesita rellenar los campos de nombre, email, contraseña, empresa y teléfono, 
 mientras que el desarrollador debe rellenar campos adicionales 
-como nombre de empresa desarrolladora, nif/cif, web, descripción y experiencia.
+como , nif/cif, web, descripción y experiencia.
 Al enviar los datos el usuario normal se le crea la cuenta al momento pero al desarrolador se le muestra 
 mensaje de espera hasta q sea aceptado y pasado el visto bueno de los admins.
 
 */
 
-
-import React, { useMemo, useState } from "react";
+//import React, { useMemo, useState } from "react"; 
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { registrarUsuario } from "../services/conexion_api";
 
@@ -17,9 +17,10 @@ export default function Register() {
     // "developer" | "business" | ""
     const [role, setRole] = useState("");
 
+    /*
     // No lo necesita el backend, pero lo guardamos por si lo usas en logs
     const fechaRegistroISO = useMemo(() => new Date().toISOString(), []);
-
+*/
     // Mensajes éxito
     const [successBusiness, setSuccessBusiness] = useState(false);
     const [successDeveloper, setSuccessDeveloper] = useState(false);
@@ -28,7 +29,7 @@ export default function Register() {
     const [errorMsg, setErrorMsg] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // Form
+    // Datos formulario
     const [form, setForm] = useState({
         nombre: "",
         email: "",
@@ -37,7 +38,7 @@ export default function Register() {
         telefono: "",
 
         // Developer extra
-        nombreEmpresaDesarrolladora: "",
+       // nombreEmpresaDesarrolladora: "",
         nif_cif: "",
         web: "",
         descripcion: "",
@@ -50,16 +51,8 @@ export default function Register() {
         return (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
     }
 
-    /**
-     * Siempre devuelve un número (nunca null).
-     * - extrae dígitos
-     * - usa últimos 9 (España) para evitar overflow
-     * - si no hay dígitos -> 0
-     *
-     * Si tu backend NO acepta 0, cambia el return 0 por:
-     *   return 111111111;
-     * (pero lo ideal es que el usuario ponga bien el teléfono)
-     */
+
+    //normalizacion del telefono en caso de q el usuario ponga espacios o guiones (aprueba de bobos)
     function normalizeTelefonoToInteger(raw) {
         const digits = String(raw ?? "").replace(/\D/g, "");
         if (!digits) return 0;
@@ -77,25 +70,27 @@ export default function Register() {
         setSuccessBusiness(false);
         setSuccessDeveloper(false);
 
+        //roles de registrro
         const rolBackend = isDeveloper ? "DESARROLLADOR" : "CLIENTE";
-
-        // ✅ empresa final: si es developer y puso nombreEmpresaDesarrolladora, usamos ese como "empresa"
+/*
+        // empresa final: si es developer y puso nombreEmpresaDesarrolladora, usamos ese como "empresa"
         const empresaFinal =
             isDeveloper && form.nombreEmpresaDesarrolladora.trim()
                 ? form.nombreEmpresaDesarrolladora.trim()
                 : form.empresa;
-
+*/
         const payload = {
+            //info general de todos los usuarios
             email: form.email.trim(),
-            contrasenia: form.contrasena, // backend espera "contrasenia"
+            contrasenia: form.contrasena, 
             nombre: form.nombre.trim(),
-            empresa: empresaFinal.trim(),
+            empresa: form.empresa.trim(),
             telefono: normalizeTelefonoToInteger(form.telefono),
             rol: rolBackend,
 
             ...(isDeveloper
                 ? {
-                    // backend: nif (no nif_cif)
+                    // info extra solo para desarrolladores
                     nif: form.nif_cif.trim(),
                     web: form.web.trim(),
                     descripcion: form.descripcion.trim(),
@@ -117,12 +112,12 @@ export default function Register() {
                 setSuccessBusiness(false);
                 setSuccessDeveloper(false);
             }, 10000);
-
-            console.log("Registro OK:", resp, "fechaRegistroISO(front):", fechaRegistroISO);
+            //console.log("Registro OK:", resp, "fechaRegistroISO(front):", fechaRegistroISO);
+            console.log("Registro OK:", resp);
         } catch (err) {
             setErrorMsg(err?.message || "Error al registrar. Inténtalo de nuevo.");
             console.error("Error al registrar usuario:", err);
-            console.log("Payload enviado:", payload); // útil para debug
+            console.log("Payload enviado:", payload); // comporbar debug
         } finally {
             setLoading(false);
         }
@@ -159,24 +154,24 @@ export default function Register() {
                         </p>
                     </div>
 
-                    {/* Error */}
+                    {/* Los datos no se enviaron bien entonces mensaje error */}
                     {errorMsg && (
                         <div className="mb-5 p-4 rounded-lg bg-red-100 border border-red-300 text-red-800 text-sm font-semibold">
                             ❌ {errorMsg}
                         </div>
                     )}
 
-                    {/* Éxito normal */}
+                    {/* Datos enviados correctamente del cleinte normal */}
                     {successBusiness && (
                         <div className="mb-5 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800 text-sm font-semibold">
                             🎉 Cuenta creada correctamente. ¡Felicitaciones!
                         </div>
                     )}
 
-                    {/* Éxito developer */}
+                    {/* Datos enviados correctamente del desarrollador */}
                     {successDeveloper && (
                         <div className="mb-5 p-4 rounded-lg bg-blue-100 border border-blue-300 text-blue-800 text-sm font-semibold">
-                            📩 Gracias por registrarte como desarrollador. Te llegará un correo
+                            📩 Gracias por registrarte como desarrollador. Te llegará un correo eletronico
                             cuando nuestro equipo evalúe tu perfil. Muchas gracias.
                         </div>
                     )}
@@ -257,7 +252,7 @@ export default function Register() {
                             />
                         </div>
 
-                        {/* Tipo cuenta */}
+                        {/* Tipo cuenta aqui vemos si es desarrollador o es cliente*/}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                                 Tipo de cuenta
@@ -276,7 +271,7 @@ export default function Register() {
                             </select>
                         </div>
 
-                        {/* Developer extra */}
+                        {/* DE aqui para abajo es info extra del desarrollador */}
                         {isDeveloper && (
                             <div className="mt-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/40 dark:bg-white/5 backdrop-blur-sm p-5 space-y-4">
                                 <div className="flex items-center justify-between">
@@ -286,22 +281,6 @@ export default function Register() {
                                     </span>
                                 </div>
 
-                                {/* Nombre empresa desarrolladora (NO va al backend como campo propio,
-                    pero lo usamos para rellenar empresaFinal) */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                        Nombre empresa desarrolladora
-                                    </label>
-                                    <input
-                                        className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                        placeholder="Ej. DevLabs AI"
-                                        value={form.nombreEmpresaDesarrolladora}
-                                        onChange={updateField("nombreEmpresaDesarrolladora")}
-                                    />
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                                        Si lo rellenas, se usará como “Empresa” en el registro.
-                                    </p>
-                                </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {/* NIF/CIF */}
@@ -364,7 +343,7 @@ export default function Register() {
                             </div>
                         )}
 
-                        {/* Submit */}
+                        {/* Boton de enviar  */}
                         <button
                             type="submit"
                             disabled={loading}
