@@ -50,6 +50,15 @@ public class UsuarioService {
             .orElseThrow(() -> new IllegalArgumentException("Credenciales incorrectas, nice try diddi"));
         if (!passwordEncoder.matches(req.getContrasenia(), u.getContrasenia()))
             throw new IllegalArgumentException("Credenciales incorrectas");
+            
+        // HU 2: Validacion de estado de desarrollador en login
+        if("DESARROLLADOR".equals(u.getRol().toUpperCase())) {
+            Desarrollador d = u.getDesarrollador();
+            if(d != null && "pendiente".equals(d.getEstado())) {
+                throw new IllegalArgumentException("Tu cuenta de desarrollador está pendiente de aprobación. Por favor, espera a que sea validada.");
+            }
+        }
+            
         return LoginResponse.builder()
             .token(jwtService.generateToken(u.getEmail()))
             .type("Bearer")
