@@ -22,6 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth", "/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/agentes/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/desarrolladores/**").permitAll()
+                .requestMatchers("/api/test-ia/**").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(s -> s
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
