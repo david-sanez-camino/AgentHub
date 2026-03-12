@@ -31,5 +31,6 @@ public class AuthController {
         return ResponseEntity.ok(usuarioService.login(req));
     }
 
+}
 
 }
