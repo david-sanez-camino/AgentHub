@@ -6,14 +6,16 @@ import lombok.*;
 @Entity
 @Table(name="desarrollador")
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
+@EqualsAndHashCode(exclude = "usuario")   // evita ciclo infinito
+@ToString(exclude = "usuario")            // evita ciclo infinito
 public class Desarrollador {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @MapsId
     // Conexion con tabla usuario
     @OneToOne
-    @JoinColumn(name="id_usuario")
+    @JoinColumn(name="id_usuario", nullable = false, unique = true)
     private Usuario usuario;
 
     private String nif;

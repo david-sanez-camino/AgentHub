@@ -22,6 +22,7 @@ public class UsuarioService {
             throw new IllegalArgumentException("El email ya esta registrado, nice try didi");
         Usuario u = Usuario.builder()
             .nombre(req.getNombre())
+            .apellido(req.getApellido())
             .email(req.getEmail())
             .contrasenia(passwordEncoder.encode(req.getContrasenia()))
             .empresa(req.getEmpresa())
@@ -36,6 +37,7 @@ public class UsuarioService {
                 .web(req.getWeb())
                 .descripcion(req.getDescripcion())
                 .experiencia(req.getExperiencia())
+                .estado("pendiente")
                 .usuario(u)
                 .build();
             u.setDesarrollador(desarrollador);

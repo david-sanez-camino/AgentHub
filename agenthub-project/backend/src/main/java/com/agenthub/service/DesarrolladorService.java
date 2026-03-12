@@ -3,6 +3,8 @@ package com.agenthub.service;
 import com.agenthub.model.entity.Desarrollador;
 import com.agenthub.model.dto.DesarrolladorResponse;
 import com.agenthub.repository.DesarrolladorRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,9 +13,48 @@ import java.util.List;
 public class DesarrolladorService {
     private final DesarrolladorRepository desarrolladorRepository;
 
+    
     // Obtener todos los desarrolladores
     public List<DesarrolladorResponse> getAllDesarrolladores(){
         return desarrolladorRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    // solo rechazados
+    public List<DesarrolladorResponse> getDesarrolladoresRechazados(){
+        return desarrolladorRepository.findByEstado("rechazado").stream().map(this::toResponse).toList();
+    }
+
+    // solo aprobados
+    public List<DesarrolladorResponse> getDesarrolladoresAprobados(){
+        return desarrolladorRepository.findByEstado("aprobado").stream().map(this::toResponse).toList();
+    }
+
+    // Obtener solo los que esten en "PENDIENTE"
+    public List<DesarrolladorResponse> getDesarrolladoresPendientes() {
+        return desarrolladorRepository.findByEstado("pendiente").stream().map(this::toResponse).toList();
+    }
+
+    // PUT /{id}/aprobado
+    @Transactional
+    public DesarrolladorResponse aprobar(Integer id) {
+        Desarrollador d = desarrolladorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Desarollador no encontrado" + id));
+        if(!"pendiente".equals(d.getEstado()))
+            throw new IllegalStateException("El desarrollador no está en pendiente");
+        d.setEstado("aprobado");
+        return toResponse(desarrolladorRepository.save(d));
+    }
+
+    //PUT /{id}/rechazado
+    @Transactional
+    public DesarrolladorResponse rechazar(Integer id) {
+        Desarrollador d = desarrolladorRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Desarrollador no encontrado: " + id));
+
+        if (!"pendiente".equals(d.getEstado()))
+            throw new IllegalStateException("El desarrollador no está en estado pendiente");
+
+        d.setEstado("rechazado");
+        return toResponse(desarrolladorRepository.save(d));
     }
 
     private DesarrolladorResponse toResponse(Desarrollador desarrollador) {

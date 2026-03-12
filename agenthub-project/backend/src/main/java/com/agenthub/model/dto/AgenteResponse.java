@@ -1,7 +1,7 @@
 package com.agenthub.model.dto;
 import lombok.*;
 
-@Data @Builder @AllArgsConstructor
+@Data @Builder @AllArgsConstructor @NoArgsConstructor
 
 public class AgenteResponse {
     private Integer id;
@@ -11,4 +11,5 @@ public class AgenteResponse {
     private String categoria;
     private Integer precio;
     private Boolean publicado;
+    private String estadoVerificacion;  // Pendiente, Aprobado, Rechazado
 }
