@@ -7,6 +7,8 @@ import { saveAuth } from "../services/auth";
 
 export default function Login() {
     const navigate = useNavigate();
+
+    // Estados del formulario
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [contrasenia, setContrasenia] = useState("");
@@ -16,13 +18,47 @@ export default function Login() {
     async function onSubmit(e) {
         e.preventDefault();
         setErrorMsg("");
-        const payload = { email: email.trim(), contrasenia };
+
+        // Dejamos el payload exactamente como antes para no romper el login
+        const payload = {
+            email: email.trim(),
+            contrasenia,
+        };
+
         try {
             setLoading(true);
+
+            // Login al backend
             const resp = await loginUsuario(payload);
-            if (!resp?.token) throw new Error("Credenciales incorrectas.");
+
+            // Si no hay token, el login no es válido
+            if (!resp?.token) {
+                throw new Error("Credenciales incorrectas.");
+            }
+
+            // Guardamos token y datos de usuario en localStorage
             saveAuth(resp);
-            navigate("/", { replace: true });
+
+            // Leemos el rol en varios posibles sitios por seguridad
+            const rol = (
+                resp?.rol ||
+                resp?.role ||
+                resp?.usuario?.rol ||
+                resp?.usuario?.role ||
+                ""
+            ).toLowerCase();
+
+            // Redirección según rol
+            if (rol === "cliente") {
+                navigate("/cliente", { replace: true });
+            } else if (rol === "desarrollador") {
+                navigate("/desarrollador", { replace: true });
+            } else if (rol === "admin") {
+                navigate("/pantalla_admin", { replace: true });
+            } else {
+                // Si no llega rol o no coincide, lo mandamos al inicio
+                navigate("/", { replace: true });
+            }
         } catch (err) {
             setErrorMsg(err?.message || "Correo o contraseña incorrectos.");
         } finally {
@@ -32,12 +68,15 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#1a1f2e] via-[#252a3a] to-[#1a1f2e] flex flex-col">
-
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-[#1a1f2e]/80 backdrop-blur-sm border-b border-white/5">
                 <div className="max-w-7xl mx-auto px-8 py-4">
                     <Link to="/" className="flex items-center gap-2">
-                        <img src={logo} alt="AgentHub Logo" className="w-8 h-8 object-contain rounded-md" />
+                        <img
+                            src={logo}
+                            alt="AgentHub Logo"
+                            className="w-8 h-8 object-contain rounded-md"
+                        />
                         <span className="text-xl">
                             <span className="text-white font-semibold">Agent</span>
                             <span className="text-blue-400 font-semibold">Hub</span>
@@ -46,9 +85,12 @@ export default function Login() {
                 </div>
             </header>
 
-            {/* Botón Volver */}
+            {/* Botón volver */}
             <div className="pt-20 px-8">
-                <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <Link
+                    to="/"
+                    className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
                     <ArrowLeft className="w-5 h-5" />
                     <span className="text-sm">Volver</span>
                 </Link>
@@ -58,7 +100,6 @@ export default function Login() {
             <main className="flex-1 flex items-center justify-center px-8 pb-12">
                 <div className="w-full max-w-md">
                     <div className="bg-gradient-to-b from-[#1f2937] to-[#1a2130] rounded-2xl p-8 border border-white/10 shadow-2xl">
-
                         <div className="text-center mb-8">
                             <h1 className="text-2xl text-white mb-3">Inicio de sesión</h1>
                             <p className="text-gray-400 text-sm">Bienvenido de nuevo</p>
@@ -114,34 +155,47 @@ export default function Login() {
                                         onClick={() => setShowPassword((v) => !v)}
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                                     >
-                                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                        {showPassword ? (
+                                            <EyeOff className="w-5 h-5" />
+                                        ) : (
+                                            <Eye className="w-5 h-5" />
+                                        )}
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Olvidé contraseña */}
+                            {/* Recuperar contraseña */}
                             <div className="text-right">
-                                <button type="button" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                                <button
+                                    type="button"
+                                    className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                                >
                                     ¿Has olvidado tu contraseña?
                                 </button>
                             </div>
 
-                            {/* Botón submit */}
+                            {/* Submit */}
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className={`w-full px-6 py-3 text-white rounded-xl transition-colors shadow-sm
-                                    ${loading ? "bg-blue-600/50 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+                                className={`w-full px-6 py-3 text-white rounded-xl transition-colors shadow-sm ${
+                                    loading
+                                        ? "bg-blue-600/50 cursor-not-allowed"
+                                        : "bg-blue-600 hover:bg-blue-700"
+                                }`}
                             >
                                 {loading ? "Verificando..." : "Iniciar Sesión"}
                             </button>
                         </form>
                     </div>
 
-                    {/* Regístrate */}
+                    {/* Registro */}
                     <div className="text-center mt-6">
                         <span className="text-gray-400 text-sm">¿No tienes una cuenta? </span>
-                        <Link to="/crear_usuario" className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
+                        <Link
+                            to="/crear_usuario"
+                            className="text-blue-400 text-sm hover:text-blue-300 transition-colors"
+                        >
                             Regístrate
                         </Link>
                     </div>
