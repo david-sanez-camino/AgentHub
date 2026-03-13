@@ -22,7 +22,8 @@ class AuthControllerTest {
             {
               "email": "ana@test.com",
               "contrasenia": "123456",
-              "nombre": "Ana García"
+                            "nombre": "Ana García",
+                            "rol": "CLIENTE"
             }
             """;
         
@@ -36,7 +37,7 @@ class AuthControllerTest {
 
     @Test
     void registro_emailInvalido_devuelve400() throws Exception {
-        String body = "{\"email\":\"no-valido\",\"contrasenia\":\"123456\",\"nombre\":\"Test\"}";
+        String body = "{\"email\":\"no-valido\",\"contrasenia\":\"123456\",\"nombre\":\"Test\",\"rol\":\"CLIENTE\"}";
         mockMvc.perform(post("/api/auth/registro")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
             .andExpect(status().isBadRequest());
@@ -44,7 +45,7 @@ class AuthControllerTest {
 
     @Test
     void registro_contraseniaMuyCorta_devuelve400() throws Exception {
-        String body = "{\"email\":\"b@t.com\",\"contrasenia\":\"123\",\"nombre\":\"Test\"}";
+        String body = "{\"email\":\"b@t.com\",\"contrasenia\":\"123\",\"nombre\":\"Test\",\"rol\":\"CLIENTE\"}";
         mockMvc.perform(post("/api/auth/registro")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
             .andExpect(status().isBadRequest());
@@ -52,7 +53,7 @@ class AuthControllerTest {
 
     @Test
     void registro_emailDuplicado_devuelve400() throws Exception {
-        String body = "{\"email\":\"dup@t.com\",\"contrasenia\":\"123456\",\"nombre\":\"Dup\"}";
+        String body = "{\"email\":\"dup@t.com\",\"contrasenia\":\"123456\",\"nombre\":\"Dup\",\"rol\":\"CLIENTE\"}";
         mockMvc.perform(post("/api/auth/registro")
                 .contentType(MediaType.APPLICATION_JSON).content(body));
         mockMvc.perform(post("/api/auth/registro")
@@ -69,7 +70,8 @@ class AuthControllerTest {
               "contrasenia": "pass123",
               "nombre": "Carlos Dev",
               "empresa": "TechCorp SL",
-              "telefono": 612345678
+                            "telefono": 612345678,
+                            "rol": "CLIENTE"
             }
             """;
         mockMvc.perform(post("/api/auth/registro")
@@ -83,7 +85,7 @@ class AuthControllerTest {
     @Test
     void login_credencialesValidas_devuelveToken() throws Exception {
         // Primero registrar
-        String reg = "{\"email\":\"u@t.com\",\"contrasenia\":\"pass123\",\"nombre\":\"U\"}";
+        String reg = "{\"email\":\"u@t.com\",\"contrasenia\":\"pass123\",\"nombre\":\"U\",\"rol\":\"ADMIN\"}";
         mockMvc.perform(post("/api/auth/registro")
                 .contentType(MediaType.APPLICATION_JSON).content(reg));
         // Luego login
@@ -93,12 +95,13 @@ class AuthControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.token").exists())
             .andExpect(jsonPath("$.type").value("Bearer"))
-            .andExpect(jsonPath("$.usuario.email").value("u@t.com"));
+            .andExpect(jsonPath("$.usuario.email").value("u@t.com"))
+            .andExpect(jsonPath("$.usuario.rol").value("ADMIN"));
     }
 
     @Test
     void login_contraseniaIncorrecta_devuelve400() throws Exception {
-        String reg = "{\"email\":\"x@t.com\",\"contrasenia\":\"buena\",\"nombre\":\"X\"}";
+        String reg = "{\"email\":\"x@t.com\",\"contrasenia\":\"buena\",\"nombre\":\"X\",\"rol\":\"CLIENTE\"}";
         mockMvc.perform(post("/api/auth/registro")
                 .contentType(MediaType.APPLICATION_JSON).content(reg));
         String login = "{\"email\":\"x@t.com\",\"contrasenia\":\"mala\"}";

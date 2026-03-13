@@ -72,7 +72,8 @@ public class UsuarioService {
         return UsuarioResponse.builder()
             .id(u.getId()).email(u.getEmail())
             .nombre(u.getNombre()).empresa(u.getEmpresa())
-            .telefono(u.getTelefono()).build();
+            .apellido(u.getApellido()).telefono(u.getTelefono())
+            .rol(u.getRol()).build();
     }
 
     // Obtener todos los usuarios
