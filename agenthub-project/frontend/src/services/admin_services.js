@@ -1,9 +1,11 @@
-// src/services/adminService.js
+// src/services/admin_services.js
+
+import { getAuthHeader } from "./auth";
 
 const API_BASE_URL = "http://localhost:8080/api";
 
 /**
- * Función genérica para manejar respuestas HTTP
+ * Manejo genérico de respuestas HTTP
  */
 async function handleResponse(response) {
     const contentType = response.headers.get("content-type");
@@ -20,7 +22,19 @@ async function handleResponse(response) {
     }
 
     return data;
-} 
+}
+
+/**
+ * Cabeceras comunes con token si existe
+ */
+function getHeaders(withJson = true) {
+    const authHeader = getAuthHeader();
+
+    return {
+        ...(withJson ? { "Content-Type": "application/json" } : {}),
+        ...(authHeader ? { Authorization: authHeader } : {}),
+    };
+}
 
 //
 // ==============================
@@ -28,61 +42,46 @@ async function handleResponse(response) {
 // ==============================
 //
 
-/**
- * Ver desarrolladores pendientes
- * GET /api/desarrolladores/pendientes
- */
 export async function obtenerDesarrolladoresPendientes() {
     const response = await fetch(`${API_BASE_URL}/desarrolladores/pendientes`, {
         method: "GET",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Ver desarrolladores aprobados
- * GET /api/desarrolladores/aprobados
- */
 export async function obtenerDesarrolladoresAprobados() {
     const response = await fetch(`${API_BASE_URL}/desarrolladores/aprobados`, {
         method: "GET",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Ver desarrolladores rechazados
- * GET /api/desarrolladores/rechazados
- */
 export async function obtenerDesarrolladoresRechazados() {
     const response = await fetch(`${API_BASE_URL}/desarrolladores/rechazados`, {
         method: "GET",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Aprobar desarrollador pendiente
- * PUT /api/desarrolladores/{id}/aprobado
- */
 export async function aprobarDesarrollador(id) {
     const response = await fetch(`${API_BASE_URL}/desarrolladores/${id}/aprobado`, {
         method: "PUT",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Rechazar desarrollador pendiente
- * PUT /api/desarrolladores/{id}/rechazado
- */
 export async function rechazarDesarrollador(id) {
     const response = await fetch(`${API_BASE_URL}/desarrolladores/${id}/rechazado`, {
         method: "PUT",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
@@ -94,80 +93,59 @@ export async function rechazarDesarrollador(id) {
 // ==============================
 //
 
-/**
- * Listar todos los agentes
- * GET /api/agentes
- */
 export async function obtenerAgentes() {
     const response = await fetch(`${API_BASE_URL}/agentes`, {
         method: "GET",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Obtener un agente por ID
- * GET /api/agentes/{id}
- */
 export async function obtenerAgentePorId(id) {
     const response = await fetch(`${API_BASE_URL}/agentes/${id}`, {
         method: "GET",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Buscar agentes por keyword
- * GET /api/agentes/buscar?keyword=
- */
 export async function buscarAgentes(keyword = "") {
     const response = await fetch(
         `${API_BASE_URL}/agentes/buscar?keyword=${encodeURIComponent(keyword)}`,
         {
             method: "GET",
+            headers: getHeaders(),
         }
     );
 
     return handleResponse(response);
 }
 
-/**
- * Crear agente
- * POST /api/agentes
- */
 export async function crearAgente(agenteData) {
     const response = await fetch(`${API_BASE_URL}/agentes`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getHeaders(),
         body: JSON.stringify(agenteData),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Aprobar agente
- * POST /api/agentes/{id}/aprobar
- */
 export async function aprobarAgente(id) {
     const response = await fetch(`${API_BASE_URL}/agentes/${id}/aprobar`, {
         method: "POST",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
 }
 
-/**
- * Rechazar agente
- * POST /api/agentes/{id}/rechazar
- */
 export async function rechazarAgente(id) {
     const response = await fetch(`${API_BASE_URL}/agentes/${id}/rechazar`, {
         method: "POST",
+        headers: getHeaders(),
     });
 
     return handleResponse(response);
