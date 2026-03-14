@@ -13,12 +13,20 @@ com\agenthub\controller\DesarrolladorController.class
 com\agenthub\controller\AuthController.class
 com\agenthub\model\entity\Herramienta$HerramientaBuilder.class
 com\agenthub\model\entity\Desarrollador.class
+<<<<<<< HEAD
 com\agenthub\Application.class
 com\agenthub\model\dto\UsuarioResponse.class
 com\agenthub\repository\UsuarioRepository.class
 com\agenthub\controller\TestIAController.class
 com\agenthub\model\dto\LoginResponse.class
 com\agenthub\service\OpenRouterService.class
+=======
+com\agenthub\service\AgenteSpecification.class
+com\agenthub\Application.class
+com\agenthub\model\dto\UsuarioResponse.class
+com\agenthub\repository\UsuarioRepository.class
+com\agenthub\model\dto\LoginResponse.class
+>>>>>>> ee890deac0d26d0a8ea447e7e899231183330bb8
 com\agenthub\model\dto\AgenteResponse$AgenteResponseBuilder.class
 com\agenthub\model\entity\Conversacion.class
 com\agenthub\service\UsuarioService.class
@@ -26,18 +34,27 @@ com\agenthub\model\entity\Usuario$UsuarioBuilder.class
 com\agenthub\repository\ConversacionRepository.class
 com\agenthub\controller\AgenteController.class
 com\agenthub\service\AgenteService.class
+<<<<<<< HEAD
 com\agenthub\model\dto\Mensaje.class
+=======
+>>>>>>> ee890deac0d26d0a8ea447e7e899231183330bb8
 com\agenthub\repository\MensajeRepository.class
 com\agenthub\model\entity\InstanciaAgente$InstanciaAgenteBuilder.class
 com\agenthub\model\dto\RegistroUsuarioRequest.class
 com\agenthub\model\entity\Mensaje$MensajeBuilder.class
 com\agenthub\model\dto\LoginRequest.class
+<<<<<<< HEAD
 com\agenthub\model\dto\OpenRouterRequest.class
+=======
+>>>>>>> ee890deac0d26d0a8ea447e7e899231183330bb8
 com\agenthub\repository\InstanciaAgenteRepostory.class
 com\agenthub\model\dto\DesarrolladorRequest.class
 com\agenthub\repository\DesarrolladorRepository.class
 com\agenthub\model\entity\Mensaje.class
+<<<<<<< HEAD
 com\agenthub\model\dto\OpenRouterResponse$Eleccion.class
+=======
+>>>>>>> ee890deac0d26d0a8ea447e7e899231183330bb8
 com\agenthub\security\JwtAuthenticationFilter.class
 com\agenthub\service\DesarrolladorService.class
 com\agenthub\security\SecurityConfig.class
@@ -47,4 +64,8 @@ com\agenthub\exception\ResourceNotFoundException.class
 com\agenthub\model\entity\InstanciaAgente.class
 com\agenthub\repository\HerramientaRepository.class
 com\agenthub\service\JwtService.class
+<<<<<<< HEAD
 com\agenthub\model\dto\OpenRouterResponse.class
+=======
+com\agenthub\model\dto\AgenteBusquedaRequest.class
+>>>>>>> ee890deac0d26d0a8ea447e7e899231183330bb8

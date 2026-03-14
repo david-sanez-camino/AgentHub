@@ -25,7 +25,6 @@ public class Usuario {
     @Column(name = "rol", nullable = false)
     private String rol;
 
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Desarrollador desarrollador;
 }
