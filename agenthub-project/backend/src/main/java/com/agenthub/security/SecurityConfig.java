@@ -20,8 +20,10 @@ public class SecurityConfig {
         http.csrf(c -> c.disable())
             .authorizeHttpRequests(a -> a
                 .requestMatchers("/api/auth", "/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/agentes/**").permitAll()
+                .requestMatchers("/api/agentes", "/api/agentes/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/desarrolladores").permitAll()
+                .requestMatchers("/api/test-ia/**").permitAll()
+                .requestMatchers("/api/chat").permitAll() 
                 .requestMatchers(
                     "/api/desarrolladores/pendientes",
                     "/api/desarrolladores/aprobados",
