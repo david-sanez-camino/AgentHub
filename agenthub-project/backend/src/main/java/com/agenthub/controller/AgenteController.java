@@ -25,6 +25,12 @@ public class AgenteController {
         return ResponseEntity.ok(agenteService.listarAprobados());
     }
 
+    // get /api/agentes/mis-agentes
+    @GetMapping("/mis-agentes")
+    public ResponseEntity<List<AgenteResponse>> listarMisAgentes(){
+        return ResponseEntity.ok(agenteService.listarMisAgentes());
+    }
+
     // GET /api/agentes/{id}
     @GetMapping("/{id}")
     public ResponseEntity<AgenteResponse> obtener(@PathVariable Integer id){

@@ -76,3 +76,30 @@ export async function obtenerAgentes(token) {
 
     return handleResponse(response);
 }
+
+// Crear un agente nuevo
+// POST /api/agentes
+
+export async function publicarAgente(payload, token = null) {
+    const response = await fetch(AGENTES_ENDPOINT, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(payload),
+    });
+
+    return handleResponse(response);
+}
+
+export async function obtenerMisAgentes(token) {
+    const response = await fetch(`${API_BASE_URL}/api/agentes/mis-agentes`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` 
+        },
+    });
+    return handleResponse(response);
+}

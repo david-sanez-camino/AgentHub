@@ -1,6 +1,8 @@
 package com.agenthub.repository;
 
 import com.agenthub.model.entity.Agente;
+import com.agenthub.model.entity.Desarrollador;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,7 @@ public interface AgenteRepository extends JpaRepository<Agente, Integer>, JpaSpe
 
     // NUEVO: aprobados y publicados (lo que ve el cliente en la tienda)
     List<Agente> findByEstadoVerificacionAndPublicado(String estadoVerficacion, Boolean publicado);
+
+    // buscar agentes vinculados al desarrollador 
+    List<Agente> findByDesarrollador(Desarrollador desarrollador);
 }

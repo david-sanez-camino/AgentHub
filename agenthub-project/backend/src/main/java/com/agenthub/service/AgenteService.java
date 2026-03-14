@@ -98,6 +98,22 @@ public class AgenteService {
         return agenteRepository.findAll(spec).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
+    // obtener agentes propios usando el jwt
+    public List<AgenteResponse> listarMisAgentes() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        Desarrollador desarrollador = usuario.getDesarrollador();
+        if (desarrollador == null) {
+            throw new IllegalStateException("No eres desarrollador bro");
+        }
+
+        //buscar agentes en la bbdd
+        return agenteRepository.findByDesarrollador(desarrollador).stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
     //Mapper
     private AgenteResponse toResponse(Agente a) {
         return AgenteResponse.builder().id(a.getId()).nombre(a.getNombre()).descripcion(a.getDescripcion())
