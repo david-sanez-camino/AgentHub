@@ -103,3 +103,33 @@ export async function obtenerMisAgentes(token) {
     });
     return handleResponse(response);
 }
+
+// Enviar mensaje al chat de un agente
+// POST /api/chat
+export async function enviarMensajeChat(agenteId, mensaje, token) {
+    const response = await fetch(`${API_BASE_URL}/api/chat`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        // JSON 
+        body: JSON.stringify({
+            agenteId: agenteId,
+            mensajeUsuario: mensaje
+        }),
+    });
+
+    return handleResponse(response);
+}
+
+// Obtener informacion de un solo agente por su ID
+export async function obtenerAgentePorId(id) {
+    const response = await fetch(`${API_BASE_URL}/api/agentes/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    return handleResponse(response);
+}

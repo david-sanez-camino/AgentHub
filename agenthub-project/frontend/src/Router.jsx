@@ -21,6 +21,7 @@ import DocumentacionCaracteristicas from './pages/Documentacion_Caracteristicas'
 import SubirAgente from './pages/Subir_Agente';
 import Finanzas from './pages/Finanzas';
 import MisAgentes from './pages/Mis_Agentes';
+import PantallaChat from './pages/PantallaChat';
 
 // Nuevas Rutas: Cliente
 import ClientePagina from './pages/Cliente_Pagina';
@@ -45,6 +46,7 @@ export default function Router() {
                 <Route path="/desarrollador/subir-agente" element={<SubirAgente />} />
                 <Route path="/desarrollador/finanzas" element={<Finanzas />} />
                 <Route path="/desarrollador/mis-agentes" element={<MisAgentes />} />
+                <Route path="/chat/:idAgente" element={<PantallaChat />} />
 
                 {/* Rutas Cliente */}
                 <Route path="/cliente" element={<ClientePagina />} />
