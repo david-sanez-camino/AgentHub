@@ -38,28 +38,7 @@ export default function Login() {
 
             // Guardamos token y datos de usuario en localStorage
             saveAuth(resp);
-<<<<<<< HEAD
-
-            // Leemos el rol en varios posibles sitios por seguridad
-            const rol = (
-                resp?.rol ||
-                resp?.role ||
-                resp?.usuario?.rol ||
-                resp?.usuario?.role ||
-                ""
-            ).toLowerCase();
-
-            // Redirección según rol
-            if (rol === "cliente") {
-                navigate("/cliente", { replace: true });
-            } else if (rol === "desarrollador") {
-                navigate("/desarrollador", { replace: true });
-            } else if (rol === "admin") {
-                navigate("/pantalla_admin", { replace: true });
-            } else {
-                // Si no llega rol o no coincide, lo mandamos al inicio
-=======
-            const rol = resp?.usuario?.rol;
+            const rol = (resp?.usuario?.rol || "").toUpperCase();
             if (rol === "ADMIN") {
                 navigate("/", { replace: true });
             } else if (rol === "DESARROLLADOR") {
@@ -67,7 +46,6 @@ export default function Login() {
             } else if (rol === "CLIENTE") {
                 navigate("/cliente", { replace: true });
             } else {
->>>>>>> feature/mejoras-admin
                 navigate("/", { replace: true });
             }
         } catch (err) {
