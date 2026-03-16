@@ -21,24 +21,6 @@ public class DesarrolladorController {
         return desarrolladorService.getAllDesarrolladores();
     }
 
-    //GET /api/desarrolladores/pendientes
-    @GetMapping("/pendientes")
-    public List<DesarrolladorResponse> getPendientes(){
-        return desarrolladorService.getDesarrolladoresPendientes();
-    }
-
-    //GET /api/desarrolladores/aprobados
-    @GetMapping("/aprobados")
-    public List<DesarrolladorResponse> getAprobados(){
-        return desarrolladorService.getDesarrolladoresAprobados();
-    }
-
-    //GET /api/desarrolladores/rechazados
-    @GetMapping("/rechazados")
-    public List<DesarrolladorResponse> getRechazados(){
-        return desarrolladorService.getDesarrolladoresRechazados();
-    }
-
         // PUT /api/desarrolladores/{id}/aprobado
     @PutMapping("/{id}/aprobado")
     public ResponseEntity<DesarrolladorResponse> aprobar(@PathVariable Integer id) {

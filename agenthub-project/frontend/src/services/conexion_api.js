@@ -70,10 +70,85 @@ export async function obtenerAgentes(token) {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        // Si tu backend usa cookies/sesión, descomenta:
-        // credentials: "include",
     });
+    return handleResponse(response);
+}
 
+// Aprobar agente
+// PUT /api/agentes/{id}/aprobar
+export async function aprobarAgente(id, token) {
+    const response = await fetch(`${AGENTES_ENDPOINT}/${id}/aprobar`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return handleResponse(response);
+}
+
+// Rechazar agente
+// PUT /api/agentes/{id}/rechazar
+export async function rechazarAgente(id, token) {
+    const response = await fetch(`${AGENTES_ENDPOINT}/${id}/rechazar`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return handleResponse(response);
+}
+
+// Obtener todos los usuarios
+// GET /api/auth
+export async function obtenerUsuarios(token) {
+    const response = await fetch(`${API_BASE_URL}/api/auth`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return handleResponse(response);
+}
+
+// Obtener todos los desarrolladores
+// GET /api/desarrolladores
+export async function obtenerDesarrolladores(token) {
+    const response = await fetch(`${API_BASE_URL}/api/desarrolladores`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return handleResponse(response);
+}
+
+// Aprobar desarrollador
+// PUT /api/desarrolladores/{id}/aprobado
+export async function aprobarDesarrollador(id, token) {
+    const response = await fetch(`${API_BASE_URL}/api/desarrolladores/${id}/aprobado`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return handleResponse(response);
+}
+
+// Rechazar desarrollador
+// PUT /api/desarrolladores/{id}/rechazado
+export async function rechazarDesarrollador(id, token) {
+    const response = await fetch(`${API_BASE_URL}/api/desarrolladores/${id}/rechazado`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
     return handleResponse(response);
 }
 
