@@ -80,6 +80,14 @@ export default function TopNavbar() {
                         </>
                     ) : (
                         <>
+                            {user?.rol === "ADMIN" && (
+                                <Link
+                                    to="/pantalla_admin"
+                                    className="hidden sm:block px-4 py-2 text-sm font-semibold text-slate-700 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors"
+                                >
+                                    Panel Admin
+                                </Link>
+                            )}
                             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                                 Hola, {user.nombre}
                             </span>

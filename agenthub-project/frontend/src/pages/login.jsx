@@ -22,7 +22,16 @@ export default function Login() {
             const resp = await loginUsuario(payload);
             if (!resp?.token) throw new Error("Credenciales incorrectas.");
             saveAuth(resp);
-            navigate("/", { replace: true });
+            const rol = resp?.usuario?.rol;
+            if (rol === "ADMIN") {
+                navigate("/", { replace: true });
+            } else if (rol === "DESARROLLADOR") {
+                navigate("/desarrollador", { replace: true });
+            } else if (rol === "CLIENTE") {
+                navigate("/cliente", { replace: true });
+            } else {
+                navigate("/", { replace: true });
+            }
         } catch (err) {
             setErrorMsg(err?.message || "Correo o contraseña incorrectos.");
         } finally {

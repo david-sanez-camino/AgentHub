@@ -19,21 +19,6 @@ public class DesarrolladorService {
         return desarrolladorRepository.findAll().stream().map(this::toResponse).toList();
     }
 
-    // solo rechazados
-    public List<DesarrolladorResponse> getDesarrolladoresRechazados(){
-        return desarrolladorRepository.findByEstado("rechazado").stream().map(this::toResponse).toList();
-    }
-
-    // solo aprobados
-    public List<DesarrolladorResponse> getDesarrolladoresAprobados(){
-        return desarrolladorRepository.findByEstado("aprobado").stream().map(this::toResponse).toList();
-    }
-
-    // Obtener solo los que esten en "PENDIENTE"
-    public List<DesarrolladorResponse> getDesarrolladoresPendientes() {
-        return desarrolladorRepository.findByEstado("pendiente").stream().map(this::toResponse).toList();
-    }
-
     // PUT /{id}/aprobado
     @Transactional
     public DesarrolladorResponse aprobar(Integer id) {
