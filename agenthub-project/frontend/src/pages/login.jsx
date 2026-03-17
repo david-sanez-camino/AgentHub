@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { loginUsuario } from "../services/conexion_api";
 import { saveAuth } from "../services/auth";
+import { mockUsuarios } from "../mocks/info_ejemplo_relleno";
 
 export default function Login() {
     const navigate = useNavigate();
-
 
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
@@ -16,33 +16,49 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
-
     async function onSubmit(e) {
         e.preventDefault();
         setErrorMsg("");
-        //datos q enviaremos al backend para loguear al usuario
-        const payload = {
-            email: email.trim(),
-            contrasenia: contrasenia,
-        };
 
-        //envio de credenciales al backend, si son correctas guarda la sesion y redirige al home,
-        // si no muestra error
         try {
             setLoading(true);
 
-            const resp = await loginUsuario(payload);
+            // TODO: En el futuro cambiar a loginUsuario cuando la API soporte los roles de CLIENTE y DESARROLLADOR
+            // Simulamos un retraso de red
+            await new Promise(resolve => setTimeout(resolve, 800));
 
-            // si no devuelve nada esntonces error
-            if (!resp?.token) {
+            const usuarioMock = mockUsuarios.find(
+                (u) => u.email === email.trim() && u.contrasenia === contrasenia
+            );
+
+            if (!usuarioMock) {
                 throw new Error("Credenciales incorrectas.");
             }
 
-            // guardamos sesión para q no reinicie todo el rato
-            saveAuth(resp);
+            // Simulamos la respuesta de la API
+            const respMock = {
+                token: "mock-jwt-token-123",
+                type: "Bearer",
+                usuario: {
+                    id: usuarioMock.id,
+                    email: usuarioMock.email,
+                    nombre: usuarioMock.nombre,
+                    apellido: usuarioMock.apellido,
+                    rol: usuarioMock.rol
+                }
+            };
 
-            // redirige al home si se loga bien
-            navigate("/", { replace: true });
+            // guardamos sesión para q no reinicie todo el rato
+            saveAuth(respMock);
+
+            // Redireccionamos dependiendo del rol mockeado
+            if (usuarioMock.rol === "DESARROLLADOR") {
+                navigate("/desarrollador", { replace: true });
+            } else if (usuarioMock.rol === "CLIENTE") {
+                navigate("/cliente", { replace: true });
+            } else {
+                navigate("/", { replace: true }); // Por defecto
+            }
 
         } catch (err) {
             // si falla mostramos error
@@ -50,8 +66,6 @@ export default function Login() {
         } finally {
             setLoading(false);
         }
-
-
     }
 
     return (
