@@ -8,9 +8,10 @@ mensaje de espera hasta q sea aceptado y pasado el visto bueno de los admins.
 
 */
 
-//import React, { useMemo, useState } from "react"; 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { User, Mail, Lock, Building2, Phone, FileText, Globe, Briefcase, ArrowLeft } from "lucide-react";
+import logo from "../assets/logo.png";
 import { registrarUsuario } from "../services/conexion_api";
 
 export default function Register() {
@@ -123,275 +124,309 @@ export default function Register() {
     }
 
     return (
-        <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
-            {/* Header minimal */}
-            <header className="border-b border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-[#101822]/60 backdrop-blur-md sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-                    <Link to="/" className="text-lg font-bold tracking-tight">
-                        AgentHub
-                    </Link>
-
-                    <Link
-                        to="/login"
-                        className="px-4 py-1.5 text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
-                    >
-                        Iniciar sesión
+        <div className="min-h-screen bg-gradient-to-b from-[#1a1f2e] via-[#252a3a] to-[#1a1f2e] flex flex-col">
+            {/* Header */}
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#1a1f2e]/80 backdrop-blur-sm border-b border-white/5">
+                <div className="max-w-7xl mx-auto px-8 py-4">
+                    <Link to="/" className="flex items-center gap-2">
+                        <img src={logo} alt="AgentHub Logo" className="w-8 h-8 object-contain rounded-md" />
+                        <span className="text-xl">
+                            <span className="text-white font-semibold">Agent</span>
+                            <span className="text-blue-400 font-semibold">Hub</span>
+                        </span>
                     </Link>
                 </div>
             </header>
 
+            {/* Botón Volver */}
+            <div className="pt-20 px-8">
+                <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                    <ArrowLeft className="w-5 h-5" />
+                    <span className="text-sm">Volver</span>
+                </Link>
+            </div>
+
             {/* Main */}
-            <main className="flex-1 flex items-center justify-center p-6">
-                <div className="w-full max-w-xl bg-white dark:bg-[#1a2230] p-7 sm:p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800">
-                    {/* Título */}
-                    <div className="text-center mb-7">
-                        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-                            Crear cuenta
-                        </h1>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
-                            Regístrate para acceder a AgentHub
-                        </p>
-                    </div>
-
-                    {/* Los datos no se enviaron bien entonces mensaje error */}
-                    {errorMsg && (
-                        <div className="mb-5 p-4 rounded-lg bg-red-100 border border-red-300 text-red-800 text-sm font-semibold">
-                            ❌ {errorMsg}
-                        </div>
-                    )}
-
-                    {/* Datos enviados correctamente del cleinte normal */}
-                    {successBusiness && (
-                        <div className="mb-5 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800 text-sm font-semibold">
-                            🎉 Cuenta creada correctamente. ¡Felicitaciones!
-                        </div>
-                    )}
-
-                    {/* Datos enviados correctamente del desarrollador */}
-                    {successDeveloper && (
-                        <div className="mb-5 p-4 rounded-lg bg-blue-100 border border-blue-300 text-blue-800 text-sm font-semibold">
-                            📩 Gracias por registrarte como desarrollador. Te llegará un correo eletronico
-                            cuando nuestro equipo evalúe tu perfil. Muchas gracias.
-                        </div>
-                    )}
-
-                    {/* Form */}
-                    <form onSubmit={onSubmit} className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Nombre */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                Nombre
-                            </label>
-                            <input
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                placeholder="Tu nombre"
-                                required
-                                value={form.nombre}
-                                onChange={updateField("nombre")}
-                            />
+            <main className="flex-1 flex items-center justify-center px-8 py-12">
+                <div className="w-full max-w-2xl">
+                    <div className="bg-gradient-to-b from-[#1f2937] to-[#1a2130] rounded-2xl p-8 border border-white/10 shadow-2xl">
+                        {/* Título */}
+                        <div className="text-center mb-8">
+                            <h1 className="text-2xl text-white mb-3">Crear cuenta</h1>
+                            <p className="text-gray-400 text-sm">Regístrate para acceder a AgentHub</p>
                         </div>
 
-                        {/* Apellido */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                Apellido
-                            </label>
-                            <input
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                placeholder="Tu apellido"
-                                required
-                                value={form.apellido}
-                                onChange={updateField("apellido")}
-                            />
-                        </div>
-                        </div>
-                        
-
-                        {/* Email */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                Correo electrónico
-                            </label>
-                            <input
-                                type="email"
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                placeholder="nombre@empresa.com"
-                                required
-                                value={form.email}
-                                onChange={updateField("email")}
-                            />
-                        </div>
-
-                        {/* Contraseña */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                Contraseña
-                            </label>
-                            <input
-                                type="password"
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                placeholder="••••••••"
-                                required
-                                value={form.contrasena}
-                                onChange={updateField("contrasena")}
-                            />
-                            <p>* Debe tener al menos 6 caracteres</p>
-                        </div>
-
-                        {/* Empresa */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                Empresa
-                            </label>
-                            <input
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                placeholder="Nombre comercial"
-                                required
-                                value={form.empresa}
-                                onChange={updateField("empresa")}
-                            />
-                        </div>
-
-                        {/* Teléfono */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                Teléfono
-                            </label>
-                            <input
-                                type="tel"
-                                inputMode="numeric"
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                placeholder="600000000"
-                                required
-                                value={form.telefono}
-                                onChange={updateField("telefono")}
-                            />
-                        </div>
-
-                        {/* Tipo cuenta aqui vemos si es desarrollador o es cliente*/}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                Tipo de cuenta
-                            </label>
-                            <select
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-black dark:text-white focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition"
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                                required
-                            >
-                                <option value="" disabled>
-                                    Selecciona una opción
-                                </option>
-                                <option value="business">Usuario normal (comprar/usar agentes)</option>
-                                <option value="developer">Desarrollador (publicar agentes)</option>
-                            </select>
-                        </div>
-
-                        {/* DE aqui para abajo es info extra del desarrollador */}
-                        {isDeveloper && (
-                            <div className="mt-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/40 dark:bg-white/5 backdrop-blur-sm p-5 space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="font-bold text-sm">Datos de desarrollador</h3>
-                                    <span className="text-xs text-slate-500 dark:text-slate-400">
-                                        Solo para publicar agentes
-                                    </span>
-                                </div>
-
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {/* NIF/CIF */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                            NIF/CIF
-                                        </label>
-                                        <input
-                                            className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                            placeholder="B12345678"
-                                            required
-                                            value={form.nif_cif}
-                                            onChange={updateField("nif_cif")}
-                                        />
-                                    </div>
-
-                                    {/* Web */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                            Web
-                                        </label>
-                                        <input
-                                            type="url"
-                                            className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                            placeholder="https://tusitio.com"
-                                            required
-                                            value={form.web}
-                                            onChange={updateField("web")}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Descripción */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                        Descripción
-                                    </label>
-                                    <textarea
-                                        className="w-full min-h-[88px] px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                        placeholder="Cuéntanos qué tipo de agentes desarrollas y para qué casos de uso."
-                                        required
-                                        value={form.descripcion}
-                                        onChange={updateField("descripcion")}
-                                    />
-                                </div>
-
-                                {/* Experiencia */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                        Experiencia (resumen)
-                                    </label>
-                                    <input
-                                        className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-[#136dec]/50 focus:border-[#136dec] outline-none transition placeholder:text-slate-400"
-                                        placeholder="Ej. 3 años creando agentes + integraciones con APIs"
-                                        required
-                                        value={form.experiencia}
-                                        onChange={updateField("experiencia")}
-                                    />
-                                </div>
+                        {/* Los datos no se enviaron bien entonces mensaje error */}
+                        {errorMsg && (
+                            <div className="mb-5 p-4 rounded-lg bg-red-900/40 border border-red-500/30 text-red-400 text-sm">
+                                ❌ {errorMsg}
                             </div>
                         )}
 
-                        {/* Boton de enviar  */}
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full h-11 font-medium rounded-lg transition shadow-md shadow-[#136dec]/20 flex items-center justify-center gap-2 mt-2
-                            ${loading
-                                    ? "bg-[#136dec]/60 cursor-not-allowed text-white"
-                                    : "bg-[#136dec] hover:bg-blue-700 text-white"
-                                }`}
-                        >
-                            {loading ? "Enviando..." : "Crear cuenta"}
-                            {!loading && (
-                                <span className="material-symbols-outlined text-lg">
-                                    arrow_forward
-                                </span>
-                            )}
-                        </button>
+                        {/* Datos enviados correctamente del cleinte normal */}
+                        {successBusiness && (
+                            <div className="mb-5 p-4 rounded-lg bg-green-900/40 border border-green-500/30 text-green-400 text-sm">
+                                🎉 Cuenta creada correctamente. ¡Felicitaciones!
+                            </div>
+                        )}
 
-                        {/* Ayuda */}
-                        <div className="text-center pt-2">
-                            <Link to="/ayuda" className="text-sm text-[#136dec] hover:underline">
-                                ¿Necesitas ayuda?
+                        {/* Datos enviados correctamente del desarrollador */}
+                        {successDeveloper && (
+                            <div className="mb-5 p-4 rounded-lg bg-blue-900/40 border border-blue-500/30 text-blue-400 text-sm">
+                                📩 Gracias por registrarte como desarrollador. Te llegará un correo eletronico
+                                cuando nuestro equipo evalúe tu perfil. Muchas gracias.
+                            </div>
+                        )}
+
+                        {/* Form */}
+                        <form onSubmit={onSubmit} className="space-y-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                {/* Nombre */}
+                                <div>
+                                    <label className="block text-sm text-gray-300 mb-2">
+                                        Nombre
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                            <User className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                            placeholder="Tu nombre"
+                                            required
+                                            value={form.nombre}
+                                            onChange={updateField("nombre")}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Apellido */}
+                                <div>
+                                    <label className="block text-sm text-gray-300 mb-2">
+                                        Apellido
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                            <User className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                            placeholder="Tu apellido"
+                                            required
+                                            value={form.apellido}
+                                            onChange={updateField("apellido")}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Email */}
+                            <div>
+                                <label className="block text-sm text-gray-300 mb-2">
+                                    Correo electrónico
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                        <Mail className="w-5 h-5" />
+                                    </div>
+                                    <input
+                                        type="email"
+                                        className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                        placeholder="nombre@empresa.com"
+                                        required
+                                        value={form.email}
+                                        onChange={updateField("email")}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Contraseña */}
+                            <div>
+                                <label className="block text-sm text-gray-300 mb-2">
+                                    Contraseña
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                        <Lock className="w-5 h-5" />
+                                    </div>
+                                    <input
+                                        type="password"
+                                        className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                        placeholder="••••••••"
+                                        required
+                                        value={form.contrasena}
+                                        onChange={updateField("contrasena")}
+                                    />
+                                </div>
+                                <p className="text-xs text-gray-400 mt-1.5">* Debe tener al menos 6 caracteres</p>
+                            </div>
+
+                            {/* Empresa */}
+                            <div>
+                                <label className="block text-sm text-gray-300 mb-2">
+                                    Empresa
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                        <Building2 className="w-5 h-5" />
+                                    </div>
+                                    <input
+                                        className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                        placeholder="Nombre comercial"
+                                        required
+                                        value={form.empresa}
+                                        onChange={updateField("empresa")}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Teléfono */}
+                            <div>
+                                <label className="block text-sm text-gray-300 mb-2">
+                                    Teléfono
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                        <Phone className="w-5 h-5" />
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        inputMode="numeric"
+                                        className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                        placeholder="600000000"
+                                        required
+                                        value={form.telefono}
+                                        onChange={updateField("telefono")}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Tipo cuenta aqui vemos si es desarrollador o es cliente*/}
+                            <div>
+                                <label className="block text-sm text-gray-300 mb-2">
+                                    Tipo de cuenta
+                                </label>
+                                <select
+                                    className="w-full px-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                    value={role}
+                                    onChange={(e) => setRole(e.target.value)}
+                                    required
+                                >
+                                    <option value="" disabled>
+                                        Selecciona una opción
+                                    </option>
+                                    <option value="business">Usuario normal (comprar/usar agentes)</option>
+                                    <option value="developer">Desarrollador (publicar agentes)</option>
+                                </select>
+                            </div>
+
+                            {/* DE aqui para abajo es info extra del desarrollador */}
+                            {isDeveloper && (
+                                <div className="mt-2 rounded-xl border border-blue-500/20 bg-blue-950/20 backdrop-blur-sm p-5 space-y-5">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="font-bold text-sm text-white">Datos de desarrollador</h3>
+                                        <span className="text-xs text-gray-400">
+                                            Solo para publicar agentes
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        {/* NIF/CIF */}
+                                        <div>
+                                            <label className="block text-sm text-gray-300 mb-2">
+                                                NIF/CIF
+                                            </label>
+                                            <div className="relative">
+                                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                                    <FileText className="w-5 h-5" />
+                                                </div>
+                                                <input
+                                                    className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                                    placeholder="B12345678"
+                                                    required
+                                                    value={form.nif_cif}
+                                                    onChange={updateField("nif_cif")}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Web */}
+                                        <div>
+                                            <label className="block text-sm text-gray-300 mb-2">
+                                                Web
+                                            </label>
+                                            <div className="relative">
+                                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                                    <Globe className="w-5 h-5" />
+                                                </div>
+                                                <input
+                                                    type="url"
+                                                    className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                                    placeholder="https://tusitio.com"
+                                                    required
+                                                    value={form.web}
+                                                    onChange={updateField("web")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Descripción */}
+                                    <div>
+                                        <label className="block text-sm text-gray-300 mb-2">
+                                            Descripción
+                                        </label>
+                                        <textarea
+                                            className="w-full min-h-[88px] px-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                                            placeholder="Cuéntanos qué tipo de agentes desarrollas y para qué casos de uso."
+                                            required
+                                            value={form.descripcion}
+                                            onChange={updateField("descripcion")}
+                                        />
+                                    </div>
+
+                                    {/* Experiencia */}
+                                    <div>
+                                        <label className="block text-sm text-gray-300 mb-2">
+                                            Experiencia (resumen)
+                                        </label>
+                                        <div className="relative">
+                                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+                                                <Briefcase className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                className="w-full pl-11 pr-4 py-3 bg-[#0f1319] border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                                                placeholder="Ej. 3 años creando agentes + integraciones con APIs"
+                                                required
+                                                value={form.experiencia}
+                                                onChange={updateField("experiencia")}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Boton de enviar  */}
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className={`w-full px-6 py-3 text-white rounded-xl transition-colors shadow-sm
+                                    ${loading ? "bg-blue-600/50 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+                            >
+                                {loading ? "Enviando..." : "Crear cuenta"}
+                            </button>
+                        </form>
+
+                        {/* Ya tienes cuenta */}
+                        <div className="text-center mt-6">
+                            <span className="text-gray-400 text-sm">¿Ya tienes una cuenta? </span>
+                            <Link to="/login" className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
+                                Iniciar sesión
                             </Link>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </main>
-
-            {/* Footer */}
-            <footer className="py-6 text-center text-xs text-slate-500 dark:text-slate-600 border-t border-slate-200 dark:border-slate-800">
-                © 2026 AgentHub Inc. · Todos los derechos reservados
-            </footer>
         </div>
     );
 }
