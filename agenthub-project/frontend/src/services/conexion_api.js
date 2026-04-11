@@ -1,7 +1,7 @@
 // services/usuarios.js
 // Servicio centralizado para consumir la API de AgentHub (registro, login, agentes).
 
-const API_BASE_URL = "http://127.0.0.1:8080";
+const API_BASE_URL = "https://agenthub-production-e274.up.railway.app";
 
 // Endpoints del backend
 const AUTH_REGISTRO_ENDPOINT = `${API_BASE_URL}/api/auth/registro`;
