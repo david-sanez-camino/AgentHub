@@ -14,9 +14,6 @@ export default function SubirAgente() {
         systemPromt: "",
         modelo: "gpt-4o",
         categoria: "productividad",
-        tecnologias: "",
-        posibilidades: "",
-        negocios: "",
         precio: "",
         archivoZip: null
     });
@@ -155,26 +152,9 @@ export default function SubirAgente() {
                         </div>
 
                         {/* Detalles para la Venta */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-200 dark:border-slate-800 pt-6">
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tecnologías Usadas</label>
-                                <input type="text" name="tecnologias" value={formData.tecnologias} onChange={handleChange} placeholder="Ej: Python, LangChain, Pinecone..." className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none" required />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Precio de Venta (USD)</label>
-                                <input type="number" name="precio" value={formData.precio} onChange={handleChange} placeholder="Ej: 49" min="0" className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none" required />
-                            </div>
-
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Posibilidades del Agente</label>
-                                <input type="text" name="posibilidades" value={formData.posibilidades} onChange={handleChange} placeholder="Ej: Clasifica correos, genera excels de resumen, responde quejas automáticas..." className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none" required />
-                            </div>
-
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Aplicación en Negocios</label>
-                                <input type="text" name="negocios" value={formData.negocios} onChange={handleChange} placeholder="Ej: Departamentos de RRHH, clínicas dentales, ecommerce de moda..." className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none" required />
-                            </div>
+                        <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Precio de Venta (USD)</label>
+                            <input type="number" name="precio" value={formData.precio} onChange={handleChange} placeholder="Ej: 49" min="0" className="w-full md:w-1/2 h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none" required />
                         </div>
 
                         {/* Enviar */}
