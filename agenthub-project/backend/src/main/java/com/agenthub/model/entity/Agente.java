@@ -1,6 +1,8 @@
 package com.agenthub.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,11 +34,12 @@ public class Agente {
     @Builder.Default
     private String estadoVerificacion = "PENDIENTE"; // valores posibles: pendiente, aprobado, rechazado
 
-    // relacion n->n con entidad Herramienta 
-    @ManyToMany
-    @JoinTable(name = "agente_herramienta", 
-        joinColumns = @JoinColumn(name = "id_agente"), 
-        inverseJoinColumns = @JoinColumn(name = "id_herramienta")
+    // --- NUEVA RELACIÓN PARA LAS HERRAMIENTAS ---
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "agente_herramienta", // Nombre de la tabla intermedia que creará PostgreSQL
+        joinColumns = @JoinColumn(name = "agente_id"),
+        inverseJoinColumns = @JoinColumn(name = "herramienta_id")
     )
-    private Set<Herramienta> herramientas;
+    private List<Herramienta> herramientas;
 }

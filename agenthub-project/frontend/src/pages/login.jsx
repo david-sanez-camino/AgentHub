@@ -40,7 +40,7 @@ export default function Login() {
             saveAuth(resp);
             const rol = (resp?.usuario?.rol || "").toUpperCase();
             if (rol === "ADMIN") {
-                navigate("/", { replace: true });
+                navigate("/pantalla_admin", { replace: true });
             } else if (rol === "DESARROLLADOR") {
                 navigate("/desarrollador", { replace: true });
             } else if (rol === "CLIENTE") {

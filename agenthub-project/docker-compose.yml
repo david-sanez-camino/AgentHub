@@ -33,6 +33,7 @@ services:
       # OLLAMA_URL: http://ollama:11434
     depends_on:
       - postgres
+      - mcp-legal
       # - ollama
     env_file:
       - ./backend/.env
@@ -46,6 +47,18 @@ services:
       REACT_APP_API_URL: http://localhost:8080
     depends_on:
       - backend
+
+  mcp-legal:
+    build: ./mcp-servers/legal
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+    environment:
+      - UVICORN_HOST=0.0.0.0
+      - UVICORN_PORT=8001
+      - MCP_ALLOW_ALL_ORIGINS=true
+    env_file:
+      - ./backend/.env
 
 volumes:
   postgres_data:

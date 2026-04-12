@@ -7,13 +7,15 @@ import java.time.LocalDate;
 @Table(name = "mensaje")
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 
-public class Mensaje {
+public class MensajeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String rol;
+
+    @Column(columnDefinition = "TEXT")
     private String contenido;
+
     private String nombreHerramienta;
     private String llamadaHerramienta;
     private LocalDate fechaMensaje;

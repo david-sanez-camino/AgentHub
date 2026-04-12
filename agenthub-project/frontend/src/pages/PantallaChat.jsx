@@ -7,9 +7,7 @@ import Footer from "../components/Footer";
 import { enviarMensajeChat } from "../services/conexion_api";
 import { getToken } from "../services/auth";
 
-import {
-  obtenerAgentePorId,
-} from "../services/conexion_api";
+import { obtenerAgentePorId } from "../services/conexion_api";
 
 export default function PantallaChat() {
   // Capturamos el ID del agente desde la URL (ej: /chat/1)
@@ -28,6 +26,8 @@ export default function PantallaChat() {
 
   const [infoAgente, setInfoAgente] = useState(null);
 
+  const [conversacionId, setConversacionId] = useState(null);
+
   // Referencia para hacer auto-scroll hacia abajo cuando haya mensajes nuevos
   const finalDelChatRef = useRef(null);
   useEffect(() => {
@@ -44,6 +44,41 @@ export default function PantallaChat() {
       }
     };
     cargarInfo();
+  }, [idAgente]);
+
+  useEffect(() => {
+    const cargarConversacion = async () => {
+      try {
+        const token = getToken();
+        if (!token) return;
+
+        const conversaciones = await fetch(
+          `http://127.0.0.1:8080/api/chat/conversaciones/${idAgente}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        ).then((r) => r.json());
+
+        if (conversaciones && conversaciones.length > 0) {
+          const ultima = conversaciones[conversaciones.length - 1];
+          setConversacionId(ultima.id);
+
+          const mensajesHistorial = await fetch(
+            `http://127.0.0.1:8080/api/chat/conversacion/${ultima.id}`,
+            { headers: { Authorization: `Bearer ${token}` } },
+          ).then((r) => r.json());
+
+          if (mensajesHistorial && mensajesHistorial.length > 0) {
+            const mensajesMapeados = mensajesHistorial.map((m) => ({
+              rol: m.rol === "user" ? "usuario" : "agente",
+              texto: m.contenido,
+            }));
+            setMensajes(mensajesMapeados);
+          }
+        }
+      } catch (error) {
+        console.error("Error cargando historial:", error);
+      }
+    };
+    cargarConversacion();
   }, [idAgente]);
 
   const manejarEnvio = async (e) => {
@@ -64,10 +99,17 @@ export default function PantallaChat() {
         idAgente,
         mensajeUsuario,
         token,
+        conversacionId,
       );
 
+      // Guardar el conversacionId que devuelve el backend
+      setConversacionId(respuestaIA.conversacionId);
+
       // 3. Añadimos la respuesta del agente a la pantalla
-      setMensajes((prev) => [...prev, { rol: "agente", texto: respuestaIA }]);
+      setMensajes((prev) => [
+        ...prev,
+        { rol: "agente", texto: respuestaIA.respuesta },
+      ]);
     } catch (error) {
       console.error("Error en el chat:", error);
       setMensajes((prev) => [
@@ -80,6 +122,35 @@ export default function PantallaChat() {
       ]);
     } finally {
       setEscribiendo(false);
+    }
+  };
+
+  const eliminarConversacion = async () => {
+    if (!conversacionId) return;
+    if (!window.confirm("¿Seguro que quieres borrar esta conversación?"))
+      return;
+
+    try {
+      const token = getToken();
+      await fetch(
+        `http://127.0.0.1:8080/api/chat/conversacion/${conversacionId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      // Resetear el estado
+      setConversacionId(null);
+      setMensajes([
+        {
+          rol: "agente",
+          texto:
+            "¡Hola! Soy tu asistente de Inteligencia Artificial. ¿En qué te puedo ayudar hoy?",
+        },
+      ]);
+    } catch (error) {
+      console.error("Error eliminando conversación:", error);
     }
   };
 
@@ -112,6 +183,16 @@ export default function PantallaChat() {
               </p>
             </div>
           </div>
+          {/* Botón eliminar conversación */}
+          {conversacionId && (
+            <button
+              onClick={eliminarConversacion}
+              className="ml-auto size-10 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors"
+              title="Eliminar conversación"
+            >
+              <i className="fa-solid fa-trash text-red-500 text-sm"></i>
+            </button>
+          )}
         </div>
 
         {/* Historial de Mensajes (Zona scrolleable) */}

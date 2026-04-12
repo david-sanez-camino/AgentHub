@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "conversacion")
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
@@ -18,5 +20,6 @@ public class Conversacion {
 
     @ManyToOne
     @JoinColumn(name = "id_instancia_agente", nullable = false)
+    @JsonIgnoreProperties({"agente", "usuario", "mensajes", "conversaciones"})
     private InstanciaAgente instanciaAgente;
 }
