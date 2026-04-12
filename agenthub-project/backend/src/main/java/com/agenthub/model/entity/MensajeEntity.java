@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Table(name = "mensaje")
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 
-public class Mensaje {
+public class MensajeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
