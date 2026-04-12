@@ -116,11 +116,11 @@ export default function SubirAgente() {
                             <div>
                                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Modelo Base</label>
                                 <select name="modelo" value={formData.modelo} onChange={handleChange} className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none">
-                                    <option value="gpt-4o">openai/gpt-oss-20b:free</option>
-                                    <option value="gpt-4-turbo">anthropic/claude-3-haiku</option>
-                                    <option value="gpt-3.5-turbo">opcion3 futuro</option>
-                                    <option value="claude-3-opus">opcion4 futuro</option>
-                                    <option value="phi-3-mini">opcion5 futuro</option>
+                                    <option value="openai/gpt-oss-20b:free">openai/gpt-oss-20b:free</option>
+                                    <option value="anthropic/claude-3-haiku">anthropic/claude-3-haiku</option>
+                                    <option value="cambiar3">opcion3 futuro</option>
+                                    <option value="cambiar4">opcion4 futuro</option>
+                                    <option value="cambiar5">opcion5 futuro</option>
                                 </select>
                             </div>
                         </div>
