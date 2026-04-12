@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ClienteNavbar from "../components/ClienteNavbar";
 import Footer from "../components/Footer";
-import { obtenerAgentes } from "../services/conexion_api";
+import { obtenerAgentesAprobados } from "../services/conexion_api";
 
 export default function ClientePagina() {
     const [busqueda, setBusqueda] = useState("");
@@ -11,7 +11,7 @@ export default function ClientePagina() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        obtenerAgentes()
+        obtenerAgentesAprobados()
             .then(data => {
                 setAgentes(data);
                 setAgentesFiltered(data);
@@ -42,11 +42,9 @@ export default function ClientePagina() {
                     <h1 className="text-5xl md:text-6xl font-black mb-6 tracking-tight text-slate-900 dark:text-white leading-tight">
                         Encuentra el <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#136dec] to-cyan-400">Agente IA</span> perfecto para tu negocio
                     </h1>
-
                     <p className="text-xl text-slate-500 dark:text-slate-400 mb-10">
                         Explora nuestro marketplace y automatiza tus tareas hoy mismo.
                     </p>
-
                     <form onSubmit={handleBuscar} className="relative max-w-2xl mx-auto group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-[#136dec] transition-colors">
                             <i className="fa-solid fa-magnifying-glass text-xl"></i>
@@ -70,17 +68,14 @@ export default function ClientePagina() {
                 {loading && (
                     <p className="text-slate-500 dark:text-slate-400">Cargando agentes...</p>
                 )}
-
                 {error && (
                     <p className="text-red-500">{error}</p>
                 )}
-
                 {!loading && !error && agentesFiltered.length === 0 && (
                     <div className="p-6 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400">
                         No se encontraron agentes disponibles.
                     </div>
                 )}
-
                 {!loading && !error && agentesFiltered.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                         {agentesFiltered.map(agente => (

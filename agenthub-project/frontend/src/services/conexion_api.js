@@ -87,6 +87,18 @@ export async function aprobarAgente(id, token) {
     return handleResponse(response);
 }
 
+//listar agentes aprobados para el marketplace david 12/04/2026
+export async function obtenerAgentesAprobados(token) {
+    const response = await fetch(`${AGENTES_ENDPOINT}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return handleResponse(response);
+}
+
 // Rechazar agente
 // PUT /api/agentes/{id}/rechazar
 export async function rechazarAgente(id, token) {
