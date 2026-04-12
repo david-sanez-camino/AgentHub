@@ -12,7 +12,7 @@ export default function SubirAgente() {
         nombre: "",
         descripcion: "",
         systemPromt: "",
-        modelo: "gpt-4o",
+        modelo: "",
         categoria: "productividad",
         precio: "",
         archivoZip: null
