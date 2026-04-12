@@ -121,5 +121,9 @@ public class AgenteService {
         .estadoVerificacion(a.getEstadoVerificacion()).build();
     }
     
+    // Listar todos los agentes
+    public List<AgenteResponse> listarTodos(){
+        return agenteRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
+    }
 
 }

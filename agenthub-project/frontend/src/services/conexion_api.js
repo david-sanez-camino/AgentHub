@@ -64,7 +64,7 @@ export async function loginUsuario(payload) {
 // Obtener agentes
 // GET /api/agentes
 export async function obtenerAgentes(token) {
-    const response = await fetch(AGENTES_ENDPOINT, {
+    const response = await fetch(`${AGENTES_ENDPOINT}/todos`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -79,6 +79,18 @@ export async function obtenerAgentes(token) {
 export async function aprobarAgente(id, token) {
     const response = await fetch(`${AGENTES_ENDPOINT}/${id}/aprobar`, {
         method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return handleResponse(response);
+}
+
+//listar agentes aprobados para el marketplace david 12/04/2026
+export async function obtenerAgentesAprobados(token) {
+    const response = await fetch(`${AGENTES_ENDPOINT}`, {
+        method: "GET",
         headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -207,3 +219,5 @@ export async function obtenerAgentePorId(id) {
     });
     return handleResponse(response);
 }
+
+//

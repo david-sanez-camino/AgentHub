@@ -12,7 +12,7 @@ export default function SubirAgente() {
         nombre: "",
         descripcion: "",
         systemPromt: "",
-        modelo: "gpt-4o",
+        modelo: "", //openai/gpt-oss-20b:free
         categoria: "productividad",
         precio: "",
         archivoZip: null
@@ -104,34 +104,34 @@ export default function SubirAgente() {
                             <div>
                                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Categoría</label>
                                 <select name="categoria" value={formData.categoria} onChange={handleChange} className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none">
-                                    <option value="productividad">Productividad</option>
-                                    <option value="marketing">Marketing</option>
-                                    <option value="datos">Análisis de Datos</option>
-                                    <option value="atencion">Atención al Cliente</option>
-                                    <option value="desarrollo">Desarrollo de Software</option>
-                                    <option value="otro">Otro</option>
+                                    <option className="text-black" value="productividad">Productividad</option>
+                                    <option className="text-black" value="marketing">Marketing</option>
+                                    <option className="text-black" value="datos">Análisis de Datos</option>
+                                    <option className="text-black" value="atencion">Atención al Cliente</option>
+                                    <option className="text-black" value="desarrollo">Desarrollo de Software</option>
+                                    <option className="text-black" value="otro">Otro</option>
                                 </select>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Modelo Base</label>
                                 <select name="modelo" value={formData.modelo} onChange={handleChange} className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none">
-                                    <option value="gpt-4o">GPT-4o (OpenAI)</option>
-                                    <option value="gpt-4-turbo">GPT-4 Turbo (OpenAI)</option>
-                                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (OpenAI)</option>
-                                    <option value="claude-3-opus">Claude 3 Opus (Anthropic)</option>
-                                    <option value="phi-3-mini">Phi-3-Mini (Microsoft/Local)</option>
+                                    <option className="text-black"  value="">Elige un modelo</option>
+                                    <option className="text-black"  value="openai/gpt-oss-20b:free">openai/gpt-oss-20b:free</option>
+                                    <option className="text-black" value="anthropic/claude-3-haiku">anthropic/claude-3-haiku</option>
+                                    <option className="text-black" value="cambiar3">opcion3 futuro</option>
+                                    <option className="text-black" value="cambiar4">opcion4 futuro</option>
+                                    <option className="text-black" value="cambiar5">opcion5 futuro</option>
                                 </select>
                             </div>
                         </div>
-
                         {/* Técnico */}
                         <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">System Prompt <span className="text-xs font-normal text-slate-500">(Instrucciones principales)</span></label>
                             <textarea name="systemPromt" value={formData.systemPromt} onChange={handleChange} rows="5" placeholder="Eres un asistente experto en..." className="w-full p-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 font-mono text-sm focus:ring-2 focus:ring-purple-500/50 outline-none resize-y" required></textarea>
                         </div>
 
-                        {/* Archivo ZIP */}
+                        {/* Archivo ZIP 
                         <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Archivos del Proyecto <span className="text-xs font-normal text-slate-500">(.zip)</span></label>
                             <div className="flex items-center justify-center w-full">
@@ -149,7 +149,7 @@ export default function SubirAgente() {
                                     <i className="fa-solid fa-check-circle"></i> Archivo seleccionado: {formData.archivoZip.name}
                                 </p>
                             )}
-                        </div>
+                        </div> */}
 
                         {/* Detalles para la Venta */}
                         <div className="border-t border-slate-200 dark:border-slate-800 pt-6">

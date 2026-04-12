@@ -31,6 +31,12 @@ public class AgenteController {
         return ResponseEntity.ok(agenteService.listarMisAgentes());
     }
 
+    // <-- ANTES que /{id}
+    @GetMapping("/todos")
+    public ResponseEntity<List<AgenteResponse>> listarTodos() {
+        return ResponseEntity.ok(agenteService.listarTodos());
+    }
+
     // GET /api/agentes/{id}
     @GetMapping("/{id}")
     public ResponseEntity<AgenteResponse> obtener(@PathVariable Integer id){
@@ -76,5 +82,6 @@ public class AgenteController {
 
         return ResponseEntity.ok(agenteService.buscar(req));
     } 
+
     
 }
