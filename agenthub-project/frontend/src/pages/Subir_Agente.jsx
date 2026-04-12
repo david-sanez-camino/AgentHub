@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
 import Footer from "../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
+import { publicarAgente } from "../services/conexion_api";
+import { getUser, getToken } from "../services/auth";
 
 export default function SubirAgente() {
     const navigate = useNavigate();
@@ -27,15 +29,54 @@ export default function SubirAgente() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         // Simulamos subida a backend
-        setTimeout(() => {
+        //setTimeout(() => {
+            //setLoading(false);
+            //alert("Agente subido correctamente y enviado a verificación.");
+            //navigate("/desarrollador/mis-agentes");
+
+        // FUNCIONES DE AUTH PARA COGER TOKEN Y ROL
+        const usuarioActual = getUser();
+        const token = getToken();
+
+        // comprobacion de si hay usuario o no
+        if (!usuarioActual || !usuarioActual.id) {
+            alert("Error: No se ha detectado tu usuario. Inicia sesion");
             setLoading(false);
-            alert("Agente subido correctamente y enviado a verificación.");
+            return;
+        }
+
+        // Payload con id de usuario dinamico
+        const agentePayload = {
+            desarrollador: {
+                id: usuarioActual.id
+            },
+            nombre: formData.nombre,
+            descripcion: formData.descripcion,
+            systemPromt: formData.systemPromt,
+            modelo: formData.modelo,
+            categoria: formData.categoria,
+            precio: formData.precio ? parseFloat(formData.precio) : 0,
+
+            // datos hardcodeados guarramente por ahora
+            publicado: true,
+            estadoVerificacion: "APROBADO"
+        };
+
+        try {
+            // envio pasando token de seguridad
+            const respuesta = await publicarAgente(agentePayload, token);
+            setLoading(false);
+            alert(`Agente "${respuesta.nombre}" publicado correctamente.`)
             navigate("/desarrollador/mis-agentes");
-        }, 1500);
+        } catch (error) {
+            setLoading(false);
+            console.error("Error al publicar:", error);
+            alert("Hubo un problema con el servidor, revisar consola");
+        }
     };
 
     return (
