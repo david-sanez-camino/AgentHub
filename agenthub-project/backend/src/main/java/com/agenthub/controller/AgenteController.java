@@ -76,5 +76,11 @@ public class AgenteController {
 
         return ResponseEntity.ok(agenteService.buscar(req));
     } 
+
+    // --
+    @GetMapping("/todos")
+    public ResponseEntity<List<AgenteResponse>> listarTodos() {
+        return ResponseEntity.ok(agenteService.listarTodos());
+    }
     
 }

@@ -64,7 +64,7 @@ export async function loginUsuario(payload) {
 // Obtener agentes
 // GET /api/agentes
 export async function obtenerAgentes(token) {
-    const response = await fetch(AGENTES_ENDPOINT, {
+    const response = await fetch(`${AGENTES_ENDPOINT}/todos`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -207,3 +207,5 @@ export async function obtenerAgentePorId(id) {
     });
     return handleResponse(response);
 }
+
+//
