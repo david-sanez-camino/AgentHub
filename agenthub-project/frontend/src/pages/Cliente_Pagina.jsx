@@ -1,22 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ClienteNavbar from "../components/ClienteNavbar";
 import Footer from "../components/Footer";
+import { obtenerAgentes } from "../services/conexion_api";
 
 export default function ClientePagina() {
     const [busqueda, setBusqueda] = useState("");
+    const [agentes, setAgentes] = useState([]);
+    const [agentesFiltered, setAgentesFiltered] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        obtenerAgentes()
+            .then(data => {
+                setAgentes(data);
+                setAgentesFiltered(data);
+                setLoading(false);
+            })
+            .catch(() => {
+                setError("Error al cargar los agentes.");
+                setLoading(false);
+            });
+    }, []);
 
     const handleBuscar = (e) => {
         e.preventDefault();
-        // Lógica futura de búsqueda
-        console.log("Buscando agentes:", busqueda);
+        const filtrados = agentes.filter(a =>
+            a.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+            a.descripcion?.toLowerCase().includes(busqueda.toLowerCase()) ||
+            a.categoria?.toLowerCase().includes(busqueda.toLowerCase())
+        );
+        setAgentesFiltered(filtrados);
     };
 
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
             <ClienteNavbar />
 
-            <main className="flex-1 max-w-7xl mx-auto px-6 py-20 w-full flex flex-col items-center justify-center text-center">
-                <div className="max-w-3xl w-full">
+            <main className="flex-1 max-w-7xl mx-auto px-6 py-20 w-full flex flex-col items-center text-center">
+                <div className="max-w-3xl w-full mb-12">
                     <h1 className="text-5xl md:text-6xl font-black mb-6 tracking-tight text-slate-900 dark:text-white leading-tight">
                         Encuentra el <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#136dec] to-cyan-400">Agente IA</span> perfecto para tu negocio
                     </h1>
@@ -43,16 +65,47 @@ export default function ClientePagina() {
                             Buscar
                         </button>
                     </form>
-
-                    {busqueda && (
-                        <div className="mt-8 text-slate-500 dark:text-slate-400">
-                            Buscando resultados para: <strong className="text-slate-900 dark:text-white">{busqueda}</strong>
-                            <div className="mt-4 p-6 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl">
-                                Aún no hay agentes disponibles en la tienda. Vuelve pronto.
-                            </div>
-                        </div>
-                    )}
                 </div>
+
+                {loading && (
+                    <p className="text-slate-500 dark:text-slate-400">Cargando agentes...</p>
+                )}
+
+                {error && (
+                    <p className="text-red-500">{error}</p>
+                )}
+
+                {!loading && !error && agentesFiltered.length === 0 && (
+                    <div className="p-6 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400">
+                        No se encontraron agentes disponibles.
+                    </div>
+                )}
+
+                {!loading && !error && agentesFiltered.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                        {agentesFiltered.map(agente => (
+                            <div
+                                key={agente.id}
+                                className="bg-white dark:bg-[#1a2230] border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-left shadow-sm hover:shadow-lg transition-shadow"
+                            >
+                                <div className="flex items-center justify-between mb-3">
+                                    <span className="text-xs font-semibold uppercase tracking-wider text-[#136dec] bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-lg">
+                                        {agente.categoria || "General"}
+                                    </span>
+                                    <span className="text-sm font-bold text-slate-900 dark:text-white">
+                                        {agente.precio != null ? `${agente.precio}€` : "Gratis"}
+                                    </span>
+                                </div>
+                                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                                    {agente.nombre}
+                                </h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3">
+                                    {agente.descripcion}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </main>
 
             <Footer />
