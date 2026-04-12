@@ -14,7 +14,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, X, Search, Filter } from "lucide-react";
 import logo from "../assets/logo.png";
-import { getToken } from "../services/auth";
+import { getToken, logout } from "../services/auth";
 import {
     obtenerAgentes,
     aprobarAgente,
@@ -136,11 +136,12 @@ export default function AdminScreen() {
         }
     }
 
-    const filteredUsuarios = usuarios.filter(
-        (u) =>
-            (u.nombre + " " + u.apellido).toLowerCase().includes(searchQuery.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredUsuarios = usuarios.filter((u) => {
+        const nombreCompleto = `${u.nombre || ""} ${u.apellido || ""}`.toLowerCase();
+        const correo = (u.email || "").toLowerCase();
+        const busqueda = (searchQuery || "").toLowerCase();
+        return nombreCompleto.includes(busqueda) || correo.includes(busqueda);
+    });
 
     const filteredAgentes = agentes.filter(
         (a) =>
@@ -150,6 +151,7 @@ export default function AdminScreen() {
 
     const devsPendientes = desarrolladores.filter((d) => esPendiente(d.estado)).length;
     const agentesPendientes = agentes.filter((a) => a.estadoVerificacion === "Pendiente").length;
+    const totalClientes = usuarios.filter((u) => u.rol === "CLIENTE").length;
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#1a1f2e] via-[#252a3a] to-[#1a1f2e]">
@@ -164,10 +166,10 @@ export default function AdminScreen() {
                         </span>
                     </div>
                     <button
-                        onClick={() => navigate("/")}
-                        className="px-4 py-2 border border-white/10 text-white rounded-lg hover:bg-white/5 transition-colors"
+                        onClick={() => { logout(); navigate("/"); }}
+                        className="px-4 py-2 border border-red-500/30 text-white rounded-lg hover:bg-red-500/20 hover:text-red-400 transition-colors font-medium flex items-center gap-2"
                     >
-                        Volver
+                        Cerrar sesión
                     </button>
                 </div>
             </header>
@@ -346,11 +348,16 @@ export default function AdminScreen() {
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
                         <div className="bg-gradient-to-b from-[#1f2937] to-[#1a2130] rounded-xl p-6 border border-white/10">
                             <div className="text-gray-400 text-sm mb-2">Total Usuarios</div>
                             <div className="text-3xl text-white">{usuarios.length}</div>
                             <div className="text-sm text-gray-500 mt-2">{devsPendientes} desarrolladores pendientes</div>
+                        </div>
+                        <div className="bg-gradient-to-b from-[#1f2937] to-[#1a2130] rounded-xl p-6 border border-white/10">
+                            <div className="text-gray-400 text-sm mb-2">Total Clientes</div>
+                            <div className="text-3xl text-white">{totalClientes}</div>
+                            <div className="text-sm text-gray-500 mt-2">Registrados como cliente</div>
                         </div>
                         <div className="bg-gradient-to-b from-[#1f2937] to-[#1a2130] rounded-xl p-6 border border-white/10">
                             <div className="text-gray-400 text-sm mb-2">Total Agentes</div>
