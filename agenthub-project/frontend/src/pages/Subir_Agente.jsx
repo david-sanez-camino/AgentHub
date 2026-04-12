@@ -12,7 +12,7 @@ export default function SubirAgente() {
         nombre: "",
         descripcion: "",
         systemPromt: "",
-        modelo: "openai/gpt-oss-20b:free",
+        modelo: "", //openai/gpt-oss-20b:free
         categoria: "productividad",
         precio: "",
         archivoZip: null
