@@ -74,7 +74,7 @@ public class OpenRouterService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiKey.trim()); // .trim() evita espacios ocultos 
-        headers.set("HTTP-Referer", "http://localhost:8080"); // Identifica el origen de la petición
+        headers.set("HTTP-Referer", "https://agenthub-production-e274.up.railway.app"); // Identifica el origen de la petición
         headers.set("X-Title", "AgentHub"); // Nombre visible en el dashboard de OpenRouter
 
 

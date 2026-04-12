@@ -53,7 +53,7 @@ export default function PantallaChat() {
         if (!token) return;
 
         const conversaciones = await fetch(
-          `http://127.0.0.1:8080/api/chat/conversaciones/${idAgente}`,
+          `agenthub-production-e274.up.railway.app/api/chat/conversaciones/${idAgente}`,
           { headers: { Authorization: `Bearer ${token}` } },
         ).then((r) => r.json());
 
@@ -62,7 +62,7 @@ export default function PantallaChat() {
           setConversacionId(ultima.id);
 
           const mensajesHistorial = await fetch(
-            `http://127.0.0.1:8080/api/chat/conversacion/${ultima.id}`,
+            `agenthub-production-e274.up.railway.app/api/chat/conversacion/${ultima.id}`,
             { headers: { Authorization: `Bearer ${token}` } },
           ).then((r) => r.json());
 
@@ -133,7 +133,7 @@ export default function PantallaChat() {
     try {
       const token = getToken();
       await fetch(
-        `http://127.0.0.1:8080/api/chat/conversacion/${conversacionId}`,
+        `agenthub-production-e274.up.railway.app/api/chat/conversacion/${conversacionId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

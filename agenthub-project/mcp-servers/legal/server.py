@@ -95,4 +95,4 @@ if __name__ == "__main__":
     # Arranca el servidor en 0.0.0.0 para ser accesible desde otros contenedores Docker.
     # Puerto 8001 — configurado en docker-compose y guardado en mcp_server_url de la BD.
     # En Railway, este servicio se despliega como un servicio independiente con URL pública.
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="gleaming-growth-production-1b6d.up.railway.app", port=8001)
