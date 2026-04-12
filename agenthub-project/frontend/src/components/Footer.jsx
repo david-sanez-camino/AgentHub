@@ -39,10 +39,10 @@ export default function Footer() {
                     <div>
                         <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Producto</h3>
                         <ul className="space-y-3">
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Marketplace</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Precios</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Casos de Uso</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Integraciones</a></li>
+                            <li><Link to="/desarrollador" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Marketplace</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Precios</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Casos de Uso</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Integraciones</Link></li>
                         </ul>
                     </div>
 
@@ -50,10 +50,10 @@ export default function Footer() {
                     <div>
                         <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Recursos</h3>
                         <ul className="space-y-3">
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Documentación API</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Blog</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Comunidad</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Soporte</a></li>
+                            <li><Link to="/desarrollador/documentacion" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Documentación API</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Blog</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Comunidad</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Soporte</Link></li>
                         </ul>
                     </div>
 
@@ -62,9 +62,9 @@ export default function Footer() {
                         <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Empresa</h3>
                         <ul className="space-y-3">
                             <li><Link to="/sobre-nosotros" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Sobre Nosotros</Link></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Empleo</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Privacidad</a></li>
-                            <li><a href="#!" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Términos Legales</a></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Empleo</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Privacidad</Link></li>
+                            <li><Link to="/" className="text-sm text-slate-500 hover:text-[#136dec] dark:text-slate-400 transition-colors">Términos Legales</Link></li>
                         </ul>
                     </div>
                 </div>
