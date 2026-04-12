@@ -17,8 +17,9 @@ public class TestIAController {
     public String probarChat(@RequestBody Map<String, String> request) {
         String systemPrompt = request.get("systemPrompt");
         String mensajeUsuario = request.get("mensajeUsuario");
+        String modelo = request.getOrDefault("modelo", "anthropic/claude-3-haiku");
 
-        return openRouterService.chatearConAgente(systemPrompt, mensajeUsuario);
+        return openRouterService.chatearConAgente(systemPrompt, mensajeUsuario, null, modelo);
     }
 
 }

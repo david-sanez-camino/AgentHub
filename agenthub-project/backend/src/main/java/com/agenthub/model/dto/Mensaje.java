@@ -1,6 +1,7 @@
 package com.agenthub.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public class Mensaje {
     @JsonProperty("role")
@@ -8,6 +9,9 @@ public class Mensaje {
 
     @JsonProperty("content")
     private String contenido;
+
+    @JsonProperty("tool_calls")
+    private List<ToolCall> toolCalls;
 
     public Mensaje() {}
 
@@ -21,4 +25,7 @@ public class Mensaje {
 
     public String getContenido() { return contenido; }
     public void setContenido(String contenido) { this.contenido = contenido; }
+
+    public List<ToolCall> getToolCalls() { return toolCalls; }
+    public void setToolCalls(List<ToolCall> toolCalls) { this.toolCalls = toolCalls; }
 }
