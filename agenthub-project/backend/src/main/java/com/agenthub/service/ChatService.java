@@ -2,118 +2,192 @@ package com.agenthub.service;
 
 import com.agenthub.model.dto.Tool;
 import com.agenthub.model.dto.ToolFunction;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.agenthub.model.dto.Mensaje;
+import com.agenthub.model.dto.ChatResponse;
+import com.agenthub.model.entity.*;
+import com.agenthub.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.agenthub.model.entity.Agente;
-import com.agenthub.model.entity.Herramienta;
-import com.agenthub.repository.AgenteRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
 /**
  * ChatService — Núcleo del sistema de chat de AgentHub.
  *
- * Responsabilidades:
- *   1. Buscar y validar el agente solicitado en la BD.
- *   2. Cargar sus herramientas (tools) y el modelo de IA asociado.
- *   3. Delegar la conversación a OpenRouterService para que el LLM responda.
- *
- * Flujo completo:
- *   ChatController → ChatService → OpenRouterService → OpenRouter API
- *                                                     ↘ McpClientService → mcp-legal (si hay tool_call)
+ * Ahora gestiona también el historial de conversaciones:
+ *   1. Busca o crea la InstanciaAgente del usuario con el agente
+ *   2. Crea una nueva Conversacion o recupera una existente
+ *   3. Carga el historial de mensajes y lo incluye en el contexto del LLM
+ *   4. Guarda cada mensaje (usuario + IA) en la BD
  */
-
 @Service
 @RequiredArgsConstructor
 public class ChatService {
 
-    // Repositorio JPA para consultar agentes en PostgreSQL
     private final AgenteRepository agenteRepository;
-
-    // Servicio que gestiona la comunicación con la API de OpenRouter (LLM)
     private final OpenRouterService openRouterService;
-
-    // ObjectMapper de Jackson — disponible por si se necesita serializar/deserializar JSON
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
+    private final UsuarioRepository usuarioRepository;
+    private final InstanciaAgenteRepostory instanciaAgenteRepository;
+    private final ConversacionRepository conversacionRepository;
+    private final MensajeRepository mensajeRepository;
 
     /**
-     * Procesa un mensaje de usuario dirigido a un agente especifico
+     * Procesa un mensaje y gestiona el historial de conversación.
      *
-     * @param agenteId       ID del agente en la BD (viene del frontend)
-     * @param mensajeusuario Texto que escribe el usuario en el chat
-     * @return Respuesta final generada por el LLM (con o sin uso de herramientas)
+     * @param agenteId       ID del agente con el que se chatea
+     * @param mensajeUsuario Texto del usuario
+     * @param conversacionId null = nueva conversación, número = continuar existente
      */
-
     @Transactional
-    public String procesarChat(Integer agenteId, String mensajeusuario) {
+    public ChatResponse procesarChat(Integer agenteId, String mensajeUsuario, Integer conversacionId) {
 
-        // ── 1. BUSCAR AGENTE ──────────────────────────────────────────────────
-        // Si no existe el ID en la BD lanzamos una excepcion
-        Agente agente = agenteRepository.findById(agenteId).orElseThrow(() -> new RuntimeException("Error: No se ha encontrado el agente con el ID: " + agenteId));
+        // ── 1. BUSCAR Y VALIDAR AGENTE ────────────────────────────────────────
+        Agente agente = agenteRepository.findById(agenteId)
+            .orElseThrow(() -> new RuntimeException("Agente no encontrado: " + agenteId));
 
-        // ── 2. VALIDAR QUE EL AGENTE ESTÁ DISPONIBLE ─────────────────────────
-        // Solo los agentes aprobados por el admin y marcados como publicados
-        // son accesibles en el marketplace. Doble check por seguridad.
         if (!agente.getPublicado() || !"APROBADO".equals(agente.getEstadoVerificacion())) {
-            return "El agente que busca aun no esta disponible en AgentHUB, nice try didi";
+            return new ChatResponse("El agente que busca aun no esta disponible en AgentHUB", null);
         }
 
-        // ── 3. LOG DE TRAZABILIDAD ────────────────────────────────────────────
-        // Permite ver en los logs qué agente responde y con que modelo
-        // Ejemplo:  Agente: [LexAdvisor] | Modelo: anthropic/claude-3-haiku | ID: 1
-        System.out.println("Agente: [" + agente.getNombre() + "] | Modelo: " + agente.getModelo() + " | ID: " + agenteId);
+        System.out.println("==== Agente: [" + agente.getNombre() + "] | Modelo: " + agente.getModelo() + " | ID: " + agenteId);
 
-        // ── 4. EXTRAER SYSTEM PROMPT ──────────────────────────────────────────
-        // El system prompt define la personalidad y reglas del agente.
-        // Esta guardado en la BD y lo configura el desarrollador al crear el agente.
-        String systemPrompt = agente.getSystemPromt();
+        // ── 2. OBTENER USUARIO AUTENTICADO ────────────────────────────────────
+        // El usuario viene del JWT — no hace falta mandarlo desde el frontend
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("==== Usuario no encontrado: " + email));
 
-        // ── 5. CARGAR HERRAMIENTAS DEL AGENTE ────────────────────────────────
-        // Cada agente puede tener 0 o mas herramientas asignadas (relacion ManyToMany).
-        // Las herramientas se convierten al formato Tool que entiende OpenRouter (OpenAI-compatible).
-        // Cada Tool contiene: nombre, descripcion, esquema JSON de parámetros y URL del servidor MCP.
+        // ── 3. BUSCAR O CREAR INSTANCIA AGENTE ───────────────────────────────
+        // Una InstanciaAgente representa la relación usuario-agente.
+        // Si el usuario ya había chateado con este agente, reutilizamos la instancia.
+        InstanciaAgente instancia = instanciaAgenteRepository
+            .findByUsuarioIdAndAgenteId(usuario.getId(), agenteId)
+            .orElseGet(() -> {
+                System.out.println("==== Creando nueva InstanciaAgente para usuario " + email);
+                return instanciaAgenteRepository.save(
+                    InstanciaAgente.builder()
+                        .usuario(usuario)
+                        .agente(agente)
+                        .estado("ACTIVA")
+                        .fechaCreacion(LocalDate.now())
+                        .build()
+                );
+            });
+
+        // ── 4. BUSCAR O CREAR CONVERSACION ───────────────────────────────────
+        // Si conversacionId es null, creamos una conversación nueva.
+        // Si viene con ID, cargamos la conversación existente para continuar.
+        Conversacion conversacion;
+        if (conversacionId == null) {
+            System.out.println("===== Creando nueva conversación =====");
+            conversacion = conversacionRepository.save(
+                Conversacion.builder()
+                    .instanciaAgente(instancia)
+                    .fechaInicio(LocalDate.now())
+                    .estado("ACTIVA")
+                    .build()
+            );
+        } else {
+            conversacion = conversacionRepository.findById(conversacionId)
+                .orElseThrow(() -> new RuntimeException("==== Conversación no encontrada: " + conversacionId));
+        }
+
+        // ── 5. CARGAR HISTORIAL DE MENSAJES ──────────────────────────────────
+        // Recuperamos todos los mensajes anteriores de esta conversación
+        // y los convertimos al formato Mensaje DTO que entiende OpenRouter.
+        List<MensajeEntity> historial = mensajeRepository.findByConversacionId(conversacion.getId());
+
+        List<Mensaje> mensajesContexto = new ArrayList<>();
+
+        // System prompt del agente — siempre primero
+        mensajesContexto.add(new Mensaje("system", agente.getSystemPromt()));
+
+        // Historial anterior de la conversación
+        for (MensajeEntity m : historial) {
+            mensajesContexto.add(new Mensaje(m.getRol(), m.getContenido()));
+        }
+
+        // Nuevo mensaje del usuario
+        mensajesContexto.add(new Mensaje("user", mensajeUsuario));
+
+        System.out.println("==== Historial cargado: " + historial.size() + " mensajes anteriores");
+
+        // ── 6. CARGAR HERRAMIENTAS ────────────────────────────────────────────
         List<Tool> herramientasIA = null;
-
         if (agente.getHerramientas() != null && !agente.getHerramientas().isEmpty()) {
             herramientasIA = new ArrayList<>();
-            
-            System.out.println("Herramientas de [" + agente.getNombre() + "]: " + agente.getHerramientas().size());
-
+            System.out.println("==== Herramientas de [" + agente.getNombre() + "]: " + agente.getHerramientas().size());
             for (Herramienta h : agente.getHerramientas()) {
                 try {
-                    // Construimos el objeto ToolFunction con el esquema JSON de parámetros.
-                    // El esquemaParametros es un JSON raw guardado en TEXT en la BD.
-                    // Ejemplo: {"type":"object","properties":{"query":{"type":"string"}},"required":["query"]}
                     ToolFunction funcion = new ToolFunction(h.getNombre(), h.getDescripcion(), h.getEsquemaParametros());
-
-                    // Añadimos la Tool a la lista incluyendo la URL del servidor MCP.
-                    // mcpServerUrl se usa en McpClientService para saber a qué servidor llamar
-                    // cuando el LLM decide usar esta herramienta. No se envía a OpenRouter (@JsonIgnore).
-                    // Ejemplo URL: http://mcp-legal:8001
-                    herramientasIA.add(new Tool("function", funcion, h.getMcpServerUrl())); 
-
-                    System.out.println("Herramienta cargada: " + h.getNombre() + " → " + h.getMcpServerUrl());
-
+                    herramientasIA.add(new Tool("function", funcion, h.getMcpServerUrl()));
+                    System.out.println("   ==== Tool cargada: " + h.getNombre() + " → " + h.getMcpServerUrl());
                 } catch (Exception e) {
-                    // Si falla una herramienta, continuamos con las demás — no bloqueamos el chat
-                    System.err.println("Error al cargar la herramienta: " + h.getNombre() + " - " + e.getMessage());
+                    System.err.println("   ==== Error al cargar tool: " + h.getNombre() + " - " + e.getMessage());
                 }
             }
         } else {
-            // El agente no tiene herramientas — respondera solo con su conocimiento
-            System.out.println("[" + agente.getNombre() + "] no tiene herramientas asignadas, responderá sin tools.");
+            System.out.println("==== [" + agente.getNombre() + "] no tiene herramientas asignadas. ====");
         }
 
-        // ── 6. DELEGAR A OPENROUTER ───────────────────────────────────────────
-        // Pasamos al LLM:
-        //   - systemPrompt: personalidad y reglas del agente
-        //   - mensajeusuario: lo que escribió el usuario
-        //   - herramientasIA: lista de tools disponibles (null si no tiene)
-        //   - agente.getModelo(): modelo guardado en BD para este agente específico
-        //                         Ejemplo: "anthropic/claude-3-haiku" o "openai/gpt-oss-20b:free"
-        return openRouterService.chatearConAgente(systemPrompt, mensajeusuario, herramientasIA, agente.getModelo());
+        // ── 7. LLAMAR AL LLM CON EL HISTORIAL COMPLETO ───────────────────────
+        String respuesta = openRouterService.chatearConAgente(
+            mensajesContexto,
+            herramientasIA,
+            agente.getModelo()
+        );
+
+        // ── 8. GUARDAR MENSAJES EN LA BD ──────────────────────────────────────
+        // Guardamos el mensaje del usuario y la respuesta de la IA
+        mensajeRepository.save(MensajeEntity.builder()
+            .conversacion(conversacion)
+            .rol("user")
+            .contenido(mensajeUsuario)
+            .fechaMensaje(LocalDate.now())
+            .build());
+
+        mensajeRepository.save(MensajeEntity.builder()
+            .conversacion(conversacion)
+            .rol("assistant")
+            .contenido(respuesta)
+            .fechaMensaje(LocalDate.now())
+            .build());
+
+        System.out.println("==== Mensajes guardados en conversación ID: " + conversacion.getId());
+
+        return new ChatResponse(respuesta, conversacion.getId());
+    }
+
+    // Lista todas las conversaciones del usuario con un agente concreto
+    public List<Conversacion> listarConversaciones(Integer agenteId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return instanciaAgenteRepository
+            .findByUsuarioIdAndAgenteId(usuario.getId(), agenteId)
+            .map(instancia -> conversacionRepository.findByInstanciaAgenteId(instancia.getId()))
+            .orElse(List.of());
+    }
+
+    // Devuelve el historial de mensajes de una conversación
+    public List<MensajeEntity> obtenerHistorial(Integer conversacionId) {
+        return mensajeRepository.findByConversacionId(conversacionId);
+    }
+
+    // Elimina una conversación y todos sus mensajes
+    @Transactional
+    public void eliminarConversacion(Integer conversacionId) {
+        List<MensajeEntity> mensajes = mensajeRepository.findByConversacionId(conversacionId);
+        mensajeRepository.deleteAll(mensajes);
+        conversacionRepository.deleteById(conversacionId);
+        System.out.println("==== Conversación " + conversacionId + " eliminada ====");
     }
 }

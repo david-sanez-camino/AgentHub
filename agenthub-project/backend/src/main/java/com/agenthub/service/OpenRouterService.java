@@ -67,7 +67,7 @@ public class OpenRouterService {
      * @return Respuesta final en texto para mostrar al usuario
      */
 
-    public String chatearConAgente(String systemPrompt, String mensajeUsuario, List<Tool> herramientas, String modeloAgente) {
+    public String chatearConAgente(List<Mensaje> mensajes,  List<Tool> herramientas, String modeloAgente) {
 
         // ── CABECERAS HTTP ────────────────────────────────────────────────────
         // OpenRouter requiere Authorization Bearer + cabeceras opcionales de identificación
@@ -77,17 +77,14 @@ public class OpenRouterService {
         headers.set("HTTP-Referer", "http://localhost:8080"); // Identifica el origen de la petición
         headers.set("X-Title", "AgentHub"); // Nombre visible en el dashboard de OpenRouter
 
-        // ── CONSTRUCCIÓN DEL CONTEXTO ─────────────────────────────────────────
-        // OpenRouter (como OpenAI) usa una lista de mensajes con roles:
-        //   "system"    → instrucciones del agente (no visible para el usuario)
-        //   "user"      → mensaje del usuario
-        Mensaje mensajeSistema = new Mensaje("system", systemPrompt);
-        Mensaje preguntaUsuario = new Mensaje("user", mensajeUsuario);
 
         // ── PETICIÓN A OPENROUTER (FASE 1) ────────────────────────────────────
+        // El contexto completo (system + historial + mensaje actual) 
+        // viene construido desde ChatService — no lo construimos aquí
         OpenRouterRequest requestBody = new OpenRouterRequest();
-        requestBody.setModelo(modeloAgente); // Modelo específico del agente
-        requestBody.setMensajes(List.of(mensajeSistema, preguntaUsuario)); // Contexto de la conversación
+        requestBody.setModelo(modeloAgente);
+        requestBody.setMensajes(mensajes); // ← lista completa con historial
+        
 
         // Si el agente tiene herramientas, las incluimos en el request.
         // OpenRouter las pasa al LLM en formato OpenAI function calling.

@@ -11,9 +11,11 @@ public class MensajeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String rol;
+
+    @Column(columnDefinition = "TEXT")
     private String contenido;
+
     private String nombreHerramienta;
     private String llamadaHerramienta;
     private LocalDate fechaMensaje;

@@ -181,20 +181,19 @@ export async function obtenerMisAgentes(token) {
 
 // Enviar mensaje al chat de un agente
 // POST /api/chat
-export async function enviarMensajeChat(agenteId, mensaje, token) {
+export async function enviarMensajeChat(agenteId, mensaje, token, conversacionId = null) {
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        // JSON 
         body: JSON.stringify({
             agenteId: agenteId,
-            mensajeUsuario: mensaje
+            mensajeUsuario: mensaje,
+            conversacionId: conversacionId  
         }),
     });
-
     return handleResponse(response);
 }
 

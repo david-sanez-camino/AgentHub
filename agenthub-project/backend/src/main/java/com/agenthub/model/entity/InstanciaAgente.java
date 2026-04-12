@@ -3,6 +3,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 @Entity
 @Table(name = "instancia_agente")
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
@@ -11,7 +14,8 @@ public class InstanciaAgente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(columnDefinition = "JSON")
+    @JdbcTypeCode(SqlTypes.JSON)          
+    @Column(columnDefinition = "jsonb")
     private String configuracion;
 
     private String estado;
