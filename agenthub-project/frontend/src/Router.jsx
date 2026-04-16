@@ -9,6 +9,7 @@ import Home from './pages/home';
 import Login from './pages/login';
 import CrearUsuario from './pages/crear_usuario';
 import AboutUs from './pages/AboutUs';
+import Marketplace from './pages/Marketplace';
 
 // Admin (Legado / Ya existía)
 import ProtectedRoute from "./components/proteccion_ruta";
@@ -39,6 +40,7 @@ export default function Router() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/crear_usuario" element={<CrearUsuario />} />
                 <Route path="/sobre-nosotros" element={<AboutUs />} />
+                <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/pantalla_admin" element={<ProtectedRoute> <PantallaAdmin /> </ProtectedRoute>} />
 
                 {/* Rutas Desarrollador */}

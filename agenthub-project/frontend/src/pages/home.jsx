@@ -43,12 +43,12 @@ export default function Home() {
 
                         </Link>
 
-                        <a
-                            href="#destacados"
+                        <Link
+                            to="/marketplace"
                             className="inline-flex items-center px-8 py-4 text-lg font-semibold border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
                         >
                             Ver agentes destacados
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Features */}

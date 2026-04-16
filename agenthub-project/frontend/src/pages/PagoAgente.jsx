@@ -5,6 +5,7 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import ClienteNavbar from "../components/ClienteNavbar";
 import Footer from "../components/Footer";
 import { crearPaymentIntent, obtenerAgentePorId } from "../services/conexion_api";
+import { getToken } from "../services/auth";
 
 // Inicializar Stripe una sola vez con la clave pública del .env.local
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
@@ -91,7 +92,7 @@ export default function PagoAgente() {
     const [clientSecret, setClientSecret] = useState(null);
     const [error, setError] = useState(null);
 
-    const token = localStorage.getItem("token");
+    const token = getToken();
 
     const iniciarPago = useCallback(async () => {
         try {
