@@ -2,8 +2,8 @@ package com.agenthub.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -12,10 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration @EnableWebSecurity @RequiredArgsConstructor
 public class SecurityConfig {
@@ -23,10 +21,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults())
-            .csrf(c -> c.disable())
+        http.csrf(c -> c.disable())
             .authorizeHttpRequests(a -> a
-                // Permitir preflight OPTIONS en todos los endpoints
+                // Preflight OPTIONS siempre permitido
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth", "/api/auth/**").permitAll()
                 .requestMatchers("/api/agentes", "/api/agentes/**").permitAll()
@@ -48,17 +45,19 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Configuración CORS: permite peticiones desde cualquier origen (Vercel, local, etc.)
+    // CorsFilter con @Order(0) se ejecuta ANTES que Spring Security
+    // garantizando que los headers CORS llegan siempre al navegador
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    @Order(0)
+    public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return source;
+        return new CorsFilter(source);
     }
 
     @Bean
