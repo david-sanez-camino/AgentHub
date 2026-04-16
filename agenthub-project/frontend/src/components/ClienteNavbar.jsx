@@ -2,28 +2,27 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { getUser, logout } from "../services/auth";
+import ModalConfirmLogout from "./ModalConfirmLogout";
 
 export default function ClienteNavbar() {
     const [scrolled, setScrolled] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
     const user = getUser();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
-        };
+        const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const handleLogout = () => {
-        if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-            logout();
-            navigate("/login");
-        }
-    };
+    const handleLogout = () => setShowLogoutModal(true);
+    const confirmarLogout = () => { logout(); navigate("/login"); };
+    const cancelarLogout = () => setShowLogoutModal(false);
 
     return (
+        <>
+        {showLogoutModal && <ModalConfirmLogout onConfirm={confirmarLogout} onCancel={cancelarLogout} />}
         <header
             className={`sticky top-0 w-full z-50 transition-all duration-300 ${scrolled
                 ? "bg-white/80 dark:bg-[#101822]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm"
@@ -74,5 +73,6 @@ export default function ClienteNavbar() {
                 </div>
             </div>
         </header>
+        </>
     );
 }
