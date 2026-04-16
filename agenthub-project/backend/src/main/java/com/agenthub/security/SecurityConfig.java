@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/desarrolladores").permitAll()
                 .requestMatchers("/api/test-ia/**").permitAll() 
                 .requestMatchers("/api/chat", "/api/chat/**").authenticated()
+                .requestMatchers("/api/payments", "/api/payments/**").authenticated()
                 .requestMatchers(
                     "/api/desarrolladores/pendientes",
                     "/api/desarrolladores/aprobados",

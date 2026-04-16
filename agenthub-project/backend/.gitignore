@@ -1,2 +1,12 @@
 target/
+
+# Variables de entorno y secretos — nunca subir a git
 .env
+.env.*
+*.env
+
+# Claves y certificados
+*.pem
+*.key
+*.p12
+*.jks

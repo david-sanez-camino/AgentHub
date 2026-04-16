@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ClienteNavbar from "../components/ClienteNavbar";
 import Footer from "../components/Footer";
 import { obtenerAgentesAprobados } from "../services/conexion_api";
 
 export default function ClientePagina() {
+    const navigate = useNavigate();
     const [busqueda, setBusqueda] = useState("");
     const [agentes, setAgentes] = useState([]);
     const [agentesFiltered, setAgentesFiltered] = useState([]);
@@ -94,9 +96,16 @@ export default function ClientePagina() {
                                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
                                     {agente.nombre}
                                 </h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3">
+                                <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-4">
                                     {agente.descripcion}
                                 </p>
+                                {/* Botón de compra: redirige al checkout de Stripe */}
+                                <button
+                                    onClick={() => navigate(`/cliente/pagar/${agente.id}`)}
+                                    className="w-full py-2.5 bg-[#136dec] hover:bg-blue-600 text-white text-sm font-bold rounded-xl transition-colors"
+                                >
+                                    {agente.precio ? `Comprar — $${agente.precio}` : "Obtener gratis"}
+                                </button>
                             </div>
                         ))}
                     </div>

@@ -27,6 +27,8 @@ import PantallaChat from './pages/PantallaChat';
 import ClientePagina from './pages/Cliente_Pagina';
 import ClientePerfil from './pages/Cliente_Perfil';
 import ClienteMisAgentes from './pages/Cliente_Mis_Agentes';
+import PagoAgente from './pages/PagoAgente';
+import PagoExitoso from './pages/PagoExitoso';
 
 export default function Router() {
     return (
@@ -52,6 +54,8 @@ export default function Router() {
                 <Route path="/cliente" element={<ClientePagina />} />
                 <Route path="/cliente/perfil" element={<ClientePerfil />} />
                 <Route path="/cliente/mis-agentes" element={<ClienteMisAgentes />} />
+                <Route path="/cliente/pagar/:idAgente" element={<PagoAgente />} />
+                <Route path="/cliente/pago-exitoso" element={<PagoExitoso />} />
             </Routes>
         </BrowserRouter>
     );

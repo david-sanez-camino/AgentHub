@@ -220,4 +220,17 @@ export async function obtenerAgentePorId(id) {
     return handleResponse(response);
 }
 
+// Crear PaymentIntent en Stripe para comprar un agente
+// POST /api/payments/create-payment-intent
+export async function crearPaymentIntent(agenteId, token) {
+    const response = await fetch(`${API_BASE_URL}/api/payments/create-payment-intent`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ agenteId }),
+    });
+    return handleResponse(response);
+}
 //
