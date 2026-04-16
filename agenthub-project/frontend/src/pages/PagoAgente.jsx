@@ -13,7 +13,6 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 function CheckoutForm({ agente }) {
     const stripe = useStripe();
     const elements = useElements();
-    const navigate = useNavigate();
 
     const [mensaje, setMensaje] = useState(null);
     const [procesando, setProcesando] = useState(false);
