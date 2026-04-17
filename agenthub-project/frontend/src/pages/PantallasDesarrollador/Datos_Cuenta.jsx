@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
-import Footer from "../components/Footer";
-import { getUser } from "../services/auth";
+import DesarrolladorNavbar from "../../components/DesarrolladorNavbar";
+import Footer from "../../components/Footer";
+import { getUser } from "../../services/auth";
 
 export default function DatosCuenta() {
     const user = getUser();

@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import agentImage from "../assets/imagen_agent.png";
-import Footer from "../components/Footer";
-import TopNavbar from "../components/TopNavbar";
+import agentImage from "../../assets/imagen_agent.png";
+import Footer from "../../components/Footer";
+import TopNavbar from "../../components/TopNavbar";
 //home pagina de inicio de la web
 export default function Home() {
     return (

@@ -10,7 +10,7 @@ import {
     obtenerAgentePorId,
     aprobarAgente,
     rechazarAgente,
-} from "../services/adminService";
+} from "../../services/adminService";
 
 export default function AdminSystemScreen() {
     // =========================

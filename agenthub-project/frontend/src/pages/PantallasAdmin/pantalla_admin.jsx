@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, X, Search } from "lucide-react";
-import logo from "../assets/logo.png";
-import { getToken, logout } from "../services/auth";
-import ModalConfirmLogout from "../components/ModalConfirmLogout";
+import logo from "../../assets/logo.png";
+import { getToken, logout } from "../../services/auth";
+import ModalConfirmLogout from "../../components/ModalConfirmLogout";
 import {
     obtenerAgentes,
     aprobarAgente,
@@ -12,7 +12,7 @@ import {
     obtenerDesarrolladores,
     aprobarDesarrollador,
     rechazarDesarrollador,
-} from "../services/conexion_api";
+} from "../../services/conexion_api";
 
 // Normaliza estado a mayúsculas para comparar independientemente de cómo lo devuelva el backend
 function normalizar(estado) {

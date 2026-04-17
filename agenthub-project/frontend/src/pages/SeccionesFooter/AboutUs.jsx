@@ -1,6 +1,6 @@
 import React from "react";
-import TopNavbar from "../components/TopNavbar";
-import Footer from "../components/Footer";
+import TopNavbar from "../../components/TopNavbar";
+import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
 
 export default function AboutUs() {

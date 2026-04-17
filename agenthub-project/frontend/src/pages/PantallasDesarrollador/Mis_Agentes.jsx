@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
-import Footer from "../components/Footer";
+import DesarrolladorNavbar from "../../components/DesarrolladorNavbar";
+import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
 
-import { obtenerMisAgentes } from "../services/conexion_api";
-import { getToken } from "../services/auth";
+import { obtenerMisAgentes } from "../../services/conexion_api";
+import { getToken } from "../../services/auth";
 
 export default function MisAgentes() {
   const [misAgentes, setMisagentes] = useState([]);

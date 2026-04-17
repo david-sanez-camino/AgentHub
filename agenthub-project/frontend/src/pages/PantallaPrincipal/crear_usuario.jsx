@@ -11,8 +11,8 @@ mensaje de espera hasta q sea aceptado y pasado el visto bueno de los admins.
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, Building2, Phone, FileText, Globe, Briefcase, ArrowLeft } from "lucide-react";
-import logo from "../assets/logo.png";
-import { registrarUsuario } from "../services/conexion_api";
+import logo from "../../assets/logo.png";
+import { registrarUsuario } from "../../services/conexion_api";
 
 export default function Register() {
     // "developer" | "business" | ""

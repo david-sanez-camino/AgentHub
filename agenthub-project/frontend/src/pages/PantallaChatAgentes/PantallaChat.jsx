@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
-import Footer from "../components/Footer";
+import DesarrolladorNavbar from "../../components/DesarrolladorNavbar";
+import Footer from "../../components/Footer";
 
 // Asegúrate de tener esta función en tu conexion_api.js
-import { enviarMensajeChat } from "../services/conexion_api";
-import { getToken } from "../services/auth";
+import { enviarMensajeChat } from "../../services/conexion_api";
+import { getToken } from "../../services/auth";
 
-import { obtenerAgentePorId } from "../services/conexion_api";
+import { obtenerAgentePorId } from "../../services/conexion_api";
 
 export default function PantallaChat() {
   // Capturamos el ID del agente desde la URL (ej: /chat/1)

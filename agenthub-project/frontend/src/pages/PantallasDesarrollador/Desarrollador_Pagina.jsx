@@ -1,8 +1,8 @@
 import React from "react";
-import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
-import Footer from "../components/Footer";
+import DesarrolladorNavbar from "../../components/DesarrolladorNavbar";
+import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
-import { getUser } from "../services/auth";
+import { getUser } from "../../services/auth";
 
 export default function DesarrolladorPagina() {
     const user = getUser();

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import ClienteNavbar from "../components/ClienteNavbar";
-import Footer from "../components/Footer";
-import { getUser } from "../services/auth";
+import ClienteNavbar from "../../components/ClienteNavbar";
+import Footer from "../../components/Footer";
+import { getUser } from "../../services/auth";
 
 export default function ClientePerfil() {
     const user = getUser();

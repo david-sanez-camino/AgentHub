@@ -52,15 +52,15 @@ export default function TopNavbar() {
                     <a href="#destacados" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
                         Agentes
                     </a>
-                    <a href="#!" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    <Link to="/soluciones" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
                         Soluciones
-                    </a>
-                    <a href="#!" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    </Link>
+                    <Link to="/precios" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
                         Precios
-                    </a>
-                    <a href="#!" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    </Link>
+                    <Link to="/documentacion" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
                         Documentación
-                    </a>
+                    </Link>
                 </nav>
 
                 {/* Actions (Login / Signup) */}

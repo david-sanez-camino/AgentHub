@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
-import Footer from "../components/Footer";
+import DesarrolladorNavbar from "../../components/DesarrolladorNavbar";
+import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
-import { publicarAgente } from "../services/conexion_api";
-import { getUser, getToken } from "../services/auth";
+import { publicarAgente } from "../../services/conexion_api";
+import { getUser, getToken } from "../../services/auth";
 
 export default function SubirAgente() {
     const navigate = useNavigate();

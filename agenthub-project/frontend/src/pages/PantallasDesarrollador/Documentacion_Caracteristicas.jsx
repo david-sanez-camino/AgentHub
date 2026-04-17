@@ -1,6 +1,6 @@
 import React from "react";
-import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
-import Footer from "../components/Footer";
+import DesarrolladorNavbar from "../../components/DesarrolladorNavbar";
+import Footer from "../../components/Footer";
 
 export default function DocumentacionCaracteristicas() {
     return (

@@ -4,32 +4,49 @@ Carpeta q  gestiona las rutas de la aplicacion
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Públicas
-import Home from './pages/home';
-import Login from './pages/login';
-import CrearUsuario from './pages/crear_usuario';
-import AboutUs from './pages/AboutUs';
-import Marketplace from './pages/Marketplace';
+// PantallaPrincipal
+import Home from './pages/PantallaPrincipal/home';
+import Login from './pages/PantallaPrincipal/login';
+import CrearUsuario from './pages/PantallaPrincipal/crear_usuario';
+import Marketplace from './pages/PantallaPrincipal/Marketplace';
 
-// Admin (Legado / Ya existía)
+// SeccionesFooter
+import AboutUs from './pages/SeccionesFooter/AboutUs';
+import Blog from './pages/SeccionesFooter/Blog';
+import Comunidad from './pages/SeccionesFooter/Comunidad';
+import Soporte from './pages/SeccionesFooter/Soporte';
+import Empleo from './pages/SeccionesFooter/Empleo';
+import Privacidad from './pages/SeccionesFooter/Privacidad';
+import TerminosLegales from './pages/SeccionesFooter/TerminosLegales';
+import CasosDeUso from './pages/SeccionesFooter/CasosDeUso';
+import Integraciones from './pages/SeccionesFooter/Integraciones';
+
+// SeccionesNavbar
+import Soluciones from './pages/SeccionesNavbar/Soluciones';
+import Precios from './pages/SeccionesNavbar/Precios';
+import Documentacion from './pages/SeccionesNavbar/Documentacion';
+
+// PantallasAdmin
 import ProtectedRoute from "./components/proteccion_ruta";
-import PantallaAdmin from "./pages/pantalla_admin";
+import PantallaAdmin from "./pages/PantallasAdmin/pantalla_admin";
 
-// Nuevas Rutas: Desarrollador
-import DesarrolladorPagina from './pages/Desarrollador_Pagina';
-import DatosCuenta from './pages/Datos_Cuenta';
-import DocumentacionCaracteristicas from './pages/Documentacion_Caracteristicas';
-import SubirAgente from './pages/Subir_Agente';
-import Finanzas from './pages/Finanzas';
-import MisAgentes from './pages/Mis_Agentes';
-import PantallaChat from './pages/PantallaChat';
+// PantallasDesarrollador
+import DesarrolladorPagina from './pages/PantallasDesarrollador/Desarrollador_Pagina';
+import DatosCuenta from './pages/PantallasDesarrollador/Datos_Cuenta';
+import DocumentacionCaracteristicas from './pages/PantallasDesarrollador/Documentacion_Caracteristicas';
+import SubirAgente from './pages/PantallasDesarrollador/Subir_Agente';
+import Finanzas from './pages/PantallasDesarrollador/Finanzas';
+import MisAgentes from './pages/PantallasDesarrollador/Mis_Agentes';
 
-// Nuevas Rutas: Cliente
-import ClientePagina from './pages/Cliente_Pagina';
-import ClientePerfil from './pages/Cliente_Perfil';
-import ClienteMisAgentes from './pages/Cliente_Mis_Agentes';
-import PagoAgente from './pages/PagoAgente';
-import PagoExitoso from './pages/PagoExitoso';
+// PantallaChatAgentes
+import PantallaChat from './pages/PantallaChatAgentes/PantallaChat';
+
+// PantallasCliente
+import ClientePagina from './pages/PantallasCliente/Cliente_Pagina';
+import ClientePerfil from './pages/PantallasCliente/Cliente_Perfil';
+import ClienteMisAgentes from './pages/PantallasCliente/Cliente_Mis_Agentes';
+import PagoAgente from './pages/PantallasCliente/PagoAgente';
+import PagoExitoso from './pages/PantallasCliente/PagoExitoso';
 
 export default function Router() {
     return (
@@ -41,6 +58,17 @@ export default function Router() {
                 <Route path="/crear_usuario" element={<CrearUsuario />} />
                 <Route path="/sobre-nosotros" element={<AboutUs />} />
                 <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/comunidad" element={<Comunidad />} />
+                <Route path="/soporte" element={<Soporte />} />
+                <Route path="/empleo" element={<Empleo />} />
+                <Route path="/privacidad" element={<Privacidad />} />
+                <Route path="/terminos-legales" element={<TerminosLegales />} />
+                <Route path="/casos-de-uso" element={<CasosDeUso />} />
+                <Route path="/integraciones" element={<Integraciones />} />
+                <Route path="/soluciones" element={<Soluciones />} />
+                <Route path="/precios" element={<Precios />} />
+                <Route path="/documentacion" element={<Documentacion />} />
                 <Route path="/pantalla_admin" element={<ProtectedRoute> <PantallaAdmin /> </ProtectedRoute>} />
 
                 {/* Rutas Desarrollador */}

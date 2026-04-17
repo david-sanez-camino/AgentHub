@@ -1,7 +1,7 @@
 import React from "react";
-import DesarrolladorNavbar from "../components/DesarrolladorNavbar";
-import Footer from "../components/Footer";
-import { mockAgentes } from "../mocks/info_ejemplo_relleno";
+import DesarrolladorNavbar from "../../components/DesarrolladorNavbar";
+import Footer from "../../components/Footer";
+import { mockAgentes } from "../../mocks/info_ejemplo_relleno";
 
 export default function Finanzas() {
     // Calculamos totales basados en la info mockeada de Juan

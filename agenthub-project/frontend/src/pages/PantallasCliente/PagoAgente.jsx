@@ -2,10 +2,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import ClienteNavbar from "../components/ClienteNavbar";
-import Footer from "../components/Footer";
-import { crearPaymentIntent, obtenerAgentePorId } from "../services/conexion_api";
-import { getToken } from "../services/auth";
+import ClienteNavbar from "../../components/ClienteNavbar";
+import Footer from "../../components/Footer";
+import { crearPaymentIntent, obtenerAgentePorId } from "../../services/conexion_api";
+import { getToken } from "../../services/auth";
 
 // Inicializar Stripe una sola vez con la clave pública del .env.local
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);

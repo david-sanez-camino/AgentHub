@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import ClienteNavbar from "../components/ClienteNavbar";
-import Footer from "../components/Footer";
+import ClienteNavbar from "../../components/ClienteNavbar";
+import Footer from "../../components/Footer";
 
 export default function PagoExitoso() {
     const navigate = useNavigate();

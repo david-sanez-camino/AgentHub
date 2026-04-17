@@ -1,6 +1,6 @@
 import React from "react";
-import ClienteNavbar from "../components/ClienteNavbar";
-import Footer from "../components/Footer";
+import ClienteNavbar from "../../components/ClienteNavbar";
+import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
 
 export default function ClienteMisAgentes() {

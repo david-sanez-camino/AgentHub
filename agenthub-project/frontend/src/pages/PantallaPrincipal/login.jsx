@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
-import logo from "../assets/logo.png";
-import { loginUsuario } from "../services/conexion_api";
-import { saveAuth } from "../services/auth";
+import logo from "../../assets/logo.png";
+import { loginUsuario } from "../../services/conexion_api";
+import { saveAuth } from "../../services/auth";
 
 export default function Login() {
     const navigate = useNavigate();
