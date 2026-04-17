@@ -116,7 +116,7 @@ const faqs = [
 
 /* ─── componentes auxiliares ─────────────────────────────────────────────── */
 
-function PasoCard({ paso, lado }) {
+function PasoCard({ paso }) {
     return (
         <div className="flex gap-6 items-start group">
             <div className="flex flex-col items-center shrink-0">
