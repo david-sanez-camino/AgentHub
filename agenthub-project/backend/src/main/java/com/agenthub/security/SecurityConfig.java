@@ -13,8 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration @EnableWebSecurity @RequiredArgsConstructor
 public class SecurityConfig {
@@ -23,6 +26,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable())
+            .cors(withDefaults())
             .authorizeHttpRequests(a -> a
                 // Preflight OPTIONS siempre permitido
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -46,11 +50,8 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // CorsFilter con @Order(0) se ejecuta ANTES que Spring Security
-    // garantizando que los headers CORS llegan siempre al navegador
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public CorsFilter corsFilter() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("https://agent-hub-ashy-six.vercel.app");
@@ -58,7 +59,13 @@ public class SecurityConfig {
         config.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return source;
+    }
+
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
     }
 
     @Bean
