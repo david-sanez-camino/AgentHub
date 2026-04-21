@@ -18,15 +18,6 @@ public class PaymentController {
     private final StripeService stripeService;
     private final AgenteService agenteService;
 
-    /**
-     * Crea un PaymentIntent para comprar un agente.
-     * El cliente manda el ID del agente y el backend calcula el importe
-     * consultando el precio del agente en la BD.
-     *
-     * POST /api/payments/create-payment-intent
-     * Body: { "agenteId": 1 }
-     * Respuesta: { "clientSecret": "pi_xxx_secret_xxx" }
-     */
     @PostMapping("/create-payment-intent")
     public ResponseEntity<?> crearPaymentIntent(@RequestBody Map<String, Integer> body) {
         Integer agenteId = body.get("agenteId");
@@ -35,11 +26,8 @@ public class PaymentController {
         }
 
         try {
-            // Obtenemos el agente para leer su precio desde la BD
             AgenteResponse agente = agenteService.obtener(agenteId);
-
-            // Stripe trabaja en centavos: precio (USD entero) * 100
-            long amountInCents = agente.getPrecio() * 100L;
+            long amountInCents = (long) (agente.getPrecio() * 100);
 
             String clientSecret = stripeService.crearPaymentIntent(
                     amountInCents,

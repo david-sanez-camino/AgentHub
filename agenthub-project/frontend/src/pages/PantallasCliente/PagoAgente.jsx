@@ -1,22 +1,51 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+    Elements,
+    PaymentElement,
+    useStripe,
+    useElements,
+} from "@stripe/react-stripe-js";
 import ClienteNavbar from "../../components/ClienteNavbar";
 import Footer from "../../components/Footer";
 import { crearPaymentIntent, obtenerAgentePorId } from "../../services/conexion_api";
 import { getToken } from "../../services/auth";
 
-// Inicializar Stripe una sola vez con la clave pública del .env.local
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-// Formulario interno que usa los hooks de Stripe (debe estar dentro de <Elements>)
 function CheckoutForm({ agente }) {
     const stripe = useStripe();
     const elements = useElements();
 
     const [mensaje, setMensaje] = useState(null);
     const [procesando, setProcesando] = useState(false);
+
+    // Cuando Stripe redirige de vuelta (p.ej. 3D Secure), comprueba el estado del pago
+    useEffect(() => {
+        if (!stripe) return;
+
+        const clientSecret = new URLSearchParams(window.location.search).get(
+            "payment_intent_client_secret"
+        );
+        if (!clientSecret) return;
+
+        stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+            switch (paymentIntent.status) {
+                case "succeeded":
+                    setMensaje("¡Pago completado!");
+                    break;
+                case "processing":
+                    setMensaje("Tu pago está siendo procesado.");
+                    break;
+                case "requires_payment_method":
+                    setMensaje("El pago no se completó. Inténtalo de nuevo.");
+                    break;
+                default:
+                    setMensaje("Ocurrió un error inesperado.");
+            }
+        });
+    }, [stripe]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,21 +54,21 @@ function CheckoutForm({ agente }) {
         setProcesando(true);
         setMensaje(null);
 
-        // confirmPayment envía los datos de tarjeta a Stripe directamente (nunca pasan por nuestro servidor)
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                // URL a la que Stripe redirige tras el pago (página de confirmación)
                 return_url: `${window.location.origin}/cliente/pago-exitoso`,
             },
         });
 
-        // Si hay error (tarjeta rechazada, etc.) lo mostramos aquí
-        if (error) {
+        // confirmPayment solo llega aquí si hay error; en caso de éxito redirige sola
+        if (error.type === "card_error" || error.type === "validation_error") {
             setMensaje(error.message);
-            setProcesando(false);
+        } else {
+            setMensaje("Ocurrió un error inesperado. Inténtalo de nuevo.");
         }
-        // Si no hay error, Stripe redirige sola a return_url
+
+        setProcesando(false);
     };
 
     return (
@@ -59,18 +88,17 @@ function CheckoutForm({ agente }) {
                 </div>
             </div>
 
-            {/* Formulario de tarjeta renderizado por Stripe */}
             <div className="bg-white dark:bg-[#1a2230] border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
-                <PaymentElement />
+                <PaymentElement options={{ layout: "tabs" }} />
             </div>
 
             {mensaje && (
-                <p className="text-sm text-red-500 font-medium">{mensaje}</p>
+                <p className="text-sm font-medium text-red-500">{mensaje}</p>
             )}
 
             <button
                 type="submit"
-                disabled={!stripe || procesando}
+                disabled={!stripe || !elements || procesando}
                 className="w-full py-4 bg-[#136dec] hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-colors shadow-lg shadow-[#136dec]/30 text-lg"
             >
                 {procesando ? "Procesando..." : `Pagar $${agente.precio} USD`}
@@ -83,7 +111,6 @@ function CheckoutForm({ agente }) {
     );
 }
 
-// Página principal: carga el agente y el clientSecret, luego monta <Elements>
 export default function PagoAgente() {
     const { idAgente } = useParams();
     const navigate = useNavigate();
@@ -96,11 +123,9 @@ export default function PagoAgente() {
 
     const iniciarPago = useCallback(async () => {
         try {
-            // 1. Obtener datos del agente para mostrar el resumen
             const agenteData = await obtenerAgentePorId(idAgente);
             setAgente(agenteData);
 
-            // 2. Pedir al backend que cree el PaymentIntent y devuelva el clientSecret
             const { clientSecret: secret } = await crearPaymentIntent(Number(idAgente), token);
             setClientSecret(secret);
         } catch (err) {
