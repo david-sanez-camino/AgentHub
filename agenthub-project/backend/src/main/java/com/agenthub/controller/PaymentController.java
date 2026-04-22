@@ -1,10 +1,9 @@
 package com.agenthub.controller;
 
-import com.agenthub.model.dto.AgenteResponse;
-import com.agenthub.service.AgenteService;
-import com.agenthub.service.StripeService;
-import com.stripe.exception.StripeException;
-import lombok.RequiredArgsConstructor;
+import com.stripe.Stripe;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,34 +11,41 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payments")
-@RequiredArgsConstructor
 public class PaymentController {
 
-    private final StripeService stripeService;
-    private final AgenteService agenteService;
+    @Value("${stripe.secret.key}")
+    private String stripeSecretKey;
 
     @PostMapping("/create-payment-intent")
-    public ResponseEntity<?> crearPaymentIntent(@RequestBody Map<String, Integer> body) {
-        Integer agenteId = body.get("agenteId");
-        if (agenteId == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "agenteId es obligatorio"));
-        }
-
+    public ResponseEntity<?> createPaymentIntent(@RequestBody Map<String, Object> body) {
         try {
-            AgenteResponse agente = agenteService.obtener(agenteId);
-            long amountInCents = (long) (agente.getPrecio() * 100);
+            Stripe.apiKey = stripeSecretKey;
 
-            String clientSecret = stripeService.crearPaymentIntent(
-                    amountInCents,
-                    "usd",
-                    "Compra agente: " + agente.getNombre()
-            );
+            Long agenteId = Long.valueOf(body.get("agenteId").toString());
 
-            return ResponseEntity.ok(Map.of("clientSecret", clientSecret));
+            // Aquí deberías buscar el agente en tu DB para obtener el precio real
+            // Agente agente = agenteService.findById(agenteId);
+            // Long amount = (long)(agente.getPrecio() * 100); // Stripe usa centavos
 
-        } catch (StripeException e) {
-            return ResponseEntity.internalServerError()
-                    .body(Map.of("error", "Error al procesar el pago: " + e.getMessage()));
+            Long amount = 2999L; // ejemplo: $29.99 → reemplaza con el precio real del agente
+
+            PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                .setAmount(amount)
+                .setCurrency("usd")
+                .setAutomaticPaymentMethods(
+                    PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                        .setEnabled(true)
+                        .build()
+                )
+                .putMetadata("agenteId", agenteId.toString())
+                .build();
+
+            PaymentIntent intent = PaymentIntent.create(params);
+
+            return ResponseEntity.ok(Map.of("clientSecret", intent.getClientSecret()));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 }

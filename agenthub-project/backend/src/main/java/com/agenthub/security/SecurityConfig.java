@@ -16,34 +16,36 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration @EnableWebSecurity @RequiredArgsConstructor
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable())
-            .cors(withDefaults())
-            .authorizeHttpRequests(a -> a
-                // Preflight OPTIONS siempre permitido
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/auth", "/api/auth/**").permitAll()
-                .requestMatchers("/api/agentes", "/api/agentes/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/desarrolladores").permitAll()
-                .requestMatchers("/api/test-ia/**").permitAll()
-                .requestMatchers("/api/chat", "/api/chat/**").authenticated()
-                .requestMatchers("/api/payments", "/api/payments/**").authenticated()
-                .requestMatchers(
-                    "/api/desarrolladores/pendientes",
-                    "/api/desarrolladores/aprobados",
-                    "/api/desarrolladores/rechazados",
-                    "/api/desarrolladores/*/aprobado",
-                    "/api/desarrolladores/*/rechazado"
-                ).authenticated()
-                .anyRequest().authenticated())
-            .sessionManagement(s -> s
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .cors(withDefaults())
+                .authorizeHttpRequests(a -> a
+                        // Preflight OPTIONS siempre permitido
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/auth", "/api/auth/**").permitAll()
+                        .requestMatchers("/api/agentes", "/api/agentes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/desarrolladores").permitAll()
+                        .requestMatchers("/api/test-ia/**").permitAll()
+                        .requestMatchers("/api/chat", "/api/chat/**").authenticated()
+                        .requestMatchers("/api/payments", "/api/payments/**").authenticated()
+                        .requestMatchers(
+                                "/api/desarrolladores/pendientes",
+                                "/api/desarrolladores/aprobados",
+                                "/api/desarrolladores/rechazados",
+                                "/api/desarrolladores/*/aprobado",
+                                "/api/desarrolladores/*/rechazado")
+                        .authenticated()
+                        .anyRequest().authenticated())
+                .sessionManagement(s -> s
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -51,14 +53,24 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
+
+        // Añade todos tus orígenes permitidos
         config.addAllowedOrigin("https://agent-hub-ashy-six.vercel.app");
+        config.addAllowedOrigin("http://localhost:3000"); // para desarrollo local
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+
+        // Exponer headers necesarios para Stripe
+        config.addExposedHeader("Authorization");
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
-} 
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

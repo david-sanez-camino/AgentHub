@@ -120,6 +120,13 @@
             <version>25.3.0</version>
         </dependency>
 
+        <!-- STRIPE -->
+        <dependency>
+    <groupId>com.stripe</groupId>
+    <artifactId>stripe-java</artifactId>
+    <version>25.3.0</version>
+</dependency>
+
     </dependencies>
 
     <build>
