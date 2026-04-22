@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails ud = User.builder()
                     .username(email)
                     .password("")
-                    .roles(usuarioReal.getRol())
+                    .authorities(usuarioReal.getRol())
                     .build();
                     
                 if (jwtService.validateToken(jwt, ud)) {
@@ -48,7 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // Token inválido o expirado, continuar sin autenticación
+           
+            System.out.println(">>> JWT FILTER ERROR: " + e.getClass().getName() + " - " + e.getMessage());
+
         }
         
         chain.doFilter(req, res);
