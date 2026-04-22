@@ -18,7 +18,7 @@ export default function PantallaChat() {
     {
       rol: "agente",
       texto:
-        "¡Hola! Soy tu asistente de Inteligencia Artificial. ¿En qué te puedo ayudar hoy?",
+        "¡Hola! Soy tu agente de Inteligencia Artificial. ¿En qué te puedo ayudar hoy?",
     },
   ]);
   const [inputTexto, setInputTexto] = useState("");
