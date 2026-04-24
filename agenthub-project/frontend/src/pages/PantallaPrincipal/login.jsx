@@ -155,12 +155,12 @@ export default function Login() {
 
                             {/* Recuperar contraseña */}
                             <div className="text-right">
-                                <button
-                                    type="button"
+                                <Link
+                                    to="/forgot-password"
                                     className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
                                 >
                                     ¿Has olvidado tu contraseña?
-                                </button>
+                                </Link>
                             </div>
 
                             {/* Submit */}

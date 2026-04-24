@@ -48,6 +48,10 @@ import ClienteMisAgentes from './pages/PantallasCliente/Cliente_Mis_Agentes';
 import PagoAgente from './pages/PantallasCliente/PagoAgente';
 import PagoExitoso from './pages/PantallasCliente/PagoExitoso';
 
+// Rutas de Olvido y Reset Password
+import ForgotPassword from './pages/PantallaPrincipal/OlvidoPassword';
+import ResetPassword from './pages/PantallaPrincipal/ResetPassword';
+
 export default function Router() {
     return (
         <BrowserRouter>
@@ -70,6 +74,8 @@ export default function Router() {
                 <Route path="/precios" element={<Precios />} />
                 <Route path="/documentacion" element={<Documentacion />} />
                 <Route path="/pantalla_admin" element={<ProtectedRoute> <PantallaAdmin /> </ProtectedRoute>} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
 
                 {/* Rutas Desarrollador */}
                 <Route path="/desarrollador" element={<DesarrolladorPagina />} />

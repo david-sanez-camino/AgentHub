@@ -233,4 +233,24 @@ export async function crearPaymentIntent(agenteId, token) {
     });
     return handleResponse(response);
 }
-//
+
+// ===========================================================================================
+// POST /api/auth/forgot-password
+export async function olvidarContrasenia(email) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+    });
+    return handleResponse(response);
+}
+
+// POST /api/auth/reset-password
+export async function resetContrasenia(token, nuevaContrasenia) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, nuevaContrasenia }),
+    });
+    return handleResponse(response);
+}
