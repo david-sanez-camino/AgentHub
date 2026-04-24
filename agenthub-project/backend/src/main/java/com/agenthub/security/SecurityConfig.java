@@ -11,8 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -22,11 +20,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable())
-                .cors(withDefaults())
+                .cors(cors -> cors.disable())
                 .authorizeHttpRequests(a -> a
                         // Preflight OPTIONS siempre permitido
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth", "/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/agentes", "/api/agentes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/desarrolladores").permitAll()
                         .requestMatchers("/api/test-ia/**").permitAll()

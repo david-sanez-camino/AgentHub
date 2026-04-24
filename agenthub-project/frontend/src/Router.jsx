@@ -49,7 +49,7 @@ import PagoAgente from './pages/PantallasCliente/PagoAgente';
 import PagoExitoso from './pages/PantallasCliente/PagoExitoso';
 
 // Rutas de Olvido y Reset Password
-import ForgotPassword from './pages/PantallaPrincipal/OlvidoPassword';
+import ForgotPassword from './pages/PantallaPrincipal/ForgotPassword';
 import ResetPassword from './pages/PantallaPrincipal/ResetPassword';
 
 export default function Router() {
