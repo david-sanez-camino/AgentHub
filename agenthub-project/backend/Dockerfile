@@ -4,6 +4,7 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 COPY src ./src
+# Cache bust: 2026-04-24
 RUN mvn clean package -DskipTests
 
 #PARA IVANFRAN
