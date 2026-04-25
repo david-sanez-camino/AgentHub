@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +30,9 @@ public class PasswordResetService {
 
     @Transactional
     public void solicitarReset(String email) {
-        // Busca el usuario — si no existe no decimos nada (seguridad)
         usuarioRepository.findByEmail(email).ifPresent(usuario -> {
-            // Borra tokens anteriores del usuario
             tokenRepository.deleteByUsuario_Id(usuario.getId());
 
-            // Genera token único
             String token = UUID.randomUUID().toString();
 
             PasswordResetToken resetToken = PasswordResetToken.builder()
@@ -46,25 +44,36 @@ public class PasswordResetService {
 
             tokenRepository.save(resetToken);
 
-            // Envía email
             String link = frontendUrl + "/reset-password?token=" + token;
             enviarEmail(usuario.getEmail(), usuario.getNombre(), link);
         });
     }
 
     private void enviarEmail(String destinatario, String nombre, String link) {
-        SimpleMailMessage mensaje = new SimpleMailMessage();
-        mensaje.setTo(destinatario);
-        mensaje.setSubject("Restablecer contraseña — AgentHub");
-        mensaje.setText(
-            "Hola " + nombre + ",\n\n" +
-            "Recibimos una solicitud para restablecer tu contraseña.\n\n" +
-            "Haz clic en el siguiente enlace (válido 30 minutos):\n" +
-            link + "\n\n" +
-            "Si no solicitaste esto, ignora este correo.\n\n" +
-            "— El equipo de AgentHub"
-        );
-        mailSender.send(mensaje);
+        // Añade timeouts para no colgar la petición
+        if (mailSender instanceof JavaMailSenderImpl sender) {
+            sender.getJavaMailProperties().put("mail.smtp.timeout", "5000");
+            sender.getJavaMailProperties().put("mail.smtp.connectiontimeout", "5000");
+            sender.getJavaMailProperties().put("mail.smtp.writetimeout", "5000");
+        }
+
+        try {
+            SimpleMailMessage mensaje = new SimpleMailMessage();
+            mensaje.setTo(destinatario);
+            mensaje.setSubject("Restablecer contraseña — AgentHub");
+            mensaje.setText(
+                "Hola " + nombre + ",\n\n" +
+                "Recibimos una solicitud para restablecer tu contraseña.\n\n" +
+                "Haz clic en el siguiente enlace (válido 30 minutos):\n" +
+                link + "\n\n" +
+                "Si no solicitaste esto, ignora este correo.\n\n" +
+                "— El equipo de AgentHub"
+            );
+            mailSender.send(mensaje);
+            System.out.println(">>> EMAIL ENVIADO a: " + destinatario);
+        } catch (Exception e) {
+            System.out.println(">>> ERROR ENVIANDO EMAIL: " + e.getClass().getName() + " - " + e.getMessage());
+        }
     }
 
     @Transactional
