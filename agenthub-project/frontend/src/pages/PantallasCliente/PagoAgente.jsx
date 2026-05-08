@@ -12,6 +12,7 @@ import Footer from "../../components/Footer";
 import { crearPaymentIntent, obtenerAgentePorId } from "../../services/conexion_api";
 import { getToken } from "../../services/auth";
 
+console.log("Stripe key:", process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 function CheckoutForm({ agente }) {
@@ -57,7 +58,7 @@ function CheckoutForm({ agente }) {
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: `${window.location.origin}/cliente/pago-exitoso`,
+                return_url: `${window.location.origin}/cliente/pago-exitoso?agenteId=${agente.id}`,
             },
         });
 
