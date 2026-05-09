@@ -8,6 +8,7 @@ import java.util.Optional;
 @Repository
 public interface InstanciaAgenteRepostory extends JpaRepository<InstanciaAgente, Integer>{
     List<InstanciaAgente> findByUsuarioId(Integer usuarioId);
+    List<InstanciaAgente> findByAgenteId(Integer agenteId);
 
     // Buscar la instancia de un usuario con un agente especifico
     // usada para recuperar o crear una instancia al inciar un chat

@@ -12,29 +12,40 @@ import java.util.List;
 public class AgenteController {
     private final AgenteService agenteService;
 
-    // POST /api/agentes
-    // El desarrollador crea una gente (queda PENDIENTE)
+    // POST /api/agentes — el desarrollador crea un agente (queda PENDIENTE)
     @PostMapping
     public ResponseEntity<AgenteResponse> crear(@Valid @RequestBody AgenteRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(agenteService.crear(req));
     }
 
-    // GET /api/agentes
+    // GET /api/agentes — agentes aprobados del marketplace
     @GetMapping
     public ResponseEntity<List<AgenteResponse>> listarAprobados(){
         return ResponseEntity.ok(agenteService.listarAprobados());
     }
 
-    // get /api/agentes/mis-agentes
+    // GET /api/agentes/mis-agentes — agentes propios del desarrollador autenticado
     @GetMapping("/mis-agentes")
     public ResponseEntity<List<AgenteResponse>> listarMisAgentes(){
         return ResponseEntity.ok(agenteService.listarMisAgentes());
     }
 
-    // <-- ANTES que /{id}
+    // GET /api/agentes/todos — todos los agentes (admin)
     @GetMapping("/todos")
     public ResponseEntity<List<AgenteResponse>> listarTodos() {
         return ResponseEntity.ok(agenteService.listarTodos());
+    }
+
+    // GET /api/agentes/pendientes — agentes pendientes de revisión (admin)
+    @GetMapping("/pendientes")
+    public ResponseEntity<List<AgenteResponse>> listarPendientes() {
+        return ResponseEntity.ok(agenteService.listarPendientes());
+    }
+
+    // GET /api/agentes/mis-metricas — métricas del desarrollador autenticado
+    @GetMapping("/mis-metricas")
+    public ResponseEntity<MetricasDesarrolladorResponse> obtenerMetricas() {
+        return ResponseEntity.ok(agenteService.obtenerMetricas());
     }
 
     // GET /api/agentes/{id}
@@ -43,30 +54,34 @@ public class AgenteController {
         return ResponseEntity.ok(agenteService.obtener(id));
     }
 
-    // GET /api/agentes/pendientes
-    // Solo el admin ve los pendeintes de revision
-    @GetMapping("/pendientes")
-    public ResponseEntity<List<AgenteResponse>> listarPendientes() {
-        return ResponseEntity.ok(agenteService.listarPendientes());
+    // PUT /api/agentes/{id} — el desarrollador edita su agente
+    @PutMapping("/{id}")
+    public ResponseEntity<AgenteResponse> actualizar(
+            @PathVariable Integer id,
+            @Valid @RequestBody AgenteRequest req) {
+        return ResponseEntity.ok(agenteService.actualizar(id, req));
     }
 
-    // ── PUT /api/agentes/{id}/aprobar ─────────────────────────
-    // El admin aprueba un agente
+    // DELETE /api/agentes/{id} — el desarrollador elimina su agente
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        agenteService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // PUT /api/agentes/{id}/aprobar — el admin aprueba un agente
     @PutMapping("/{id}/aprobar")
-    public ResponseEntity<AgenteResponse> aprobar(
-            @PathVariable Integer id) {
+    public ResponseEntity<AgenteResponse> aprobar(@PathVariable Integer id) {
         return ResponseEntity.ok(agenteService.aprobar(id));
     }
 
-    // ── PUT /api/agentes/{id}/rechazar ────────────────────────
-    // El admin rechaza un agente
+    // PUT /api/agentes/{id}/rechazar — el admin rechaza un agente
     @PutMapping("/{id}/rechazar")
-    public ResponseEntity<AgenteResponse> rechazar(
-            @PathVariable Integer id) {
+    public ResponseEntity<AgenteResponse> rechazar(@PathVariable Integer id) {
         return ResponseEntity.ok(agenteService.rechazar(id));
     }
 
-    // ── GET /api/agentes/buscar (HU-02) ──────────────────────
+    // GET /api/agentes/buscar (HU-02)
     @GetMapping("/buscar")
     public ResponseEntity<List<AgenteResponse>> buscar(
             @RequestParam(required = false) String keyword,
@@ -81,7 +96,5 @@ public class AgenteController {
         req.setPrecioMax(precioMax);
 
         return ResponseEntity.ok(agenteService.buscar(req));
-    } 
-
-    
+    }
 }

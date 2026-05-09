@@ -7,9 +7,11 @@ public class AgenteResponse {
     private Integer id;
     private String nombre;
     private String descripcion;
+    private String systemPromt;
     private String modelo;
     private String categoria;
     private Integer precio;
     private Boolean publicado;
-    private String estadoVerificacion;  // Pendiente, Aprobado, Rechazado
+    private String estadoVerificacion;
+    private Integer ventas;
 }

@@ -10,4 +10,6 @@ public interface CompraRepository extends JpaRepository<Compra, Integer> {
     List<Compra> findByUsuario(Usuario usuario);
     boolean existsByUsuarioAndAgenteId(Usuario usuario, Integer agenteId);
     Optional<Compra> findByStripePaymentIntentId(String paymentIntentId);
+    long countByAgenteId(Integer agenteId);
+    List<Compra> findByAgenteId(Integer agenteId);
 }
