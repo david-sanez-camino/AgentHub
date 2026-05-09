@@ -15,6 +15,7 @@ export default function SubirAgente() {
         modelo: "", //openai/gpt-oss-20b:free
         categoria: "productividad",
         precio: "",
+        urlMcp: "",
         archivoZip: null
     });
 
@@ -57,6 +58,7 @@ export default function SubirAgente() {
             modelo: formData.modelo,
             categoria: formData.categoria,
             precio: formData.precio ? parseFloat(formData.precio) : 0,
+            urlMcp: formData.urlMcp || null,
 
             // datos hardcodeados guarramente por ahora
             publicado: true,
@@ -150,6 +152,14 @@ export default function SubirAgente() {
                                 </p>
                             )}
                         </div> */}
+
+                        {/* URL MCP */}
+                        <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                                URL MCP <span className="text-red-500 font-normal">(Ver donde guardar la url)</span>
+                            </label>
+                            <input type="url" name="urlMcp" value={formData.urlMcp} onChange={handleChange} placeholder="https://tu-servidor-mcp.com/mcp" className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none" />
+                        </div>
 
                         {/* Detalles para la Venta */}
                         <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
