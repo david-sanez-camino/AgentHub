@@ -14,10 +14,6 @@ const CATEGORIAS = [
     { value: "otro", label: "Otro" },
 ];
 
-const MODELOS = [
-    { value: "openai/gpt-oss-20b:free", label: "openai/gpt-oss-20b:free" },
-    { value: "anthropic/claude-3-haiku", label: "anthropic/claude-3-haiku" },
-];
 
 function ModalEditar({ agente, onClose, onGuardado }) {
     const [form, setForm] = useState({
@@ -87,22 +83,12 @@ function ModalEditar({ agente, onClose, onGuardado }) {
                             className="w-full p-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-purple-500/50 outline-none resize-none"></textarea>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Categoría</label>
-                            <select name="categoria" value={form.categoria} onChange={handleChange}
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1a2230] focus:ring-2 focus:ring-purple-500/50 outline-none">
-                                {CATEGORIAS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Modelo</label>
-                            <select name="modelo" value={form.modelo} onChange={handleChange}
-                                className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1a2230] focus:ring-2 focus:ring-purple-500/50 outline-none">
-                                <option value="">Elige un modelo</option>
-                                {MODELOS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-                            </select>
-                        </div>
+                    <div>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Categoría</label>
+                        <select name="categoria" value={form.categoria} onChange={handleChange}
+                            className="w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1a2230] focus:ring-2 focus:ring-purple-500/50 outline-none">
+                            {CATEGORIAS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                        </select>
                     </div>
 
                     <div>
