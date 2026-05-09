@@ -9,6 +9,7 @@ Marketplace de agentes de inteligencia artificial donde desarrolladores publican
 ## Stack tecnológico
 
 
+
 | Capa | Tecnología |
 |---|---|
 | Frontend | React 18, Tailwind CSS, React Router |
