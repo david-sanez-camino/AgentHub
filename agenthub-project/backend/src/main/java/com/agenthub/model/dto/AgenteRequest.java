@@ -19,4 +19,6 @@ public class AgenteRequest {
     
     @NotNull
     private Integer precio;
+
+    private String urlMcp;
 }

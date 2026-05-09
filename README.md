@@ -1,210 +1,209 @@
 # AgentHub
-Para la ejecucion de la aplicacion seguir los siguientes pasos:
 
-DESARROLLO
-1. cd agenthub-project
-2. Abrir Docker Desktop
-3. Ejecutar docker compose up --build
-4. Acceder a : http://localhost:3000/
+Marketplace de agentes de inteligencia artificial donde desarrolladores publican agentes, clientes los compran y los usan, y administradores gestionan la plataforma.
 
-PRODUCCION
-https://agent-hub-ashy-six.vercel.app/
+**Producción:** https://agent-hub-ashy-six.vercel.app/
 
-Ha dia 1/03/2026 solamente se desarrollo el home, login , creacion de usuario. Hay mas apartados en desarrollo pero pendientes de implementacion que se haran durante las semanas posteriores. Aclaramos esto ya que hubo problemas tecnicos con el alcance del proyecto durante el desarrollo que se comentaron al profesor Roberto.
-```text
+---
+
+## Stack tecnológico
+
+| Capa | Tecnología |
+|---|---|
+| Frontend | React 18, Tailwind CSS, Lucide React, React Router |
+| Backend | Spring Boot 3, Java 21, Spring Security, JWT |
+| Base de datos | PostgreSQL 16 |
+| LLM | OpenRouter API (claude-3-haiku, gpt-oss-20b) |
+| Pagos | Stripe |
+| Servidores MCP | Python 3 + FastAPI |
+| Email | Gmail SMTP |
+| Despliegue frontend | Vercel |
+| Despliegue backend/BD | Railway |
+
+---
+
+## Arquitectura
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      Frontend (React)                   │
+│         Vercel · https://agent-hub-ashy-six.vercel.app  │
+└────────────────────────┬────────────────────────────────┘
+                         │ REST / JSON
+┌────────────────────────▼────────────────────────────────┐
+│              Backend (Spring Boot)                      │
+│         Railway · :8080                                 │
+│                                                         │
+│  AuthController  AgenteController  ChatController       │
+│  DesarrolladorController  PaymentController             │
+│                                                         │
+│  ┌──────────────┐   ┌──────────────┐                   │
+│  │ OpenRouter   │   │ McpClient    │                   │
+│  │ Service      │──▶│ Service      │──▶ MCP Servers    │
+│  └──────────────┘   └──────────────┘                   │
+└────────────────────────┬────────────────────────────────┘
+                         │ JPA / Hibernate
+┌────────────────────────▼────────────────────────────────┐
+│                  PostgreSQL (Railway)                   │
+│  usuario · desarrollador · agente · herramienta         │
+│  agente_herramienta · conversacion · mensaje            │
+└─────────────────────────────────────────────────────────┘
+
+Servidores MCP (FastAPI · Python)
+  mcp-legal  :8001 — búsqueda legislación BOE (Tavily API)
+  mcp-webdev :8002 — docs MDN, paquetes NPM, validación HTML
+```
+
+---
+
+## Roles y funcionalidades
+
+### Admin
+- Ver y gestionar todos los usuarios y desarrolladores (aprobar / rechazar)
+- Ver todos los agentes con filtros por estado (PENDIENTE / APROBADO / RECHAZADO)
+- Hacer clic en el nombre de un agente para ver sus detalles completos y probarlo en un chat integrado
+- Aprobar o rechazar agentes directamente desde el panel o desde el modal de detalle
+
+### Desarrollador
+- Registrarse y ser aprobado por el admin
+- Crear y publicar agentes (nombre, descripción, categoría, modelo, system prompt, precio, URL MCP)
+- Ver sus agentes y su estado de verificación
+- Probar sus agentes en un chat en tiempo real
+- Los agentes quedan en estado PENDIENTE hasta que el admin los aprueba
+
+### Cliente
+- Registrarse y acceder al marketplace
+- Ver todos los agentes aprobados, filtrar y buscar
+- Comprar agentes mediante Stripe
+- Acceder a sus agentes comprados y chatear con ellos
+- Recuperar contraseña por email
+
+---
+
+## Flujo de chat con herramientas MCP
+
+```
+Usuario envía mensaje
+  → ChatService carga el agente y sus Herramientas (con mcp_server_url)
+  → OpenRouterService fase 1: envía mensaje + tools al LLM
+  → Si el LLM decide usar una tool:
+      → McpClientService hace POST a {mcp_server_url}/tools/{toolName}
+      → El servidor MCP consulta la API externa (Tavily, MDN, NPM…)
+      → El resultado vuelve al LLM (fase 2)
+  → LLM redacta la respuesta final
+  → Se persiste en Conversacion / Mensaje
+```
+
+---
+
+## Base de datos
+
+| Tabla | Descripción |
+|---|---|
+| `usuario` | Todos los usuarios de la plataforma |
+| `desarrollador` | Perfil extendido del desarrollador (empresa, estado) |
+| `agente` | Agentes publicados (nombre, modelo, systemPromt, precio, estado) |
+| `herramienta` | Herramientas MCP disponibles (nombre, mcp_server_url, esquema) |
+| `agente_herramienta` | Relación N:M entre agentes y herramientas |
+| `conversacion` | Sesiones de chat entre usuario y agente |
+| `mensaje` | Mensajes individuales de cada conversación |
+| `instancia_agente` | Registro de agentes comprados por clientes |
+
+---
+
+
+## Ejecución en desarrollo
+
+```bash
+# 1. Entrar al directorio del proyecto
+cd agenthub-project
+
+# 2. Crear el fichero .env con las variables de arriba
+
+# 3. Levantar todos los servicios (PostgreSQL + Backend + Frontend + MCP)
+docker compose up --build
+
+# 4. Acceder en el navegador
+http://localhost:3000
+```
+
+Los servicios levantados por Docker:
+
+| Servicio | Puerto |
+|---|---|
+| Frontend (React) | 3000 |
+| Backend (Spring Boot) | 8080 |
+| PostgreSQL | 5432 |
+| MCP Legal (FastAPI) | 8001 |
+
+---
+
+## Estructura del proyecto
+
+```
 AgentHub/
-├── Guia_GitFlow_10.md
 ├── README.md
 └── agenthub-project/
-	├── .vscode/
-	│   └── settings.json
-	├── backend/
-	│   ├── .dockerignore
-	│   ├── Dockerfile
-	│   ├── pom.xml
-	│   ├── src/
-	│   │   ├── main/
-	│   │   │   ├── java/
-	│   │   │   │   └── com/
-	│   │   │   │       └── agenthub/
-	│   │   │   │           ├── Application.java
-	│   │   │   │           ├── controller/
-	│   │   │   │           │   ├── AgenteController.java
-	│   │   │   │           │   ├── AuthController.java
-	│   │   │   │           │   └── DesarrolladorController.java
-	│   │   │   │           ├── controllers/
-	│   │   │   │           ├── exception/
-	│   │   │   │           │   ├── GlobalExceptionHandler.java
-	│   │   │   │           │   └── ResourceNotFoundException.java
-	│   │   │   │           ├── model/
-	│   │   │   │           │   ├── dto/
-	│   │   │   │           │   │   ├── AgenteRequest.java
-	│   │   │   │           │   │   ├── AgenteResponse.java
-	│   │   │   │           │   │   ├── DesarrolladorRequest.java
-	│   │   │   │           │   │   ├── DesarrolladorResponse.java
-	│   │   │   │           │   │   ├── LoginRequest.java
-	│   │   │   │           │   │   ├── LoginResponse.java
-	│   │   │   │           │   │   ├── RegistroUsuarioRequest.java
-	│   │   │   │           │   │   └── UsuarioResponse.java
-	│   │   │   │           │   └── entity/
-	│   │   │   │           │       ├── Agente.java
-	│   │   │   │           │       ├── Conversacion.java
-	│   │   │   │           │       ├── Desarrollador.java
-	│   │   │   │           │       ├── Herramienta.java
-	│   │   │   │           │       ├── InstanciaAgente.java
-	│   │   │   │           │       ├── Mensaje.java
-	│   │   │   │           │       └── Usuario.java
-	│   │   │   │           ├── models/
-	│   │   │   │           ├── repositories/
-	│   │   │   │           ├── repository/
-	│   │   │   │           │   ├── AgenteRepository.java
-	│   │   │   │           │   ├── ConversacionRepository.java
-	│   │   │   │           │   ├── DesarrolladorRepository.java
-	│   │   │   │           │   ├── HerramientaRepository.java
-	│   │   │   │           │   ├── InstanciaAgenteRepostory.java
-	│   │   │   │           │   ├── MensajeRepository.java
-	│   │   │   │           │   └── UsuarioRepository.java
-	│   │   │   │           ├── security/
-	│   │   │   │           │   ├── JwtAuthenticationFilter.java
-	│   │   │   │           │   └── SecurityConfig.java
-	│   │   │   │           ├── service/
-	│   │   │   │           │   ├── AgenteService.java
-	│   │   │   │           │   ├── DesarrolladorService.java
-	│   │   │   │           │   ├── JwtService.java
-	│   │   │   │           │   └── UsuarioService.java
-	│   │   │   │           └── services/
-	│   │   │   ├── resources/
-	│   │   │   │   ├── application.properties
-	│   │   │   │   ├── log4jdbc.log4j2.properties
-	│   │   │   │   ├── queries.sql
-	│   │   │   │   └── templates/
-	│   │   │   │       └── hello.html
-	│   │   │   └── test/
-	│   │   └── test/
-	│   │       ├── java/
-	│   │       │   └── com/
-	│   │       │       └── agenthub/
-	│   │       │           ├── AgenteControllerTest.java
-	│   │       │           ├── AuthControllerTest.java
-	│   │       │           └── HelloControllerTest.java
-	│   │       └── resources/
-	│   │           ├── .gitkeep
-	│   │           └── application.properties
-	│   └── target/
-	│       ├── classes/
-	│       │   ├── application.properties
-	│       │   ├── log4jdbc.log4j2.properties
-	│       │   ├── queries.sql
-	│       │   ├── com/
-	│       │   │   └── agenthub/
-	│       │   │       ├── Application.class
-	│       │   │       ├── controller/
-	│       │   │       │   ├── AgenteController.class
-	│       │   │       │   ├── AuthController.class
-	│       │   │       │   └── DesarrolladorController.class
-	│       │   │       ├── controllers/
-	│       │   │       ├── exception/
-	│       │   │       │   ├── GlobalExceptionHandler.class
-	│       │   │       │   └── ResourceNotFoundException.class
-	│       │   │       ├── model/
-	│       │   │       │   ├── dto/
-	│       │   │       │   │   ├── AgenteRequest.class
-	│       │   │       │   │   ├── AgenteResponse$AgenteResponseBuilder.class
-	│       │   │       │   │   ├── AgenteResponse.class
-	│       │   │       │   │   ├── DesarrolladorRequest.class
-	│       │   │       │   │   ├── DesarrolladorResponse.class
-	│       │   │       │   │   ├── LoginRequest.class
-	│       │   │       │   │   ├── LoginResponse$LoginResponseBuilder.class
-	│       │   │       │   │   ├── LoginResponse.class
-	│       │   │       │   │   ├── RegistroUsuarioRequest.class
-	│       │   │       │   │   ├── UsuarioResponse$UsuarioResponseBuilder.class
-	│       │   │       │   │   └── UsuarioResponse.class
-	│       │   │       │   └── entity/
-	│       │   │       │       ├── Agente$AgenteBuilder.class
-	│       │   │       │       ├── Agente.class
-	│       │   │       │       ├── Conversacion$ConversacionBuilder.class
-	│       │   │       │       ├── Conversacion.class
-	│       │   │       │       ├── Desarrollador$DesarrolladorBuilder.class
-	│       │   │       │       ├── Desarrollador.class
-	│       │   │       │       ├── Herramienta$HerramientaBuilder.class
-	│       │   │       │       ├── Herramienta.class
-	│       │   │       │       ├── InstanciaAgente$InstanciaAgenteBuilder.class
-	│       │   │       │       ├── InstanciaAgente.class
-	│       │   │       │       ├── Mensaje$MensajeBuilder.class
-	│       │   │       │       ├── Mensaje.class
-	│       │   │       │       ├── Usuario$UsuarioBuilder.class
-	│       │   │       │       └── Usuario.class
-	│       │   │       ├── models/
-	│       │   │       ├── repositories/
-	│       │   │       ├── repository/
-	│       │   │       │   ├── AgenteRepository.class
-	│       │   │       │   ├── ConversacionRepository.class
-	│       │   │       │   ├── DesarrolladorRepository.class
-	│       │   │       │   ├── HerramientaRepository.class
-	│       │   │       │   ├── InstanciaAgenteRepostory.class
-	│       │   │       │   ├── MensajeRepository.class
-	│       │   │       │   └── UsuarioRepository.class
-	│       │   │       ├── security/
-	│       │   │       │   ├── JwtAuthenticationFilter.class
-	│       │   │       │   └── SecurityConfig.class
-	│       │   │       ├── service/
-	│       │   │       │   ├── AgenteService.class
-	│       │   │       │   ├── DesarrolladorService.class
-	│       │   │       │   ├── JwtService.class
-	│       │   │       │   └── UsuarioService.class
-	│       │   │       └── services/
-	│       │   └── templates/
-	│       │       └── hello.html
-	│       ├── generated-sources/
-	│       │   └── annotations/
-	│       ├── generated-test-sources/
-	│       │   └── test-annotations/
-	│       ├── maven-status/
-	│       │   └── maven-compiler-plugin/
-	│       │       └── compile/
-	│       │           └── default-compile/
-	│       │               ├── createdFiles.lst
-	│       │               └── inputFiles.lst
-	│       └── test-classes/
-	│           ├── .gitkeep
-	│           ├── application.properties
-	│           └── com/
-	│               └── agenthub/
-	│                   ├── AgenteControllerTest.class
-	│                   ├── AuthControllerTest.class
-	│                   └── HelloControllerTest.class
-	├── docker-compose.yml
-	├── DOCKER-README.md
-	└── frontend/
-		├── .dockerignore
-		├── Dockerfile
-		├── package.json
-		├── postcss.config.js
-		├── public/
-		│   └── index.html
-		├── src/
-		│   ├── assets/
-		│   │   ├── imagen_agent.png
-		│   │   ├── imagenes.txt
-		│   │   └── logo.png
-		│   ├── components/
-		│   │   ├── componentes.txt
-		│   │   ├── Footer.jsx
-		│   │   ├── proteccion_ruta.jsx
-		│   │   └── TopNavbar.jsx
-		│   ├── index.css
-		│   ├── index.js
-		│   ├── pages/
-		│   │   ├── AboutUs.jsx
-		│   │   ├── crear_usuario.jsx
-		│   │   ├── home.jsx
-		│   │   ├── login.jsx
-		│   │   ├── pantalla_admin.jsx
-		│   │   └── pantallas.txt
-		│   ├── Router.jsx
-		│   └── services/
-		│       ├── auth.js
-		│       ├── conexion_api.js
-		│       └── conexionApi.txt
-		└── tailwind.config.js
+    ├── docker-compose.yml
+    ├── backend/                          # Spring Boot
+    │   ├── Dockerfile
+    │   ├── pom.xml
+    │   └── src/main/java/com/agenthub/
+    │       ├── controller/
+    │       │   ├── AgenteController.java
+    │       │   ├── AuthController.java
+    │       │   ├── ChatController.java
+    │       │   ├── DesarrolladorController.java
+    │       │   └── PaymentController.java
+    │       ├── model/
+    │       │   ├── dto/                  # Request / Response DTOs
+    │       │   └── entity/               # Entidades JPA
+    │       ├── repository/               # Spring Data JPA
+    │       ├── security/                 # JWT filter + SecurityConfig
+    │       └── service/
+    │           ├── AgenteService.java
+    │           ├── ChatService.java
+    │           ├── McpClientService.java
+    │           ├── OpenRouterService.java
+    │           └── UsuarioService.java
+    ├── frontend/                         # React + Tailwind
+    │   └── src/
+    │       ├── components/
+    │       ├── pages/
+    │       │   ├── PantallasAdmin/
+    │       │   ├── PantallasCliente/
+    │       │   ├── PantallasDesarrollador/
+    │       │   ├── PantallaChatAgentes/
+    │       │   └── PantallaPrincipal/    # Home + Marketplace
+    │       └── services/
+    │           ├── auth.js
+    │           └── conexion_api.js
+    └── mcp-servers/
+        ├── legal/                        # Tavily — legislación BOE
+        │   ├── server.py
+        │   ├── requirements.txt
+        │   └── Dockerfile
+        └── webdev/                       # MDN + NPM + W3C
+            ├── server.py
+            ├── requirements.txt
+            └── Dockerfile
 ```
+
+---
+
+## API principal
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| POST | `/api/auth/registro` | Registro de usuario |
+| POST | `/api/auth/login` | Login — devuelve JWT |
+| POST | `/api/auth/forgot-password` | Solicitar reset de contraseña |
+| POST | `/api/auth/reset-password` | Resetear contraseña con token |
+| GET | `/api/agentes` | Listar agentes aprobados (marketplace) |
+| GET | `/api/agentes/{id}` | Detalle de un agente |
+| POST | `/api/agentes` | Crear agente (desarrollador) |
+| PUT | `/api/agentes/{id}/aprobar` | Aprobar agente (admin) |
+| PUT | `/api/agentes/{id}/rechazar` | Rechazar agente (admin) |
+| POST | `/api/chat` | Enviar mensaje a un agente |
+| POST | `/api/payments/create-payment-intent` | Iniciar pago Stripe |
+| GET | `/api/payments/mis-agentes` | Agentes comprados por el cliente |

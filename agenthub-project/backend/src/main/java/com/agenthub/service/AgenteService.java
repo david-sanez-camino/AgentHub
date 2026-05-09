@@ -3,10 +3,13 @@ import com.agenthub.exception.ResourceNotFoundException;
 import com.agenthub.model.dto.*;
 import com.agenthub.model.entity.Agente;
 import com.agenthub.model.entity.Desarrollador;
+import com.agenthub.model.entity.Herramienta;
 import com.agenthub.model.entity.Usuario;
 import com.agenthub.repository.AgenteRepository;
+import com.agenthub.repository.HerramientaRepository;
 import com.agenthub.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 public class AgenteService {
     private final AgenteRepository agenteRepository;
     private final UsuarioRepository usuarioRepository;
+    private final HerramientaRepository herramientaRepository;
 
     // Creacion de agente
     @Transactional
@@ -46,8 +50,23 @@ public class AgenteService {
         .precio(req.getPrecio())
         .publicado(false)
         .estadoVerificacion("PENDIENTE")
+        .herramientas(new ArrayList<>())
         .build();
-        return toResponse(agenteRepository.save(a));
+
+        Agente saved = agenteRepository.save(a);
+
+        if (req.getUrlMcp() != null && !req.getUrlMcp().isBlank()) {
+            Herramienta herramienta = Herramienta.builder()
+                .nombre("mcp_agente_" + saved.getId())
+                .descripcion("Servidor MCP del agente: " + saved.getNombre())
+                .mcpServerUrl(req.getUrlMcp())
+                .build();
+            herramientaRepository.save(herramienta);
+            saved.getHerramientas().add(herramienta);
+            saved = agenteRepository.save(saved);
+        }
+
+        return toResponse(saved);
     }
 
     //Listar todos los agente aprobados en el marketplace
