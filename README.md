@@ -10,7 +10,7 @@ Marketplace de agentes de inteligencia artificial donde desarrolladores publican
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | React 18, Tailwind CSS, Lucide React, React Router |
+| Frontend | React 18, Tailwind CSS, React Router |
 | Backend | Spring Boot 3, Java 21, Spring Security, JWT |
 | Base de datos | PostgreSQL 16 |
 | LLM | OpenRouter API (claude-3-haiku, gpt-oss-20b) |
