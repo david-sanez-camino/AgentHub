@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getToken } from "../../services/auth";
 import ClienteNavbar from "../../components/ClienteNavbar";
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:8080";
+const API = "https://agenthub-production-e274.up.railway.app";
 
 export default function PagoExitoso() {
     const [searchParams] = useSearchParams();

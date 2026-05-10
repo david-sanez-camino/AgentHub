@@ -4,7 +4,7 @@ import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../../services/auth";
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:8080";
+const API = "https://agenthub-production-e274.up.railway.app";
 
 export default function ClienteMisAgentes() {
     const [agentes, setAgentes] = useState([]);
