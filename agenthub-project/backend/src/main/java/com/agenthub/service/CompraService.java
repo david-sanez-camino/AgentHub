@@ -1,5 +1,6 @@
 package com.agenthub.service;
 
+import com.agenthub.model.dto.AgenteSimpleDTO;
 import com.agenthub.model.entity.Agente;
 import com.agenthub.model.entity.Compra;
 import com.agenthub.model.entity.Usuario;
@@ -42,15 +43,22 @@ public class CompraService {
             });
     }
 
-    public List<Agente> getAgentesComprados(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public List<AgenteSimpleDTO> getAgentesComprados(String email) {
+    Usuario usuario = usuarioRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        return compraRepository.findByUsuario(usuario)
-            .stream()
-            .map(Compra::getAgente)
-            .toList();
-    }
+    return compraRepository.findByUsuario(usuario)
+        .stream()
+        .map(c -> new AgenteSimpleDTO(
+            c.getAgente().getId(),
+            c.getAgente().getNombre(),
+            c.getAgente().getDescripcion(),
+            c.getAgente().getCategoria(),
+            c.getAgente().getModelo(),
+            c.getAgente().getPrecio()
+        ))
+        .toList();
+}
 
     public boolean haComprado(String email, Integer agenteId) {
         Usuario usuario = usuarioRepository.findByEmail(email)

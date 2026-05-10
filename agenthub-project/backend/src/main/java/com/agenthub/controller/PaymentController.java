@@ -39,20 +39,19 @@ public class PaymentController {
             Integer agenteId = Integer.valueOf(body.get("agenteId").toString());
 
             Agente agente = agenteRepository.findById(agenteId)
-                .orElseThrow(() -> new RuntimeException("Agente no encontrado"));
+                    .orElseThrow(() -> new RuntimeException("Agente no encontrado"));
 
-            Long amount = (long)(agente.getPrecio() * 100);
+            Long amount = (long) (agente.getPrecio() * 100);
 
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(amount)
-                .setCurrency("usd")
-                .setAutomaticPaymentMethods(
-                    PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
-                        .setEnabled(true)
-                        .build()
-                )
-                .putMetadata("agenteId", agenteId.toString())
-                .build();
+                    .setAmount(amount)
+                    .setCurrency("usd")
+                    .setAutomaticPaymentMethods(
+                            PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                    .setEnabled(true)
+                                    .build())
+                    .putMetadata("agenteId", agenteId.toString())
+                    .build();
 
             PaymentIntent intent = PaymentIntent.create(params);
 
@@ -64,39 +63,39 @@ public class PaymentController {
     }
 
     @PostMapping("/confirmar-compra")
-public ResponseEntity<?> confirmarCompra(
-        @RequestBody Map<String, Object> body,
-        @AuthenticationPrincipal UserDetails userDetails) {
-    try {
-        Stripe.apiKey = stripeSecretKey;
+    public ResponseEntity<?> confirmarCompra(
+            @RequestBody Map<String, Object> body,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            Stripe.apiKey = stripeSecretKey;
 
-        String paymentIntentId = body.get("paymentIntentId").toString();
-        Integer agenteId = Integer.valueOf(body.get("agenteId").toString());
+            String paymentIntentId = body.get("paymentIntentId").toString();
+            Integer agenteId = Integer.valueOf(body.get("agenteId").toString());
 
-        // Verificar con Stripe que el pago realmente está completado
-        PaymentIntent intent = PaymentIntent.retrieve(paymentIntentId);
-        if (!"succeeded".equals(intent.getStatus())) {
-            return ResponseEntity.badRequest()
-                .body(Map.of("error", "El pago no está completado"));
+            // Verificar con Stripe que el pago realmente está completado
+            PaymentIntent intent = PaymentIntent.retrieve(paymentIntentId);
+            if (!"succeeded".equals(intent.getStatus())) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "El pago no está completado"));
+            }
+
+            compraService.confirmarCompra(userDetails.getUsername(), agenteId, paymentIntentId);
+            return ResponseEntity.ok(Map.of("ok", true));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-
-        compraService.confirmarCompra(userDetails.getUsername(), agenteId, paymentIntentId);
-        return ResponseEntity.ok(Map.of("ok", true));
-
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
     }
-}
 
-// ---- Endpoint 2: mis agentes ----
+    // ---- Endpoint 2: mis agentes ----
     @GetMapping("/mis-agentes")
-public ResponseEntity<?> getMisAgentes(
-        @AuthenticationPrincipal UserDetails userDetails) {
-    try {
-        var agentes = compraService.getAgentesComprados(userDetails.getUsername());
-        return ResponseEntity.ok(agentes);
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    public ResponseEntity<?> getMisAgentes(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            var agentes = compraService.getAgentesComprados(userDetails.getUsername());
+            return ResponseEntity.ok(agentes);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
-}
 }

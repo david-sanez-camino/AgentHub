@@ -4,6 +4,9 @@ import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { obtenerAgentePorId } from "../../services/conexion_api";
 import { isLoggedIn } from "../../services/auth";
+import { getToken } from "../../services/auth";
+
+const API = "https://agenthub-production-e274.up.railway.app";
 
 const CATEGORIA_LABELS = {
     productividad: "Productividad",
@@ -25,12 +28,29 @@ export default function DetalleAgente() {
     const [agente, setAgente] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [yaComprado, setYaComprado] = useState(false);
 
     useEffect(() => {
         obtenerAgentePorId(id)
             .then(data => { setAgente(data); setLoading(false); })
             .catch(err => { setError(err.message || "No se pudo cargar el agente"); setLoading(false); });
     }, [id]);
+
+    useEffect(() => {
+    const token = getToken();
+    if (!token) return;
+
+    fetch(`${API}/api/payments/mis-agentes`, {
+        headers: { Authorization: `Bearer ${token}` },
+    })
+        .then(r => r.json())
+        .then(data => {
+            if (Array.isArray(data)) {
+                setYaComprado(data.some(a => String(a.id) === String(id)));
+            }
+        })
+        .catch(() => {});
+}, [id]);
 
     const handleComprar = () => {
         if (!isLoggedIn()) {
@@ -206,13 +226,15 @@ export default function DetalleAgente() {
                             </div>
 
                             <button
-                                onClick={handleComprar}
+                                onClick={yaComprado ? () => navigate(`/cliente/chat/${id}`) : handleComprar}
                                 className="w-full py-4 bg-[#136dec] hover:bg-blue-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-[#136dec]/30 text-base flex items-center justify-center gap-2"
                             >
-                                <i className="fa-solid fa-cart-shopping"></i>
-                                {isLoggedIn()
-                                    ? (agente.precio ? `Comprar — $${agente.precio} USD` : "Obtener gratis")
-                                    : "Inicia sesión para comprar"
+                                <i className={`fa-solid ${yaComprado ? "fa-comments" : "fa-cart-shopping"}`}></i>
+                                    {yaComprado
+                                        ? "Abrir chat"
+                                        : isLoggedIn()
+                                            ? (agente.precio ? `Comprar — $${agente.precio} USD` : "Obtener gratis")
+                                            : "Inicia sesión para comprar"
                                 }
                             </button>
 

@@ -48,6 +48,8 @@ import ClientePerfil from './pages/PantallasCliente/Cliente_Perfil';
 import ClienteMisAgentes from './pages/PantallasCliente/Cliente_Mis_Agentes';
 import PagoAgente from './pages/PantallasCliente/PagoAgente';
 import PagoExitoso from './pages/PantallasCliente/PagoExitoso';
+import ClientePantallaChat from './pages/PantallasCliente/PantallaClienteChat';
+
 
 // Rutas de Olvido y Reset Password
 import ForgotPassword from './pages/PantallaPrincipal/ForgotPassword';
@@ -78,6 +80,8 @@ export default function Router() {
                 <Route path="/pantalla_admin" element={<ProtectedRoute> <PantallaAdmin /> </ProtectedRoute>} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/cliente/chat/:idAgente" element={<ClientePantallaChat />} />
+
 
                 {/* Rutas Desarrollador */}
                 <Route path="/desarrollador" element={<DesarrolladorPagina />} />
