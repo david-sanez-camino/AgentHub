@@ -1,101 +1,108 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+
+//importamos las funciones para manejar la autenticacion
 import { getUser, logout } from "../services/auth";
-import ModalConfirmLogout from "./ModalConfirmLogout";
+import { useNavigate } from "react-router-dom";
 
 export default function TopNavbar() {
     const [scrolled, setScrolled] = useState(false);
-    const [showLogoutModal, setShowLogoutModal] = useState(false);
-    const user = getUser();
-    const navigate = useNavigate();
 
+    // Detectar scroll para cambiar el estilo del navbar
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const handleLogout = () => setShowLogoutModal(true);
-    const confirmarLogout = () => { logout(); navigate("/login"); };
-    const cancelarLogout = () => setShowLogoutModal(false);
-
-    const isCliente = user?.rol === "CLIENTE";
+    //para el login del ususario, si esta logueado muestra su nombre y un boton para cerrar sesion, 
+    // si no esta logueado muestra los botones de login y crear cuenta
+    const user = getUser();
+    const navigate = useNavigate();
 
     return (
-        <>
-        {showLogoutModal && <ModalConfirmLogout onConfirm={confirmarLogout} onCancel={cancelarLogout} />}
-        <header className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-            scrolled ? "bg-white/80 dark:bg-[#101822]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm" : "bg-transparent"
-        }`}>
+        <header
+            className={`sticky top-0 w-full z-50 transition-all duration-300 ${scrolled
+                ? "bg-white/80 dark:bg-[#101822]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm"
+                : "bg-transparent"
+                }`}
+        >
             <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                {/* Logo */}
-                <Link to={isCliente ? "/cliente" : "/"} className="flex items-center gap-2 group">
-                    <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-[#136dec]/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                        <img src={logo} alt="AgentHub Logo" className="w-full h-full object-cover" />
-                    </div>
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                        Agent<span className="text-[#136dec]">Hub</span>
-                    </h2>
-                </Link>
+                {/* Logo & Brand */}
+                <div className="flex items-center gap-2">
+                    <Link to="/" className="flex items-center gap-2 group">
+                        <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-white/10">
+                            <img
+                                src={logo}
+                                alt="AgentHub Logo"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <h2 className="text-2xl font-black tracking-tighter text-white">
+                            Agent<span className="text-blue-400">Hub</span>
+                        </h2>
+                    </Link>
+                </div>
 
-                {/* Nav links */}
+                {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-8">
-                    <Link to={isCliente ? "/cliente" : "/#destacados"} className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    <a href="#destacados" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Agentes
-                    </Link>
-                    <Link to="/soluciones" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    </a>
+                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Soluciones
-                    </Link>
-                    <Link to="/precios" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    </a>
+                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Precios
-                    </Link>
-                    <Link to="/documentacion" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    </a>
+                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Documentación
-                    </Link>
-                    {isCliente && (
-                        <Link to="/cliente/mis-agentes" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
-                            Mis Agentes
-                        </Link>
-                    )}
+                    </a>
                 </nav>
 
-                {/* Actions */}
+                {/* Actions (Login / Signup) */}
                 <div className="flex items-center gap-4">
                     {!user ? (
                         <>
-                            <Link to="/login" className="hidden sm:block px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">
+                            <Link
+                                to="/login"
+                                className="hidden sm:block px-4 py-2 text-sm font-bold text-gray-300 hover:text-white transition-colors">
                                 Iniciar Sesión
                             </Link>
-                            <Link to="/crear_usuario" className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-[#136dec] hover:bg-blue-600 text-white transition-all shadow-lg shadow-[#136dec]/30">
+                            <Link
+                                to="/crear_usuario"
+                                className="px-6 py-2.5 text-sm font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-lg shadow-blue-500/20 active:scale-95">
                                 Comenzar Gratis
                             </Link>
                         </>
                     ) : (
-                        <div className="flex items-center gap-4">
+                        <>
                             {user?.rol === "ADMIN" && (
-                                <Link to="/pantalla_admin" className="hidden sm:block px-4 py-2 text-sm font-semibold text-slate-700 hover:text-[#136dec] dark:text-slate-300 transition-colors">
+                                <Link
+                                    to="/pantalla_admin"
+                                    className="hidden sm:block px-4 py-2 text-sm font-bold text-gray-300 hover:text-white transition-colors"
+                                >
                                     Panel Admin
                                 </Link>
                             )}
-                            {isCliente && (
-                                <Link to="/cliente/perfil" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 transition-colors">
-                                    Perfil
-                                </Link>
-                            )}
-                            <span className="text-sm font-semibold text-[#136dec]">
+                            <span className="text-sm font-bold text-gray-200">
                                 Hola, {user.nombre}
                             </span>
                             <button
-                                onClick={handleLogout}
-                                className="px-4 py-2 text-sm font-semibold rounded-xl border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 transition-colors shadow-sm">
+                                onClick={() => {
+                                    logout();
+                                    navigate("/login");
+                                }}
+                                className="px-4 py-2 text-sm font-bold rounded-xl border border-white/10 hover:bg-white/5 text-white transition-all">
                                 Salir
                             </button>
-                        </div>
+                        </>
                     )}
                 </div>
             </div>
         </header>
-        </>
     );
 }
