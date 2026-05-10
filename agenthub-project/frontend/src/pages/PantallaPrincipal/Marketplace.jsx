@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { obtenerAgentesAprobados } from "../../services/conexion_api";
+import { getToken } from "../../services/auth";
 //import { isLoggedIn } from "../../services/auth";
+
+const API = "https://agenthub-production-e274.up.railway.app";
 
 export default function Marketplace() {
     const navigate = useNavigate();
@@ -12,6 +15,7 @@ export default function Marketplace() {
     const [agentesFiltered, setAgentesFiltered] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [agentesComprados, setAgentesComprados] = useState([]);
 
     useEffect(() => {
         obtenerAgentesAprobados()
@@ -24,6 +28,22 @@ export default function Marketplace() {
                 setError("Error al cargar los agentes.");
                 setLoading(false);
             });
+    }, []);
+
+    useEffect(() => {
+    const token = getToken();
+    if (!token) return;
+
+    fetch(`${API}/api/payments/mis-agentes`, {
+        headers: { Authorization: `Bearer ${token}` },
+    })
+        .then(r => r.json())
+        .then(data => {
+            if (Array.isArray(data)) {
+                setAgentesComprados(data.map(a => a.id));
+            }
+        })
+        .catch(() => {});
     }, []);
 
     const handleBuscar = (e) => {
@@ -109,9 +129,13 @@ export default function Marketplace() {
 
                                 <button
                                     onClick={() => handleAcceder(agente)}
-                                    className="w-full py-2.5 text-sm font-bold rounded-xl transition-colors bg-[#136dec] hover:bg-blue-600 text-white"
+                                    className={`w-full py-2.5 text-sm font-bold rounded-xl transition-colors ${
+                                        agentesComprados.includes(agente.id)
+                                            ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                                            : "bg-[#136dec] hover:bg-blue-600 text-white"
+                                    }`}
                                 >
-                                    Ver detalles
+                                    {agentesComprados.includes(agente.id) ? "Abrir agente" : "Ver detalles"}
                                 </button>
                             </div>
                         ))}
