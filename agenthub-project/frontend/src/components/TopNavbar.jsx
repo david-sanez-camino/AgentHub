@@ -34,31 +34,31 @@ export default function TopNavbar() {
                 {/* Logo & Brand */}
                 <div className="flex items-center gap-2">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-[#136dec]/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                        <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-white/10">
                             <img
                                 src={logo}
                                 alt="AgentHub Logo"
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                            Agent<span className="text-[#136dec]">Hub</span>
+                        <h2 className="text-2xl font-black tracking-tighter text-white">
+                            Agent<span className="text-blue-400">Hub</span>
                         </h2>
                     </Link>
                 </div>
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-8">
-                    <a href="#destacados" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    <a href="#destacados" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Agentes
                     </a>
-                    <a href="#!" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Soluciones
                     </a>
-                    <a href="#!" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Precios
                     </a>
-                    <a href="#!" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Documentación
                     </a>
                 </nav>
@@ -69,12 +69,12 @@ export default function TopNavbar() {
                         <>
                             <Link
                                 to="/login"
-                                className="hidden sm:block px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">
+                                className="hidden sm:block px-4 py-2 text-sm font-bold text-gray-300 hover:text-white transition-colors">
                                 Iniciar Sesión
                             </Link>
                             <Link
                                 to="/crear_usuario"
-                                className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-[#136dec] hover:bg-blue-600 text-white transition-all shadow-lg shadow-[#136dec]/30 hover:shadow-[#136dec]/50 active:scale-95">
+                                className="px-6 py-2.5 text-sm font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-lg shadow-blue-500/20 active:scale-95">
                                 Comenzar Gratis
                             </Link>
                         </>
@@ -83,12 +83,12 @@ export default function TopNavbar() {
                             {user?.rol === "ADMIN" && (
                                 <Link
                                     to="/pantalla_admin"
-                                    className="hidden sm:block px-4 py-2 text-sm font-semibold text-slate-700 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors"
+                                    className="hidden sm:block px-4 py-2 text-sm font-bold text-gray-300 hover:text-white transition-colors"
                                 >
                                     Panel Admin
                                 </Link>
                             )}
-                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            <span className="text-sm font-bold text-gray-200">
                                 Hola, {user.nombre}
                             </span>
                             <button
@@ -96,7 +96,7 @@ export default function TopNavbar() {
                                     logout();
                                     navigate("/login");
                                 }}
-                                className="px-4 py-2 text-sm font-semibold rounded-xl border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                                className="px-4 py-2 text-sm font-bold rounded-xl border border-white/10 hover:bg-white/5 text-white transition-all">
                                 Salir
                             </button>
                         </>
