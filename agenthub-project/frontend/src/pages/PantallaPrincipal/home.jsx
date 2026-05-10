@@ -31,7 +31,7 @@ export default function Home() {
                     </h1>
 
                     <p className="text-xl md:text-2xl font-medium text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed">
-                        Encuentra, despliega y escala agentes especializados en un entorno 
+                        Encuentra, despliega y escala agentes especializados en un entorno
                         <strong className="text-white"> seguro, profesional y de alto rendimiento.</strong>
                     </p>
 
@@ -67,7 +67,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
                         {/* Desktop Connecting Arrows */}
                         <div className="hidden md:block absolute top-12 left-[30%] right-[30%] h-px bg-gradient-to-r from-blue-500/0 via-blue-500 to-blue-500/0 -z-10"></div>
-                        
+
                         <div className="bg-white/10 backdrop-blur-2xl p-10 rounded-[2.5rem] border border-white/20 text-center hover:border-blue-500/50 transition-all group shadow-2xl">
                             <div className="size-20 bg-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-lg">
                                 <span className="material-symbols-outlined text-4xl text-blue-300">code_blocks</span>
@@ -136,23 +136,23 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <AgentCard 
-                            name="LegalMind Pro" 
-                            description="Análisis de contratos y cumplimiento normativo con precisión del 99.9%." 
-                            icon="gavel" 
-                            tag="Enterprise" 
+                        <AgentCard
+                            name="LegalMind Pro"
+                            description="Análisis de contratos y cumplimiento normativo con precisión del 99.9%."
+                            icon="gavel"
+                            tag="Enterprise"
                         />
-                        <AgentCard 
-                            name="DevBot X" 
-                            description="Asistente de codificación especializado en microservicios y despliegue continuo." 
-                            icon="terminal" 
-                            tag="Top Rated" 
+                        <AgentCard
+                            name="DevBot X"
+                            description="Asistente de codificación especializado en microservicios y despliegue continuo."
+                            icon="terminal"
+                            tag="Top Rated"
                         />
-                        <AgentCard 
-                            name="MarketInsight" 
-                            description="Análisis predictivo de mercados globales y detección de tendencias en tiempo real." 
-                            icon="trending_up" 
-                            tag="New" 
+                        <AgentCard
+                            name="MarketInsight"
+                            description="Análisis predictivo de mercados globales y detección de tendencias en tiempo real."
+                            icon="trending_up"
+                            tag="New"
                         />
                     </div>
                 </section>
