@@ -8,6 +8,7 @@ export default function Finanzas() {
     const [metricas, setMetricas] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [valoracionesAgentes, setValoracionesAgentes] = useState({});
 
     useEffect(() => {
         const token = getToken();
@@ -21,6 +22,21 @@ export default function Finanzas() {
                 setLoading(false);
             });
     }, []);
+
+    useEffect(() => {
+    if (!metricas?.agentes) return;
+    metricas.agentes.forEach(agente => {
+        fetch(`https://agenthub-production-e274.up.railway.app/api/valoraciones/agente/${agente.id}`)
+            .then(r => r.json())
+            .then(data => {
+                setValoracionesAgentes(prev => ({
+                    ...prev,
+                    [agente.id]: { promedio: data.promedio, total: data.total }
+                }));
+            })
+            .catch(() => {});
+    });
+    }, [metricas]);
 
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
@@ -131,7 +147,18 @@ export default function Finanzas() {
                                                     <td className="px-6 py-4 text-right font-bold text-emerald-600 dark:text-emerald-400">
                                                         ${agente.ingresos.toLocaleString()}
                                                     </td>
-                                                </tr>
+                                                    <td className="px-6 py-4">
+                                                        {valoracionesAgentes[agente.id]?.total > 0 ? (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <i className="fa-solid fa-star text-amber-400 text-xs"></i>
+                                                        <span className="font-semibold">{valoracionesAgentes[agente.id]?.promedio}</span>
+                                                        <span className="text-slate-400 text-xs">({valoracionesAgentes[agente.id]?.total})</span>
+                                                    </div>
+                                                    ) : (
+                                                        <span className="text-slate-400 text-xs">Sin reseñas</span>
+                                                    )}
+                                                </td>
+                                            </tr>
                                             ))}
                                         </tbody>
                                     </table>
