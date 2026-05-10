@@ -1,14 +1,11 @@
-# Build stage (compatible with ARM64/Jetson) para ivanfran
-FROM maven:3.8.8-eclipse-temurin-17 AS build
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 COPY src ./src
-# Cache bust: 2026-04-24
 RUN mvn clean package -DskipTests
 
-#PARA IVANFRAN
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
