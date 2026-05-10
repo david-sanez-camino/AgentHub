@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import agentImage from "../assets/imagen_agent.png";
-import Footer from "../components/Footer";
-import TopNavbar from "../components/TopNavbar";
-import AgentCard from "../components/AgentCard";
+import agentImage from "../../assets/imagen_agent.png";
+import Footer from "../../components/Footer";
+import TopNavbar from "../../components/TopNavbar";
+import AgentCard from "../../components/AgentCard";
 
 export default function Home() {
     return (
