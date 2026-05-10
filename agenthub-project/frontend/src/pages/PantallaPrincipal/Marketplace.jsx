@@ -140,7 +140,7 @@ export default function Marketplace() {
                                             ? "bg-emerald-600 hover:bg-emerald-700 text-white"
                                             : "bg-[#136dec] hover:bg-blue-600 text-white"
                                     }`}
-                                > // cambio
+                                > 
                                     {agentesComprados.includes(agente.id) ? "Abrir agente" : "Ver detalles"}
                                 </button>
                             </div>
