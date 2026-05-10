@@ -25,7 +25,7 @@ export default function ClienteNavbar() {
         {showLogoutModal && <ModalConfirmLogout onConfirm={confirmarLogout} onCancel={cancelarLogout} />}
         <header
             className={`sticky top-0 w-full z-50 transition-all duration-300 ${scrolled
-                ? "bg-white/80 dark:bg-[#101822]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm"
+                ? "bg-[#1a1f2e]/90 backdrop-blur-md border-b border-white/5 shadow-sm"
                 : "bg-transparent"
                 }`}
         >
@@ -33,39 +33,42 @@ export default function ClienteNavbar() {
                 {/* Logo & Brand */}
                 <div className="flex items-center gap-2">
                     <Link to="/cliente" className="flex items-center gap-2 group">
-                        <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-[#136dec]/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                        <div className="size-10 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-white/10">
                             <img
                                 src={logo}
                                 alt="AgentHub Logo"
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                            Agent<span className="text-[#136dec]">Hub</span>
-                            <span className="ml-2 text-sm font-medium text-slate-400">| Cliente</span>
+                        <h2 className="text-2xl font-black tracking-tighter text-white">
+                            Agent<span className="text-blue-400">Hub</span>
+                            <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 uppercase tracking-widest">Cliente</span>
                         </h2>
                     </Link>
                 </div>
 
                 {/* Navigation and Actions */}
                 <div className="flex items-center gap-6">
-                    <nav className="hidden md:flex items-center gap-6 mr-4">
-                        <Link to="/cliente/mis-agentes" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                    <nav className="hidden md:flex items-center gap-8 mr-4">
+                        <Link to="/marketplace" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                            Marketplace
+                        </Link>
+                        <Link to="/cliente/mis-agentes" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                             Mis Agentes
                         </Link>
-                        <Link to="/cliente/perfil" className="text-sm font-semibold text-slate-600 hover:text-[#136dec] dark:text-slate-300 dark:hover:text-[#136dec] transition-colors">
+                        <Link to="/cliente/perfil" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                             Perfil
                         </Link>
                     </nav>
 
                     {user && (
-                        <div className="flex items-center gap-4 border-l border-slate-300 dark:border-slate-700 pl-6">
-                            <span className="text-sm font-semibold text-[#136dec]">
-                                Hola, {user.nombre}
+                        <div className="flex items-center gap-6 border-l border-white/10 pl-6">
+                            <span className="text-sm font-bold text-gray-200">
+                                Hola, <span className="text-blue-400">{user.nombre}</span>
                             </span>
                             <button
                                 onClick={handleLogout}
-                                className="px-4 py-2 text-sm font-semibold rounded-xl border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 transition-colors shadow-sm">
+                                className="px-4 py-2 text-sm font-bold rounded-xl border border-white/10 hover:bg-white/5 text-white transition-all shadow-sm">
                                 Salir
                             </button>
                         </div>

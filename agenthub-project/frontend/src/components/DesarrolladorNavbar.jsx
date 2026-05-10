@@ -25,7 +25,7 @@ export default function DesarrolladorNavbar() {
         {showLogoutModal && <ModalConfirmLogout onConfirm={confirmarLogout} onCancel={cancelarLogout} />}
         <header
             className={`sticky top-0 w-full z-50 transition-all duration-300 ${scrolled
-                ? "bg-white/90 dark:bg-[#101822]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm"
+                ? "bg-[#1a1f2e]/90 backdrop-blur-md border-b border-white/5 shadow-sm"
                 : "bg-transparent"
                 }`}
         >
@@ -40,29 +40,29 @@ export default function DesarrolladorNavbar() {
                                 className="w-full h-full object-cover rounded-lg bg-white/20 backdrop-blur-sm"
                             />
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                            Agent<span className="text-purple-600">Hub</span>
-                            <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 uppercase tracking-wider">Dev</span>
+                        <h2 className="text-2xl font-black tracking-tighter text-white">
+                            Agent<span className="text-purple-400">Hub</span>
+                            <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 uppercase tracking-widest">Dev</span>
                         </h2>
                     </Link>
                 </div>
 
                 {/* Navigation */}
-                <nav className="hidden md:flex items-center gap-5">
-                    <Link to="/desarrollador/perfil" className="text-sm font-semibold text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400 transition-colors">
-                        Datos de la Cuenta
+                <nav className="hidden md:flex items-center gap-8">
+                    <Link to="/desarrollador/perfil" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                        Perfil
                     </Link>
-                    <Link to="/desarrollador/documentacion" className="text-sm font-semibold text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400 transition-colors">
-                        Documentación
+                    <Link to="/desarrollador/documentacion" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                        Docs
                     </Link>
-                    <Link to="/desarrollador/subir-agente" className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/40 transition-colors">
+                    <Link to="/desarrollador/subir-agente" className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30 hover:bg-purple-600/30 transition-all">
                         <i className="fa-solid fa-cloud-arrow-up"></i>
                         Subir Agente
                     </Link>
-                    <Link to="/desarrollador/finanzas" className="text-sm font-semibold text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400 transition-colors">
+                    <Link to="/desarrollador/finanzas" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Finanzas
                     </Link>
-                    <Link to="/desarrollador/mis-agentes" className="text-sm font-semibold text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400 transition-colors">
+                    <Link to="/desarrollador/mis-agentes" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Mis Agentes
                     </Link>
                 </nav>
@@ -70,16 +70,16 @@ export default function DesarrolladorNavbar() {
                 {/* Actions */}
                 <div className="flex items-center gap-4">
                     {user && (
-                        <div className="flex items-center gap-4 border-l border-slate-300 dark:border-slate-700 pl-4">
-                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 hidden lg:block">
-                                {user.nombre}
+                        <div className="flex items-center gap-6 border-l border-white/10 pl-6">
+                            <span className="text-sm font-bold text-gray-200">
+                                Hola, <span className="text-purple-400">{user.nombre}</span>
                             </span>
                             <button
                                 onClick={handleLogout}
-                                className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                className="p-2 text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
                                 title="Cerrar sesión"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                             </button>
                         </div>
                     )}

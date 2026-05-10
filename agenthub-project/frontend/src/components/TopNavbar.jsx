@@ -80,7 +80,7 @@ export default function TopNavbar() {
                         </>
                     ) : (
                         <>
-                            {user?.rol === "ADMIN" && (
+                            {user?.rol?.toUpperCase() === "ADMIN" && (
                                 <Link
                                     to="/pantalla_admin"
                                     className="hidden sm:block px-4 py-2 text-sm font-bold text-gray-300 hover:text-white transition-colors"
@@ -88,6 +88,16 @@ export default function TopNavbar() {
                                     Panel Admin
                                 </Link>
                             )}
+                            
+                            {(user?.rol?.toUpperCase() === "CLIENTE" || user?.rol?.toUpperCase() === "DESARROLLADOR") && (
+                                <Link
+                                    to={user?.rol?.toUpperCase() === "CLIENTE" ? "/cliente/mis-agentes" : "/desarrollador/mis-agentes"}
+                                    className="hidden sm:block px-4 py-2 text-sm font-bold text-gray-300 hover:text-white transition-colors"
+                                >
+                                    Mis Agentes
+                                </Link>
+                            )}
+
                             <span className="text-sm font-bold text-gray-200">
                                 Hola, {user.nombre}
                             </span>
