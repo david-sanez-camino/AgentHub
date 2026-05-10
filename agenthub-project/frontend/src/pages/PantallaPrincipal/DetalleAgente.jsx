@@ -33,6 +33,16 @@ export default function DetalleAgente() {
   const [searchParams] = useSearchParams();
   const fromMisAgentes = searchParams.get("from") === "mis-agentes";
 
+  const [valoraciones, setValoraciones] = useState([]);
+  const [promedio, setPromedio] = useState(0);
+  const [totalValoraciones, setTotalValoraciones] = useState(0);
+  const [yaValoro, setYaValoro] = useState(false);
+  const [estrellaSeleccionada, setEstrellaSeleccionada] = useState(0);
+  const [estrellaHover, setEstrellaHover] = useState(0);
+  const [comentario, setComentario] = useState("");
+  const [enviandoValoracion, setEnviandoValoracion] = useState(false);
+  const [mensajeValoracion, setMensajeValoracion] = useState(null);
+
   useEffect(() => {
     obtenerAgentePorId(id)
       .then((data) => {
@@ -60,12 +70,66 @@ export default function DetalleAgente() {
       })
       .catch(() => {});
   }, [id]);
+  useEffect(() => {
+    fetch(`${API}/api/valoraciones/agente/${id}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setValoraciones(data.valoraciones || []);
+        setPromedio(data.promedio || 0);
+        setTotalValoraciones(data.total || 0);
+      })
+      .catch(() => {});
+
+    const token = getToken();
+    if (!token) return;
+    fetch(`${API}/api/valoraciones/agente/${id}/ya-valoro`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => setYaValoro(data.yaValoro))
+      .catch(() => {});
+  }, [id]);
 
   const handleComprar = () => {
     if (!isLoggedIn()) {
       navigate("/login");
     } else {
       navigate(`/cliente/pagar/${id}`);
+    }
+  };
+
+  const handleEnviarValoracion = async () => {
+    if (estrellaSeleccionada === 0) return;
+    setEnviandoValoracion(true);
+    try {
+      const token = getToken();
+      const res = await fetch(`${API}/api/valoraciones/agente/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estrellas: estrellaSeleccionada, comentario }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setYaValoro(true);
+        setMensajeValoracion("¡Gracias por tu valoración!");
+        // Recargar valoraciones
+        fetch(`${API}/api/valoraciones/agente/${id}`)
+          .then((r) => r.json())
+          .then((d) => {
+            setValoraciones(d.valoraciones || []);
+            setPromedio(d.promedio || 0);
+            setTotalValoraciones(d.total || 0);
+          });
+      } else {
+        setMensajeValoracion(data.error || "Error al enviar valoración");
+      }
+    } catch {
+      setMensajeValoracion("Error de conexión");
+    } finally {
+      setEnviandoValoracion(false);
     }
   };
 
@@ -247,6 +311,126 @@ export default function DetalleAgente() {
                 ))}
               </ul>
             </div>
+          </div>
+
+          <div className="bg-white dark:bg-[#1a2230] rounded-2xl border border-slate-200 dark:border-slate-800 p-6">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <i className="fa-solid fa-star text-amber-400"></i> Valoraciones
+              <span className="text-sm font-normal text-slate-500 ml-1">
+                ({totalValoraciones}{" "}
+                {totalValoraciones === 1 ? "reseña" : "reseñas"})
+              </span>
+            </h2>
+
+            {/* Promedio */}
+            {totalValoraciones > 0 && (
+              <div className="flex items-center gap-3 mb-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                <span className="text-4xl font-black text-slate-900 dark:text-white">
+                  {promedio}
+                </span>
+                <div>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <i
+                        key={s}
+                        className={`fa-solid fa-star text-lg ${s <= Math.round(promedio) ? "text-amber-400" : "text-slate-300 dark:text-slate-600"}`}
+                      ></i>
+                    ))}
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {totalValoraciones} valoraciones
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Formulario si compró y no ha valorado */}
+            {yaComprado && !yaValoro && (
+              <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-xl">
+                <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">
+                  Deja tu valoración
+                </p>
+                <div className="flex gap-1 mb-3">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <button
+                      key={s}
+                      onMouseEnter={() => setEstrellaHover(s)}
+                      onMouseLeave={() => setEstrellaHover(0)}
+                      onClick={() => setEstrellaSeleccionada(s)}
+                      className="text-2xl transition-transform hover:scale-110"
+                    >
+                      <i
+                        className={`fa-solid fa-star ${s <= (estrellaHover || estrellaSeleccionada) ? "text-amber-400" : "text-slate-300 dark:text-slate-600"}`}
+                      ></i>
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  value={comentario}
+                  onChange={(e) => setComentario(e.target.value)}
+                  placeholder="Cuéntanos tu experiencia con este agente... (opcional)"
+                  rows={3}
+                  className="w-full px-4 py-3 text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1118] focus:ring-2 focus:ring-[#136dec]/30 outline-none transition-all resize-none mb-3"
+                />
+                <button
+                  onClick={handleEnviarValoracion}
+                  disabled={estrellaSeleccionada === 0 || enviandoValoracion}
+                  className="px-5 py-2.5 bg-[#136dec] hover:bg-blue-600 text-white text-sm font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {enviandoValoracion ? "Enviando..." : "Enviar valoración"}
+                </button>
+                {mensajeValoracion && (
+                  <p className="text-sm text-emerald-600 mt-2">
+                    {mensajeValoracion}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {yaValoro && (
+              <div className="mb-4 flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                <i className="fa-solid fa-circle-check"></i>
+                Ya has valorado este agente
+              </div>
+            )}
+
+            {/* Lista de valoraciones */}
+            {valoraciones.length === 0 ? (
+              <p className="text-sm text-slate-400 text-center py-4">
+                Aún no hay valoraciones para este agente.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {valoraciones.map((v) => (
+                  <div
+                    key={v.id}
+                    className="border-b border-slate-100 dark:border-slate-800 pb-4 last:border-0"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                        {v.nombreUsuario}
+                      </span>
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <i
+                            key={s}
+                            className={`fa-solid fa-star text-xs ${s <= v.estrellas ? "text-amber-400" : "text-slate-300 dark:text-slate-600"}`}
+                          ></i>
+                        ))}
+                      </div>
+                    </div>
+                    {v.comentario && (
+                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                        {v.comentario}
+                      </p>
+                    )}
+                    <p className="text-xs text-slate-400 mt-1">
+                      {new Date(v.fechaValoracion).toLocaleDateString("es-ES")}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Columna derecha — tarjeta de compra (sticky) */}
