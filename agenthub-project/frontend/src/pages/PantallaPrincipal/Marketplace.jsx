@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { obtenerAgentesAprobados } from "../../services/conexion_api";
-import { isLoggedIn } from "../../services/auth";
+//import { isLoggedIn } from "../../services/auth";
 
 export default function Marketplace() {
     const navigate = useNavigate();
