@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getToken } from "../../services/auth";
-import ClienteNavbar from "../../components/ClienteNavbar";
+import TopNavbar from "../../components/TopNavbar";
 
 const API = "https://agenthub-production-e274.up.railway.app";
 
@@ -43,7 +43,7 @@ export default function PagoExitoso() {
 
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] min-h-screen flex flex-col font-[Inter]">
-            <ClienteNavbar />
+            <TopNavbar />
             <main className="flex-1 flex flex-col items-center justify-center text-center px-6">
                 {estado === "procesando" && (
                     <>

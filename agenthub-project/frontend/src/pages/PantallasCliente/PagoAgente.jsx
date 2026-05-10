@@ -7,7 +7,7 @@ import {
     useStripe,
     useElements,
 } from "@stripe/react-stripe-js";
-import ClienteNavbar from "../../components/ClienteNavbar";
+import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { crearPaymentIntent, obtenerAgentePorId } from "../../services/conexion_api";
 import { getToken } from "../../services/auth";
@@ -149,7 +149,7 @@ export default function PagoAgente() {
 
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
-            <ClienteNavbar />
+            <TopNavbar />
 
             <main className="flex-1 max-w-lg mx-auto px-6 py-16 w-full">
                 <button

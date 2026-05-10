@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ClienteNavbar from "../../components/ClienteNavbar";
+import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../../services/auth";
@@ -25,7 +25,7 @@ export default function ClienteMisAgentes() {
 
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
-            <ClienteNavbar />
+            <TopNavbar />
 
             <main className="flex-1 max-w-7xl mx-auto px-6 py-12 w-full flex flex-col">
                 <div className="mb-10">

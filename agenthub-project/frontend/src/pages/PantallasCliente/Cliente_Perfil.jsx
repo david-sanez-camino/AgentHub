@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import ClienteNavbar from "../../components/ClienteNavbar";
+import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { getUser } from "../../services/auth";
+import TopNavbar from "../../components/TopNavbar";
 
 export default function ClientePerfil() {
     const user = getUser();
@@ -31,7 +32,7 @@ export default function ClientePerfil() {
 
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
-            <ClienteNavbar />
+            <TopNavbar />
 
             <main className="flex-1 max-w-4xl mx-auto px-6 py-12 w-full">
                 <div className="mb-8">

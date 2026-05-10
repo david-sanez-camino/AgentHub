@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ClienteNavbar from "../../components/ClienteNavbar";
+import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { obtenerAgentesAprobados } from "../../services/conexion_api";
 import { getToken } from "../../services/auth";
@@ -58,7 +58,7 @@ export default function ClientePagina() {
 
   return (
     <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
-      <ClienteNavbar />
+      <TopNavbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-6 py-20 w-full flex flex-col items-center text-center">
         <div className="max-w-3xl w-full mb-12">

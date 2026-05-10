@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import ClienteNavbar from "../../components/ClienteNavbar";
+import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { enviarMensajeChat, obtenerAgentePorId } from "../../services/conexion_api";
 import { getToken } from "../../services/auth";
@@ -133,7 +133,7 @@ export default function ClientePantallaChat() {
 
     return (
         <div className="bg-[#f6f7f8] dark:bg-[#101822] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-[Inter]">
-            <ClienteNavbar />
+            <TopNavbar />
 
             <main className="flex-1 flex gap-0 max-w-7xl mx-auto w-full px-4 py-6">
 
