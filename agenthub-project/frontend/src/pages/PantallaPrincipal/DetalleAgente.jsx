@@ -114,10 +114,13 @@ export default function DetalleAgente() {
       <main className="flex-1 max-w-6xl mx-auto px-6 py-12 w-full">
         {/* Breadcrumb */}
         <button
-          onClick={() => navigate("/marketplace")}
+          onClick={() =>
+            navigate(fromMisAgentes ? "/cliente/mis-agentes" : "/marketplace")
+          }
           className="mb-8 text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 transition-colors"
         >
-          <i className="fa-solid fa-arrow-left"></i> Volver al marketplace
+          <i className="fa-solid fa-arrow-left"></i>
+          {fromMisAgentes ? "Volver a Mis Agentes" : "Volver al marketplace"}
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
