@@ -127,6 +127,12 @@ export default function Marketplace() {
                                     {agente.descripcion}
                                 </p>
 
+                                {agentesComprados.includes(agente.id) && (
+                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-lg mb-3">
+                                        <i className="fa-solid fa-check"></i> Ya adquirido
+                                    </span>
+                                )}
+
                                 <button
                                     onClick={() => handleAcceder(agente)}
                                     className={`w-full py-2.5 text-sm font-bold rounded-xl transition-colors ${
@@ -134,7 +140,7 @@ export default function Marketplace() {
                                             ? "bg-emerald-600 hover:bg-emerald-700 text-white"
                                             : "bg-[#136dec] hover:bg-blue-600 text-white"
                                     }`}
-                                >
+                                > // cambio
                                     {agentesComprados.includes(agente.id) ? "Abrir agente" : "Ver detalles"}
                                 </button>
                             </div>
