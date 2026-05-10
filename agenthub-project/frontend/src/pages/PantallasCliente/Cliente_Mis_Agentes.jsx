@@ -68,7 +68,7 @@ export default function ClienteMisAgentes() {
                                 </div>
                                 <div className="mt-auto">
                                     <Link
-                                        to={`/agente/${agente.id}`}
+                                        to={`/agente/${agente.id}?from=mis-agentes`}
                                         className="block w-full text-center py-2.5 bg-[#136dec] hover:bg-blue-600 text-white font-bold rounded-xl transition-colors text-sm"
                                     >
                                         Abrir agente →
