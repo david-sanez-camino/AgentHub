@@ -49,18 +49,18 @@ export default function TopNavbar() {
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-8">
-                    <a href="#destacados" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                    <Link to="/cliente" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Agentes
-                    </a>
-                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                    </Link>
+                    <Link to="/soluciones" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Soluciones
-                    </a>
-                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                    </Link>
+                    <Link to="/precios" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Precios
-                    </a>
-                    <a href="#!" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                    </Link>
+                    <Link to="/documentacion" className="text-sm font-bold text-gray-300 hover:text-white transition-colors">
                         Documentación
-                    </a>
+                    </Link>
                 </nav>
 
                 {/* Actions (Login / Signup) */}
