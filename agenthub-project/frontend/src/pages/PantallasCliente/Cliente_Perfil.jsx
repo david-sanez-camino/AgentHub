@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import TopNavbar from "../../components/TopNavbar";
 import Footer from "../../components/Footer";
 import { getUser } from "../../services/auth";
-import TopNavbar from "../../components/TopNavbar";
 
 export default function ClientePerfil() {
     const user = getUser();
