@@ -254,3 +254,42 @@ export async function resetContrasenia(token, nuevaContrasenia) {
     });
     return handleResponse(response);
 }
+
+// PUT /api/agentes/{id} — editar agente
+export async function editarAgente(id, payload, token) {
+    const response = await fetch(`${AGENTES_ENDPOINT}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+    });
+    return handleResponse(response);
+}
+
+// DELETE /api/agentes/{id} — eliminar agente
+export async function eliminarAgente(id, token) {
+    const response = await fetch(`${AGENTES_ENDPOINT}/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    if (!response.ok) {
+        const text = await response.text().catch(() => "Error al eliminar");
+        throw new Error(text || "Error al eliminar el agente");
+    }
+}
+
+// GET /api/agentes/mis-metricas — métricas del desarrollador
+export async function obtenerMisMetricas(token) {
+    const response = await fetch(`${AGENTES_ENDPOINT}/mis-metricas`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return handleResponse(response);
+}

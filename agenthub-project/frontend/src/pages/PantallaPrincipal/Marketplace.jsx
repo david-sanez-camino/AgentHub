@@ -36,13 +36,8 @@ export default function Marketplace() {
         setAgentesFiltered(filtrados);
     };
 
-    // Si el usuario no está logueado lo manda al login, si lo está al checkout
     const handleAcceder = (agente) => {
-        if (!isLoggedIn()) {
-            navigate("/login");
-        } else {
-            navigate(`/cliente/pagar/${agente.id}`);
-        }
+        navigate(`/agente/${agente.id}`);
     };
 
     return (
@@ -112,44 +107,26 @@ export default function Marketplace() {
                                     {agente.descripcion}
                                 </p>
 
-                                {/* Si no está logueado muestra "Inicia sesión para acceder", si lo está muestra "Comprar" */}
                                 <button
                                     onClick={() => handleAcceder(agente)}
                                     className="w-full py-2.5 text-sm font-bold rounded-xl transition-colors bg-[#136dec] hover:bg-blue-600 text-white"
                                 >
-                                    {isLoggedIn()
-                                        ? (agente.precio ? `Comprar — $${agente.precio}` : "Obtener gratis")
-                                        : "Inicia sesión para acceder"
-                                    }
+                                    Ver detalles
                                 </button>
                             </div>
                         ))}
                     </div>
                 )}
 
-                {/* Banner de CTA si no está logueado */}
-                {!isLoggedIn() && !loading && agentesFiltered.length > 0 && (
+                {/* Banner de CTA */}
+                {!loading && agentesFiltered.length > 0 && (
                     <div className="mt-12 w-full max-w-2xl bg-[#136dec]/10 dark:bg-[#136dec]/20 border border-[#136dec]/30 rounded-2xl p-8 text-center">
                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                             ¿Listo para empezar?
                         </h3>
                         <p className="text-slate-500 dark:text-slate-400 mb-5">
-                            Crea una cuenta gratis o inicia sesión para comprar y usar estos agentes.
+                            Haz clic en "Ver detalles" para conocer cada agente antes de comprarlo.
                         </p>
-                        <div className="flex gap-3 justify-center">
-                            <button
-                                onClick={() => navigate("/login")}
-                                className="px-6 py-3 bg-[#136dec] hover:bg-blue-600 text-white font-bold rounded-xl transition-colors"
-                            >
-                                Iniciar sesión
-                            </button>
-                            <button
-                                onClick={() => navigate("/crear_usuario")}
-                                className="px-6 py-3 bg-white dark:bg-[#1a2230] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                            >
-                                Registrarse
-                            </button>
-                        </div>
                     </div>
                 )}
             </main>

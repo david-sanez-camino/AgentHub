@@ -9,6 +9,7 @@ import Home from './pages/PantallaPrincipal/home';
 import Login from './pages/PantallaPrincipal/login';
 import CrearUsuario from './pages/PantallaPrincipal/crear_usuario';
 import Marketplace from './pages/PantallaPrincipal/Marketplace';
+import DetalleAgente from './pages/PantallaPrincipal/DetalleAgente';
 
 // SeccionesFooter
 import AboutUs from './pages/SeccionesFooter/AboutUs';
@@ -62,6 +63,7 @@ export default function Router() {
                 <Route path="/crear_usuario" element={<CrearUsuario />} />
                 <Route path="/sobre-nosotros" element={<AboutUs />} />
                 <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/agente/:id" element={<DetalleAgente />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/comunidad" element={<Comunidad />} />
                 <Route path="/soporte" element={<Soporte />} />
